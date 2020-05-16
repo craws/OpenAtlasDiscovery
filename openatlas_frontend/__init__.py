@@ -1,5 +1,7 @@
 from flask import Flask, Response, request
 
+from util import filters
+
 app = Flask(__name__, instance_relative_config=True)
 app.config.from_object('config.default')   # type: ignore
 app.config.from_pyfile('production.py')   # type: ignore
@@ -23,6 +25,8 @@ def apply_caching(response: Response) -> Response:
     # Todo: activate Content-Security-Policy after removal of every inline CSS and JavaScript
     # response.headers['Content-Security-Policy'] = "default-src 'self'"
     return response
+
+app.register_blueprint(filters.blueprint)
 
 
 if __name__ == "__main__":  # pragma: no cover

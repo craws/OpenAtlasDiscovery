@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <p>
+        Frontend to present data from <a href="https://openatlas.eu" target="_blank">OpenAtlas</a> projects.
+    </p>
+    <p>
+        Version: <a href="{{ url_for('index_changelog') }}">{{ config['VERSION'] }}</a>
+    </p>
+{% endblock %}
