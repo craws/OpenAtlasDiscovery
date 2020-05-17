@@ -1,6 +1,6 @@
 from flask import Flask, Response, request
 
-from util import filters
+from openatlas_frontend.util import filters
 
 app = Flask(__name__, instance_relative_config=True)
 app.config.from_object('config.default')   # type: ignore

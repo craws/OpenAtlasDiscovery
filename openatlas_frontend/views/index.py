@@ -1,7 +1,7 @@
 from flask import render_template
 
 from openatlas_frontend import app
-from util.changelog import Changelog
+from openatlas_frontend.util.changelog import Changelog
 
 
 @app.route('/')
