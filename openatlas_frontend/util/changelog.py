@@ -2,6 +2,7 @@ class Changelog:
     versions = {
         '0.2.0': ['TBA', {
             'feature': {
+                '1245': 'Multi language',
                 '1243': 'Testing framework',
                 '1246': 'Changelog',
             },
