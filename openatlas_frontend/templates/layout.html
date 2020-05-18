@@ -1,8 +1,16 @@
 <!DOCTYPE html>
+<html lang="{{ session['language'] }}">
 <head>
     <meta charset="UTF-8">
 </head>
 <body>
+    {% for language in config['LANGUAGES'].keys()|sort %}
+        {% if 'language' in session and session['language'] == language %}
+            {{ language|upper }}
+        {% else %}
+            <a href="{{ url_for('set_locale', language=language) }}">{{ language|upper }}</a>
+        {% endif %}
+    {% endfor %}
     {% block content %}{% endblock %}
 </body>
 </html>

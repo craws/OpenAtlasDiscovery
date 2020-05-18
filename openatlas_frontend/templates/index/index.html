@@ -2,9 +2,9 @@
 
 {% block content %}
     <p>
-        Frontend to present data from <a href="https://openatlas.eu" target="_blank">OpenAtlas</a> projects.
+        {{ _('frontend for')|uc_first }} <a href="https://openatlas.eu" target="_blank">OpenAtlas</a> {{ _('projects') }}.
     </p>
     <p>
-        Version: <a href="{{ url_for('index_changelog') }}">{{ config['VERSION'] }}</a>
+        {{ _('version')|uc_first }}: <a href="{{ url_for('index_changelog') }}">{{ config['VERSION'] }}</a>
     </p>
 {% endblock %}
