@@ -1,0 +1,444 @@
+{
+  "openapi" : "3.0.0",
+  "info" : {
+    "title" : "OpenAtlas API",
+    "description" : "A prelimenary Documentation of the OpenAtlas API",
+    "contact" : {
+      "email" : "christoph.hoffmann@oeaw.ac.at"
+    },
+    "license" : {
+      "name" : "Apache 2.0",
+      "url" : "http://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "version" : "0.1"
+  },
+  "servers" : [ {
+    "url" : "https://demo-dev.openatlas.eu/api/0.1/",
+    "description" : "Demo Server"
+  } ],
+  "tags" : [ {
+    "name" : "Users",
+    "description" : "Open to all logged in Users"
+  }, {
+    "name" : "Public",
+    "description" : "Open to the general public"
+  } ],
+  "paths" : {
+    "/entity/{id}" : {
+      "get" : {
+        "tags" : [ "Users" ],
+        "summary" : "retrieves a geojson representation of a specific entity",
+        "operationId" : "retrieveEntity",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "the entity ID",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "number"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "a geojson representation of the specified entities",
+            "content" : {
+              "application/ld+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/featureCollectionGeoJSON"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "not found"
+          }
+        },
+        "security" : [ {
+          "cookieAuth" : [ ]
+        } ]
+      }
+    },
+    "/entity/download/{id}" : {
+      "get" : {
+        "tags" : [ "Users" ],
+        "summary" : "triggers a download function for the specific entity",
+        "operationId" : "downloadEntity",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "the entity ID",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "number"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "a geojson representation of the specified entities",
+            "content" : {
+              "application/ld+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/featureCollectionGeoJSON"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "not found"
+          }
+        },
+        "security" : [ {
+          "cookieAuth" : [ ]
+        } ]
+      }
+    },
+    "/code/{code}" : {
+      "get" : {
+        "tags" : [ "Users" ],
+        "summary" : "retrieves a list of geojson representations which share a menu item",
+        "operationId" : "retrieveEntitiesByCode",
+        "parameters" : [ {
+          "name" : "code",
+          "in" : "path",
+          "description" : "a menu item e.g. actor, event, place, reference, source, object",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "limit",
+          "in" : "query",
+          "description" : "number of geojson representations to be returned",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "number"
+          }
+        }, {
+          "name" : "column",
+          "in" : "query",
+          "description" : "the column wich should be sorted and filtered",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "sort",
+          "in" : "query",
+          "description" : "sort direction asc/desc",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "filter",
+          "in" : "query",
+          "description" : "filter operator to be applied",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "a geojson representation of the specified entity",
+            "content" : {
+              "application/ld+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/featureCollectionGeoJSON"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "not found"
+          }
+        },
+        "security" : [ {
+          "cookieAuth" : [ ]
+        } ]
+      }
+    },
+    "/class/{class}" : {
+      "get" : {
+        "tags" : [ "Users" ],
+        "summary" : "retrieves a list of geojson representations wich share a specified class code",
+        "operationId" : "retrieveEntitiesByClass",
+        "parameters" : [ {
+          "name" : "class",
+          "in" : "path",
+          "description" : "a cidocCRM class code eg E21",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "limit",
+          "in" : "query",
+          "description" : "number of geojson representations to be returned",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "number"
+          }
+        }, {
+          "name" : "column",
+          "in" : "query",
+          "description" : "the column wich should be sorted and filtered",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "sort",
+          "in" : "query",
+          "description" : "sort direction asc/desc",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "filter",
+          "in" : "query",
+          "description" : "filter operator to be applied",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "a geojson representation of the specified entities",
+            "content" : {
+              "application/ld+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/featureCollectionGeoJSON"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "not found"
+          }
+        },
+        "security" : [ {
+          "cookieAuth" : [ ]
+        } ]
+      }
+    },
+    "/latest/{limit}" : {
+      "get" : {
+        "tags" : [ "Users" ],
+        "summary" : "retrieves a list of geojson representations wich were last edited",
+        "operationId" : "retrieveLatest",
+        "parameters" : [ {
+          "name" : "limit",
+          "in" : "path",
+          "description" : "the amount of entities to be retrieved",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "number"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "a geojson representation of the specified entities",
+            "content" : {
+              "application/ld+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/featureCollectionGeoJSON"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "not found"
+          }
+        },
+        "security" : [ {
+          "cookieAuth" : [ ]
+        } ]
+      }
+    },
+    "/query/" : {
+      "get" : {
+        "tags" : [ "Users" ],
+        "summary" : "retrieves a list of geojson based on multiple query parameters",
+        "operationId" : "retrieveQuery",
+        "parameters" : [ {
+          "name" : "entities[]",
+          "in" : "query",
+          "description" : "get specific entities by id",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "number"
+          }
+        }, {
+          "name" : "classes[]",
+          "in" : "query",
+          "description" : "get specific classes by cidoc class code e.g. E18",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "items[]",
+          "in" : "query",
+          "description" : "get specific menu items e.g. actor, place",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "a geojson representation of the specified entities",
+            "content" : {
+              "application/ld+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/featureCollectionGeoJSON"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "not found"
+          }
+        },
+        "security" : [ {
+          "cookieAuth" : [ ]
+        } ]
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "link" : {
+        "required" : [ "href" ],
+        "type" : "object",
+        "properties" : {
+          "href" : {
+            "type" : "string"
+          },
+          "rel" : {
+            "type" : "string",
+            "example" : "prev"
+          },
+          "type" : {
+            "type" : "string",
+            "example" : "application/geo+json"
+          },
+          "hreflang" : {
+            "type" : "string",
+            "example" : "en"
+          }
+        }
+      },
+      "featureCollectionGeoJSON" : {
+        "required" : [ "features", "type" ],
+        "type" : "object",
+        "properties" : {
+          "type" : {
+            "type" : "string",
+            "enum" : [ "FeatureCollection" ]
+          },
+          "features" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/featureGeoJSON"
+            }
+          },
+          "links" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/link"
+            }
+          },
+          "timeStamp" : {
+            "type" : "string",
+            "format" : "dateTime"
+          },
+          "numberMatched" : {
+            "minimum" : 0,
+            "type" : "integer"
+          },
+          "numberReturned" : {
+            "minimum" : 0,
+            "type" : "integer"
+          }
+        }
+      },
+      "featureGeoJSON" : {
+        "required" : [ "geometry", "properties", "type" ],
+        "type" : "object",
+        "properties" : {
+          "type" : {
+            "type" : "string",
+            "enum" : [ "Feature" ]
+          },
+          "geometry" : {
+            "$ref" : "#/components/schemas/geometryGeoJSON"
+          },
+          "properties" : {
+            "type" : "object",
+            "nullable" : true
+          },
+          "id" : {
+            "oneOf" : [ {
+              "type" : "string"
+            }, {
+              "type" : "integer"
+            } ]
+          }
+        }
+      },
+      "geometryGeoJSON" : {
+        "required" : [ "type" ],
+        "type" : "object",
+        "properties" : {
+          "type" : {
+            "type" : "string",
+            "enum" : [ "Point", "MultiPoint", "LineString", "MultiLineString", "Polygon", "MultiPolygon", "GeometryCollection" ]
+          }
+        }
+      }
+    },
+    "securitySchemes" : {
+      "cookieAuth" : {
+        "type" : "apiKey",
+        "name" : "session",
+        "in" : "cookie"
+      }
+    }
+  }
+}
