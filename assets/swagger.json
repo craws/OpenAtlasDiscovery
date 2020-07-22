@@ -13,8 +13,8 @@
     "version" : "0.1"
   },
   "servers" : [ {
-    "url" : "https://demo-dev.openatlas.eu/api/0.1/",
-    "description" : "Demo Server"
+    "url" : "http://127.0.0.1:5000/api/0.1/",
+    "description" : "Local Dev"
   } ],
   "tags" : [ {
     "name" : "Users",
