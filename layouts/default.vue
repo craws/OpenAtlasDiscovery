@@ -26,10 +26,8 @@
               cols="6"
               class="text-right"
             >
-              <v-btn
-                small
-                text
-              >edit
+              <v-btn small text>
+                edit
               </v-btn>
             </v-col>
           </v-row>
@@ -38,7 +36,7 @@
             :key="i"
             dark
             class="my-4"
-          ></v-divider>
+          />
           <v-list-item
             v-else
             :key="i"
@@ -56,21 +54,23 @@
         </template>
       </v-list>
     </v-navigation-drawer>
-    <v-app-bar app  clipped-left>
-      <v-app-bar-nav-icon @click="drawer = !drawer"/>
-      <span class="title ml-3 mr-5">OpenAtlas&nbsp;<span class="font-weight-light">Discovery</span></span>
+    <v-app-bar app clipped-left>
+      <v-app-bar-nav-icon @click="drawer = !drawer" />
+      <span class="title ml-3 mr-5">OpenAtlas&nbsp;
+        <span class="font-weight-light">Discovery</span>
+      </span>
       <v-text-field
         solo-inverted
         flat
         hide-details
         prepend-inner-icon="mdi-magnify"
-      ></v-text-field>
+      />
 
-      <v-spacer></v-spacer>
+      <v-spacer />
     </v-app-bar>
     <v-main>
       <v-container>
-        <nuxt/>
+        <nuxt />
       </v-container>
     </v-main>
   </v-app>
@@ -78,35 +78,35 @@
 
 <script>
 export default {
-  data () {
+  data() {
     return {
       drawer: false,
       items: [
         {
           icon: 'mdi-lightbulb-outline',
-          text: 'Notes'
+          text: 'Notes',
         },
         {
           icon: 'mdi-history',
-          text: 'Reminders'
+          text: 'Reminders',
         },
         { divider: true },
         { heading: 'Labels' },
         {
           icon: 'mdi-plus-circle-outline',
-          text: 'Create new label'
+          text: 'Create new label',
         },
         { divider: true },
         {
           icon: 'mdi-archive',
-          text: 'Archive'
+          text: 'Archive',
         },
         {
           icon: 'mdi-delete',
-          text: 'Trash'
-        }
-      ]
-    }
-  }
-}
+          text: 'Trash',
+        },
+      ],
+    };
+  },
+};
 </script>
