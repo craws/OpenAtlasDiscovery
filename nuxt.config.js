@@ -60,6 +60,7 @@ export default {
     '@nuxtjs/pwa',
     // Doc: https://github.com/nuxt/content
     '@nuxt/content',
+    'nuxt-leaflet',
   ],
   /*
   ** Axios module configuration
@@ -91,6 +92,7 @@ export default {
         },
       },
     },
+    defaultAssets: false,
   },
   /*
   ** Build configuration

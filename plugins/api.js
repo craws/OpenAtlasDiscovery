@@ -12,5 +12,4 @@ const APIClient = {
     });
   },
 };
-
 Vue.use(APIClient);

@@ -1,29 +1,62 @@
 <template>
-  <v-layout
-    column
-    justify-center
-    align-center
-  >
-    <v-flex xs12 sm8 md6>
-      <div class="text-center">
-        <logo />
-        <p class="title">
-          Welcome to the OpenAtlas Discovery prototype
-        </p>
-      </div>
-    </v-flex>
-  </v-layout>
+  <div>
+    <v-layout
+      column
+      justify-center
+      align-center
+    >
+        <div class="text-center ontop splashtext">
+          <logo />
+          <p class="title">
+            Welcome to the OpenAtlas Discovery prototype
+          </p>
+        </div>
+    </v-layout>
+    <div class="bgmap">
+      <qmap v-if="!this.loading" :geojsonitems="items"></qmap>
+    </div>
+  </div>
 </template>
 
 <script>
 import Logo from '~/components/Logo.vue';
+import qmap from '~/components/map.vue';
 
 export default {
   components: {
     Logo,
+    qmap,
   },
-  mounted() {
-    console.log(this.$api.Users.retrieveEntitiesByClass({ class: 'E21', limit: 10 }));
+  data() {
+    return {
+      items: [],
+      loading: true,
+    };
+  },
+  async mounted() {
+    const p = await this.$api.Users.retrieveQuery({
+      limit: 100,
+      show: ['detailed'],
+      items: 'place',
+    });
+    this.items = p.body[0];
+    this.loading = false;
   },
 };
 </script>
+<style>
+.splashtext {
+  position: relative;
+  background-color: rgba(255, 255, 255, 0.8);
+  top: 15vh;
+  width: 100%;
+}
+
+.bgmap {
+  height: calc(100vh - 64px);
+  width: 100%;
+  opacity: 80%;
+  position: absolute;
+  top: 0px;
+}
+</style>

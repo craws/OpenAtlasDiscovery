@@ -1,7 +1,8 @@
 <template>
   <v-app light>
     <v-navigation-drawer
-      v-model="drawer"
+      class="ontop"
+      v-model="$store.state.app.queryDrawer"
       :disable-resize-watcher="true"
       clipped
       app
@@ -26,9 +27,6 @@
               cols="6"
               class="text-right"
             >
-              <v-btn small text>
-                edit
-              </v-btn>
             </v-col>
           </v-row>
           <v-divider
@@ -41,6 +39,8 @@
             v-else
             :key="i"
             link
+            :to="item.target"
+            @click="$store.commit('app/closeQueryDrawer')"
           >
             <v-list-item-action>
               <v-icon>{{ item.icon }}</v-icon>
@@ -54,59 +54,105 @@
         </template>
       </v-list>
     </v-navigation-drawer>
-    <v-app-bar app clipped-left>
-      <v-app-bar-nav-icon @click="drawer = !drawer" />
-      <span class="title ml-3 mr-5">OpenAtlas&nbsp;
-        <span class="font-weight-light">Discovery</span>
-      </span>
-      <v-text-field
-        solo-inverted
-        flat
-        hide-details
-        prepend-inner-icon="mdi-magnify"
-      />
-
-      <v-spacer />
+    <v-app-bar app clipped-left class="ontop">
+      <v-app-bar-nav-icon @click="$store.commit('app/toggleQueryDrawer')"/>
+      <nuxt-link to="/" @click="$store.commit('app/closeQueryDrawer')">
+        <div class="logocaption d-none d-sm-flex">
+          <img class="barlogo ml-1" src="/logo.png">
+          <span class="title ml-1">OpenAtlas</span>
+          <span class="title font-weight-light mr-5">Discovery</span>
+        </div>
+      </nuxt-link>
+      <querysearch :filterstring="$route.params.q"/>
+      <v-spacer/>
     </v-app-bar>
     <v-main>
-      <v-container>
-        <nuxt />
-      </v-container>
+      <nuxt/>
     </v-main>
   </v-app>
 </template>
-
 <script>
+import querysearch from '~/components/querysearch.vue';
+
 export default {
+  components: {
+    querysearch,
+  },
   data() {
     return {
       drawer: false,
       items: [
+        { heading: 'Sample Queries' },
         {
-          icon: 'mdi-lightbulb-outline',
-          text: 'Notes',
+          icon: 'mdi-account-group',
+          text: 'Actors',
+          target: {
+            name: 'list-q',
+            params: {
+              q: '{ "items": ["actor"] }',
+            },
+          },
         },
         {
-          icon: 'mdi-history',
-          text: 'Reminders',
+          icon: 'mdi-map-marker',
+          text: 'Places',
+          target: {
+            name: 'map-q',
+            params: {
+              q: '{ "items": ["place"] }',
+            },
+          },
+        },
+        {
+          icon: 'mdi-text-box',
+          text: 'References',
+          target: {
+            name: 'list-q',
+            params: {
+              q: '{ "items": ["reference"] }',
+            },
+          },
         },
         { divider: true },
-        { heading: 'Labels' },
-        {
-          icon: 'mdi-plus-circle-outline',
-          text: 'Create new label',
-        },
-        { divider: true },
-        {
-          icon: 'mdi-archive',
-          text: 'Archive',
-        },
-        {
-          icon: 'mdi-delete',
-          text: 'Trash',
-        },
       ],
     };
   },
 };
 </script>
+<style lang="scss">
+td {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+html {
+  overflow: auto;
+}
+
+.tablecolumndesc {
+  min-width: 500px;
+  max-width: 500px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.ontop {
+  z-index: 401!important;
+}
+
+.logocaption {
+  color: black;
+  font-size: 0;
+}
+
+.barlogo {
+  height: 27px;
+  top: 8px;
+  position: relative;
+}
+
+a {
+  text-decoration: none;
+}
+</style>
