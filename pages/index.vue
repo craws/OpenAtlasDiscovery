@@ -7,9 +7,7 @@
     >
       <div class="text-center ontop splashtext">
         <logo />
-        <p class="title">
-          Welcome to the OpenAtlas Discovery prototype
-        </p>
+        <nuxt-content :document="page" />
       </div>
     </v-layout>
     <div class="bgmap">
@@ -33,6 +31,12 @@ export default {
       loading: true,
     };
   },
+  async asyncData({ $content }) {
+    const page = await $content('home').fetch();
+    return {
+      page,
+    };
+  },
   async mounted() {
     const p = await this.$api.Users.retrieveQuery({
       limit: 100,
@@ -45,6 +49,7 @@ export default {
 };
 </script>
 <style>
+
 .splashtext {
   position: relative;
   background-color: rgba(255, 255, 255, 0.8);
