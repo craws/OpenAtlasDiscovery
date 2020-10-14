@@ -62,7 +62,7 @@
           <span class="title font-weight-light mr-5">Discovery</span>
         </div>
       </nuxt-link>
-      <querysearch :filterstring="$route.params.q" />
+      <querysearch />
       <v-spacer />
     </v-app-bar>
     <v-main>
@@ -72,6 +72,7 @@
 </template>
 <script>
 import querysearch from '~/components/querysearch.vue';
+import menuitems from '../assets/menuqueries.json';
 
 export default {
   components: {
@@ -82,38 +83,7 @@ export default {
       drawer: false,
       items: [
         { heading: 'Sample Queries' },
-        {
-          icon: 'mdi-account-group',
-          text: 'Actors',
-          target: {
-            name: 'list-q',
-            params: {
-              q: '{ "items": ["actor"] }',
-            },
-          },
-        },
-        {
-          icon: 'mdi-map-marker',
-          text: 'Places',
-          target: {
-            name: 'map-q',
-            params: {
-              q: '{ "items": ["place"] }',
-            },
-          },
-        },
-        {
-          icon: 'mdi-text-box',
-          text: 'References',
-          target: {
-            name: 'list-q',
-            params: {
-              q: '{ "items": ["reference"] }',
-            },
-          },
-        },
-        { divider: true },
-      ],
+      ].concat(menuitems),
     };
   },
 };

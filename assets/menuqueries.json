@@ -1,0 +1,32 @@
+[
+  {
+    "icon": "mdi-account-group",
+    "text": "Actors",
+    "target": {
+      "name": "list-q",
+      "params": {
+        "q": "{ \"items\": [\"actor\"] }"
+      }
+    }
+  },
+  {
+    "icon": "mdi-map-marker",
+    "text": "Places",
+    "target": {
+      "name": "map-q",
+      "params": {
+        "q": "{ \"items\": [\"place\"] }"
+      }
+    }
+  },
+  {
+    "icon": "mdi-text-box",
+    "text": "References",
+    "target": {
+      "name": "list-q",
+      "params": {
+        "q": "{ \"items\": [\"reference\"] }"
+      }
+    }
+  }
+]
