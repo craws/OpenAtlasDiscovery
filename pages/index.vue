@@ -13,7 +13,7 @@
       </div>
     </v-layout>
     <div class="bgmap">
-      <qmap :geojsonitems="items" />
+      <qmap v-if="!loading" :geojsonitems="items" :options="{ zoomControl: false }" />
     </div>
   </div>
 </template>

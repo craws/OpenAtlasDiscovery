@@ -1,7 +1,7 @@
 <template>
   <no-ssr>
     <div class="mapcontainer">
-      <l-map ref="map" :zoom="13" :center="center">
+      <l-map ref="map" :zoom="13" :center="center" :options="options">
         <l-tile-layer :url="url" />
         <l-feature-group ref="features">
           <l-geo-json
@@ -18,6 +18,10 @@
 
 export default {
   props: {
+    options: {
+      type: Array,
+      default: () => {},
+    },
     geojsonitems: {
       type: Array,
       default: () => [],
