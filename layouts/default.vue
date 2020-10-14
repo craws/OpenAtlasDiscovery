@@ -125,10 +125,6 @@ td {
   overflow: hidden;
 }
 
-html {
-  overflow: auto;
-}
-
 .tablecolumndesc {
   min-width: 500px;
   max-width: 500px;
@@ -149,9 +145,5 @@ html {
   height: 27px;
   top: 8px;
   position: relative;
-}
-
-a {
-  text-decoration: none;
 }
 </style>
