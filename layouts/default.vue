@@ -1,8 +1,8 @@
 <template>
   <v-app light>
     <v-navigation-drawer
-      class="ontop"
       v-model="$store.state.app.queryDrawer"
+      class="ontop"
       :disable-resize-watcher="true"
       clipped
       app
@@ -26,8 +26,7 @@
             <v-col
               cols="6"
               class="text-right"
-            >
-            </v-col>
+            />
           </v-row>
           <v-divider
             v-else-if="item.divider"
@@ -55,7 +54,7 @@
       </v-list>
     </v-navigation-drawer>
     <v-app-bar app clipped-left class="ontop">
-      <v-app-bar-nav-icon @click="$store.commit('app/toggleQueryDrawer')"/>
+      <v-app-bar-nav-icon @click="$store.commit('app/toggleQueryDrawer')" />
       <nuxt-link to="/" @click="$store.commit('app/closeQueryDrawer')">
         <div class="logocaption d-none d-sm-flex">
           <img class="barlogo ml-1" src="/logo.png">
@@ -63,11 +62,11 @@
           <span class="title font-weight-light mr-5">Discovery</span>
         </div>
       </nuxt-link>
-      <querysearch :filterstring="$route.params.q"/>
-      <v-spacer/>
+      <querysearch :filterstring="$route.params.q" />
+      <v-spacer />
     </v-app-bar>
     <v-main>
-      <nuxt/>
+      <nuxt />
     </v-main>
   </v-app>
 </template>

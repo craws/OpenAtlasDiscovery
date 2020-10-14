@@ -5,15 +5,15 @@
       justify-center
       align-center
     >
-        <div class="text-center ontop splashtext">
-          <logo />
-          <p class="title">
-            Welcome to the OpenAtlas Discovery prototype
-          </p>
-        </div>
+      <div class="text-center ontop splashtext">
+        <logo />
+        <p class="title">
+          Welcome to the OpenAtlas Discovery prototype
+        </p>
+      </div>
     </v-layout>
     <div class="bgmap">
-      <qmap v-if="!this.loading" :geojsonitems="items"></qmap>
+      <qmap :geojsonitems="items" />
     </div>
   </div>
 </template>
@@ -55,7 +55,6 @@ export default {
 .bgmap {
   height: calc(100vh - 64px);
   width: 100%;
-  opacity: 80%;
   position: absolute;
   top: 0px;
 }

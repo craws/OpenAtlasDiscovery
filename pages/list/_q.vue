@@ -1,6 +1,6 @@
 <template>
   <div>
-    <list :filter="query"></list>
+    <list :filter="query" />
   </div>
 </template>
 

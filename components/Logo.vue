@@ -10,13 +10,5 @@
   .VuetifyLogo {
     height: 180px;
     width: 180px;
-    opacity: 0%;
-    animation: fade 1.5s ease-out forwards 1s;
-  }
-
-  @keyframes fade {
-    100% {
-      opacity: 100%;
-    }
   }
 </style>
