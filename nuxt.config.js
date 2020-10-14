@@ -37,6 +37,9 @@ export default {
   ** Global CSS
   */
   css: [
+    '~/css/main.css',
+    '@mdi/font/css/materialdesignicons.css',
+    'typeface-roboto/index.css',
   ],
   /*
   ** Plugins to load before mounting the App
@@ -104,9 +107,19 @@ export default {
   ** See https://nuxtjs.org/api/configuration-build/
   */
   build: {
-    analyze: false,
-    extractCSS: {
-      ignoreOrder: true,
+    analyze: true,
+    extractCSS: true,
+    optimization: {
+      splitChunks: {
+        cacheGroups: {
+          styles: {
+            name: 'styles',
+            test: /\.(css|vue)$/,
+            chunks: 'all',
+            enforce: true,
+          },
+        },
+      },
     },
   },
 };
