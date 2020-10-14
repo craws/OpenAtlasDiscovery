@@ -14,7 +14,7 @@
   },
   "servers" : [ {
     "url" : "https://origins.openatlas.eu/api/0.1/",
-    "description" : "Local Dev"
+    "description" : "Origins Instance"
   } ],
   "tags" : [ {
     "name" : "Users",
