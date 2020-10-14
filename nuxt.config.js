@@ -63,7 +63,6 @@ export default {
   modules: [
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
-    '@nuxtjs/pwa',
     // Doc: https://github.com/nuxt/content
     '@nuxt/content',
     'nuxt-leaflet',
@@ -105,5 +104,9 @@ export default {
   ** See https://nuxtjs.org/api/configuration-build/
   */
   build: {
+    analyze: true,
+    extractCSS: {
+      ignoreOrder: true,
+    },
   },
 };
