@@ -9,16 +9,21 @@
     :footer-props="{
       showFirstLastPage: true,
       'items-per-page-options': itemsPerPageOptions,
-      }"
+    }"
   >
     <template v-slot:top="{ pagination, options, updateOptions }">
       <v-data-footer
         :pagination="pagination"
         :options="options"
         :items-per-page-options="itemsPerPageOptions"
-        showFirstLastPage
+        show-first-last-page
         @update:options="updateOptions"
       />
+    </template>
+    <template v-slot:item.features[0].properties.title="{ item }">
+      <nuxt-link :to="`/single/${item.features[0]['@id']}`">
+        {{ item.features[0].properties.title }}
+      </nuxt-link>
     </template>
     <template v-slot:item.features[0].description[0].value="{ item }">
       <div v-if="item.features[0].description" class="tablecolumndesc">
