@@ -27,7 +27,7 @@ Whilst the application ultimately runs in the browser and can be served from any
 developing and deploying it requires [NodeJS](https://nodejs.org/en/about/releases/)
 (minimum v10, current LTS is recommended).
 
-After cloning the repository, install all dependencies with
+After cloning the repository, install all dependencies in the application root with
 ```bash
 $ npm install
 ```

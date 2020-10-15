@@ -13,8 +13,8 @@
     "version" : "0.1"
   },
   "servers" : [ {
-    "url" : "https://origins.openatlas.eu/api/0.1/",
-    "description" : "Origins Instance"
+    "url" : "https://demo.openatlas.eu/api/0.1/",
+    "description" : "Demo Instance"
   } ],
   "tags" : [ {
     "name" : "Users",
