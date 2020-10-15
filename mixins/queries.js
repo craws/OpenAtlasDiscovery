@@ -8,7 +8,7 @@ export default {
         }
       } catch (e) {
         this.query = {
-          filter: [`or(like,name,${query})`, `or(like,description,${query})`],
+          filter: [`or|name|like|${query}`, `or|name|like|${query}`],
         };
       }
     },
