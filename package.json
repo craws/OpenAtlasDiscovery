@@ -10,7 +10,7 @@
     "dev": "nuxt",
     "build": "nuxt-ts build",
     "start": "nuxt-ts start",
-    "export": "nuxt-ts export",
+    "export": "nuxt-ts generate",
     "serve": "nuxt-ts serve",
     "lint:js": "eslint --ext .js,.vue --ignore-path .gitignore .",
     "lint": "npm run lint:js"

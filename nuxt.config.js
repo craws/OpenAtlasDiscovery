@@ -28,6 +28,7 @@ export default {
     ],
   },
   generate: {
+    fallback: true,
     exclude: [
       /^\/list/,
       /^\/map/,
