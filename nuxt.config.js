@@ -59,6 +59,7 @@ export default {
   buildModules: [
     '@nuxt/typescript-build',
     '@nuxtjs/vuetify',
+    '@nuxtjs/netlify-files',
   ],
   /*
   ** Nuxt.js modules
