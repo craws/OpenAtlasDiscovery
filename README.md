@@ -61,5 +61,9 @@ nuxt using
 ```
 npm run server
 ```
+When you are serving the application from your own server (ie Apache) you need to configure it
+accordingly to avoid 404 responses on dynamically generated routes. Some examples can be found
+in the [Vue Router Documentation](https://router.vuejs.org/guide/essentials/history-mode.html#example-server-configurations) 
+
 
 For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
