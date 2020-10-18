@@ -14,7 +14,8 @@ Please refer to the file COPYING in the root directory of this repository.
 
 All documentation and images unless otherwise noted are licensed under the terms of Creative Commons
 Attribution-ShareAlike 4.0 International License.
-To view a copy of this license, visit http://creativecommons.org/licenses/by-sa/4.0/
+To view a copy of this license, visit 
+[http://creativecommons.org/licenses/by-sa/4.0/](http://creativecommons.org/licenses/by-sa/4.0/)
 
 # Technology
 
@@ -32,14 +33,15 @@ After cloning the repository, install all dependencies in the application root w
 $ npm install
 ```
 
+# Configuration
+
 Furthermore a running OpenAtlas instance with an activated
 [API Module](https://demo.openatlas.eu/static/manual/tools/api.html) is required.
-The instance served needs to be documented in the
+The instance served needs to be configured (servers/url) in the
 [Server Object](https://swagger.io/specification/#server-object) of
 the OpenAPI specification here:
-
 ```
-\assets\swagger.json
+assets\swagger.json
 ``` 
 
 ## For Development
@@ -61,5 +63,4 @@ nuxt using
 ```
 npm run server
 ```
-
 For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
