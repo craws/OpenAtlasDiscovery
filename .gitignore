@@ -19,6 +19,12 @@ lib-cov
 # Coverage directory used by tools like istanbul
 coverage
 
+# Created content in dist
+# Only the dist/.nojekyll is kept in Git to keep the dir because the usual .gitignore
+# trick doesn't work because it would be overridin. The .nojekyll will be created new
+# when creating content but because it is empty Git doesn't track a change.
+dist/*
+
 # nyc test coverage
 .nyc_output
 
