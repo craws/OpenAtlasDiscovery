@@ -1,5 +1,5 @@
 <template>
-  <no-ssr>
+  <client-only>
     <div class="mapcontainer">
       <l-map ref="map" :zoom="13" :center="center" :options="options">
         <l-tile-layer :url="url" />
@@ -11,7 +11,7 @@
         </l-feature-group>
       </l-map>
     </div>
-  </no-ssr>
+  </client-only>
 </template>
 
 <script>
