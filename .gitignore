@@ -91,7 +91,3 @@ sw.*
 
 # Vim swap files
 *.swp
-
-# generated distribution
-dist/*
-!dist/README.md
