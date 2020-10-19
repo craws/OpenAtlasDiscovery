@@ -10,7 +10,7 @@
     "dev": "nuxt",
     "build": "nuxt-ts build",
     "start": "nuxt-ts start",
-    "export": "nuxt-ts export",
+    "export": "nuxt-ts generate",
     "serve": "nuxt-ts serve",
     "lint:js": "eslint --ext .js,.vue --ignore-path .gitignore .",
     "lint": "npm run lint:js"
@@ -36,9 +36,9 @@
     "@nuxtjs/vuetify": "^1.11.2",
     "babel-eslint": "^10.1.0",
     "eslint": "^7.2.0",
-    "eslint-plugin-nuxt": "^1.0.0",
     "eslint-config-airbnb": "^18.2.0",
     "eslint-plugin-jsx-a11y": "^6.3.1",
+    "eslint-plugin-nuxt": "^1.0.0",
     "eslint-plugin-react": "^7.20.3"
   }
 }

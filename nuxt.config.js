@@ -28,6 +28,7 @@ export default {
     ],
   },
   generate: {
+    fallback: true,
     exclude: [
       /^\/list/,
       /^\/map/,
@@ -59,6 +60,7 @@ export default {
   buildModules: [
     '@nuxt/typescript-build',
     '@nuxtjs/vuetify',
+    '@nuxtjs/netlify-files',
   ],
   /*
   ** Nuxt.js modules
