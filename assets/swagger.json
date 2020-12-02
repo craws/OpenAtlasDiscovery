@@ -1,28 +1,37 @@
 {
-  "openapi" : "3.0.0",
-  "info" : {
-    "title" : "OpenAtlas API",
-    "description" : "A preliminary Documentation of the OpenAtlas API",
-    "contact" : {
-      "email" : "christoph.hoffmann@oeaw.ac.at"
+  "openapi": "3.0.0",
+  "info": {
+    "title": "OpenAtlas API",
+    "description": "A prelimenary Documentation of the OpenAtlas API",
+    "contact": {
+      "email": "christoph.hoffmann@oeaw.ac.at"
     },
-    "license" : {
-      "name" : "Apache 2.0",
-      "url" : "http://www.apache.org/licenses/LICENSE-2.0.html"
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "version" : "0.1"
+    "version": "0.1"
   },
-  "servers" : [ {
-    "url" : "https://demo.openatlas.eu/api/0.1/",
-    "description" : "Demo Instance"
-  } ],
-  "tags" : [ {
-    "name" : "Users",
-    "description" : "Open to all logged in Users"
-  }, {
-    "name" : "Public",
-    "description" : "Open to the general public"
-  } ],
+  "servers": [
+    {
+      "url": "https://demo-dev.openatlas.eu/api/0.1/",
+      "description": "Demo Server"
+    },
+    {
+      "url": "http://openatlas.sarfstation.de/api/0.1/",
+      "description": "Bernis Development Server"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Users",
+      "description": "Open to all logged in Users"
+    },
+    {
+      "name": "Public",
+      "description": "Open to the general public"
+    }
+  ],
   "paths": {
     "/entity/{id}": {
       "get": {
@@ -239,7 +248,18 @@
             "style": "form",
             "explode": true,
             "schema": {
-              "type": "number"
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "download",
+            "in": "query",
+            "description": "triggers a file download of the result.",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "boolean"
             }
           }
         ],
@@ -396,7 +416,18 @@
             "style": "form",
             "explode": true,
             "schema": {
-              "type": "number"
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "download",
+            "in": "query",
+            "description": "triggers a file download of the result.",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "boolean"
             }
           }
         ],
@@ -439,6 +470,17 @@
             "explode": false,
             "schema": {
               "type": "number"
+            }
+          },
+          {
+            "name": "download",
+            "in": "query",
+            "description": "triggers a file download of the result.",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "boolean"
             }
           }
         ],
@@ -617,7 +659,18 @@
             "style": "form",
             "explode": true,
             "schema": {
-              "type": "number"
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "download",
+            "in": "query",
+            "description": "triggers a file download of the result.",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "boolean"
             }
           }
         ],
@@ -661,6 +714,28 @@
             "schema": {
               "type": "number"
             }
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "description": "returns only how many results the API query gets",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "download",
+            "in": "query",
+            "description": "triggers a file download of the result.",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "boolean"
+            }
           }
         ],
         "responses": {
@@ -702,6 +777,28 @@
             "explode": false,
             "schema": {
               "type": "number"
+            }
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "description": "returns only how many results the API query gets",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "download",
+            "in": "query",
+            "description": "triggers a file download of the result.",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "boolean"
             }
           }
         ],
@@ -745,6 +842,28 @@
             "schema": {
               "type": "number"
             }
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "description": "returns only how many results the API query gets",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "download",
+            "in": "query",
+            "description": "triggers a file download of the result.",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "boolean"
+            }
           }
         ],
         "responses": {
@@ -787,6 +906,28 @@
             "schema": {
               "type": "number"
             }
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "description": "returns only how many results the API query gets",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "download",
+            "in": "query",
+            "description": "triggers a file download of the result.",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "boolean"
+            }
           }
         ],
         "responses": {
@@ -796,6 +937,63 @@
               "application/ld+json": {
                 "schema": {
                   "$ref": "#/components/schemas/featureCollectionGeoJSON"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        },
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ]
+      }
+    },
+    "/content/": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "get the content of the OA instance (contact, intro, legal notice)",
+        "operationId": "retrieveContent",
+        "parameters": [
+          {
+            "name": "download",
+            "in": "query",
+            "description": "triggers a file download of the result.",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "lang",
+            "in": "query",
+            "description": "select language for content",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "en",
+                "de"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "list of OA content",
+            "content": {
+              "application/ld+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/content"
                 }
               }
             }
@@ -834,6 +1032,20 @@
           "hreflang": {
             "type": "string",
             "example": "en"
+          }
+        }
+      },
+      "content": {
+        "type": "object",
+        "properties": {
+          "contact": {
+            "type": "string"
+          },
+          "intro": {
+            "type": "string"
+          },
+          "legal": {
+            "type": "string"
           }
         }
       },
@@ -926,6 +1138,20 @@
               "MultiPolygon",
               "GeometryCollection"
             ]
+          },
+          "nodes": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "number"
+              },
+              "label": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string"
+              }
+            }
           }
         }
       }

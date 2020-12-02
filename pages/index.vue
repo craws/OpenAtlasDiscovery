@@ -7,7 +7,7 @@
     >
       <div class="text-center ontop splashtext">
         <logo />
-        <nuxt-content :document="page" />
+        <div v-html="body" ></div>
       </div>
     </v-layout>
     <div class="bgmap">
@@ -28,13 +28,8 @@ export default {
   data() {
     return {
       items: [],
+      body: 'loading...',
       loading: true,
-    };
-  },
-  async asyncData({ $content }) {
-    const page = await $content('home').fetch();
-    return {
-      page,
     };
   },
   async mounted() {
@@ -44,6 +39,8 @@ export default {
       items: 'place',
     });
     this.items = p.body[0];
+    const content = await this.$api.Users.retrieveContent({});
+    this.body = content.body.intro;
     this.loading = false;
   },
 };

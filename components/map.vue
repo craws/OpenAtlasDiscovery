@@ -19,7 +19,7 @@
 export default {
   props: {
     options: {
-      type: Array,
+      type: Object,
       default: () => {},
     },
     geojsonitems: {
