@@ -1,7 +1,6 @@
 <template>
   <img
-    class="VuetifyLogo"
-    alt="Vuetify Logo"
+    alt="OpenAtlas Logo"
     src="/logo.png"
   >
 </template>
