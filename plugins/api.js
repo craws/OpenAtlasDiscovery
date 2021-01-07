@@ -7,6 +7,7 @@ const APIClient = {
     Swagger({ spec: APISpec }).then((client) => {
       Vue.prototype.$client = client;
       Vue.prototype.$api = client.apis;
+      console.log(Vue.prototype.$api);
     }, (error) => {
       console.error('failed to load api spec: %o', error);
     });
