@@ -53,16 +53,16 @@ export default {
       page,
       itemsPerPage,
     } = this.options;
-    const p = await this.$api.Users.retrieveQuery({
+    const p = await this.$api.Entities.get_api_0_2_code__item_({
       limit: this.options.itemsPerPage,
       first: this.itemIndex[page - 1] ? this.itemIndex[page - 1].start_id : null,
       show: ['names'],
       ...this.filter,
     });
     // eslint-disable-next-line prefer-destructuring
-    this.items = p.body[0];
-    this.itemIndex = p.body[1][0].index;
-    this.totalItems = p.body[1][0].entities;
+    this.items = p.body.result;
+    this.itemIndex = p.body.pagination[0].index;
+    this.totalItems = p.body.pagination[0].entities;
     this.loading = false;
   },
   data() {

@@ -33,13 +33,13 @@ export default {
     };
   },
   async mounted() {
-    const p = await this.$api.Users.retrieveQuery({
+    const p = await this.$api.Entities.get_api_0_2_code__item_({
       limit: 100,
-      show: ['detailed'],
-      items: 'place',
+      show: ['geometry'],
+      item: 'place',
     });
-    this.items = p.body[0];
-    const content = await this.$api.Users.retrieveContent({});
+    this.items = p.body.result;
+    const content = await this.$api.Content.get_api_0_2_content_({});
     this.body = content.body.intro;
     this.loading = false;
   },
