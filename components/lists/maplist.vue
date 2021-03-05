@@ -24,13 +24,29 @@
           @update:options="updateOptions"
         />
       </template>
-      <template v-slot:item.features[0].description[0].value="{ item }">
-        <div v-if="item.features[0].description" class="tablecolumndesc">
-          {{ item.features[0].description[0].value }}
-        </div>
-        <div v-else>
-          n/a
-        </div>
+      <template v-slot:item.features[0].system_class="{ item }">
+        <v-tooltip right>
+          <template v-slot:activator="{ on, attrs }">
+            <v-icon
+              color="primary"
+              dark
+              v-bind="attrs"
+              v-on="on"
+            >
+              {{ getIconBySystemClass(item.features[0].system_class) }}
+            </v-icon>
+          </template>
+          <span>
+         {{ getCRMClassBySystemClass(item.features[0].system_class) }}
+          -
+          {{ getLabelBySystemClass({ c: item.features[0].system_class, l: 'en' }) }}
+        </span>
+        </v-tooltip>
+      </template>
+      <template v-slot:item.features[0].properties.title="{ item }">
+        <nuxt-link :to="`/single/${item.features[0]['@id'].split('/').splice(-1)[0]}`">
+          {{ item.features[0].properties.title }}
+        </nuxt-link>
       </template>
     </v-data-table>
   </v-col>
@@ -38,6 +54,7 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import qmap from '~/components/map.vue';
 
 export default {
@@ -61,13 +78,12 @@ export default {
     const p = await this.$api.Entities.get_api_0_2_code__item_({
       limit: this.options.itemsPerPage,
       first: this.itemIndex[page - 1] ? this.itemIndex[page - 1].start_id : null,
-      show: ['geometry'],
       ...this.filter,
     });
     // eslint-disable-next-line prefer-destructuring
     this.items = p.body.result;
-    this.itemIndex = p.body.pagination[0].index;
-    this.totalItems = p.body.pagination[0].entities;
+    this.itemIndex = p.body.pagination.index;
+    this.totalItems = p.body.pagination.entities;
     this.loading = false;
   },
   data() {
@@ -81,7 +97,7 @@ export default {
       totalItems: 0,
       itemIndex: [],
       headers: [
-        { text: 'Class', value: 'features[0].crmClass', width: '150px' },
+        { text: 'Class', value: 'features[0].system_class', width: '20px' },
         {
           text: 'Title',
           align: 'start',
@@ -101,6 +117,13 @@ export default {
       handler() { this.$fetch(); },
       deep: true,
     },
+  },
+  computed: {
+    ...mapGetters('app', [
+      'getIconBySystemClass',
+      'getLabelBySystemClass',
+      'getCRMClassBySystemClass',
+    ]),
   },
 };
 </script>

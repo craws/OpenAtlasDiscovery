@@ -33,12 +33,14 @@
           </v-icon>
         </template>
         <span>
+         {{ getCRMClassBySystemClass(item.features[0].system_class) }}
+          -
           {{ getLabelBySystemClass({ c: item.features[0].system_class, l: 'en' }) }}
         </span>
       </v-tooltip>
     </template>
     <template v-slot:item.features[0].properties.title="{ item }">
-      <nuxt-link :to="`/single/${item.features[0]['@id']}`">
+      <nuxt-link :to="`/single/${item.features[0]['@id'].split('/').splice(-1)[0]}`">
         {{ item.features[0].properties.title }}
       </nuxt-link>
     </template>
@@ -93,18 +95,28 @@ export default {
       totalItems: 0,
       itemIndex: [],
       headers: [
-        { text: 'Class', value: 'features[0].system_class', width: '50px' },
+        { text: 'Class', value: 'features[0].system_class', width: '20px' },
         {
           text: 'Title',
           align: 'start',
           sortable: true,
           value: 'features[0].properties.title',
-          width: '400px',
+          width: '200px',
         },
         {
           text: 'Description',
           value: 'features[0].description[0].value',
-          width: '500px',
+          width: '300px',
+        },
+        {
+          text: 'Begin/From',
+          value: 'features[0].when.timespans[0].start.earliest',
+          width: '50px',
+        },
+        {
+          text: 'End/To',
+          value: 'features[0].when.timespans[0].end.latest',
+          width: '50px',
         },
       ],
     };
@@ -123,6 +135,7 @@ export default {
     ...mapGetters('app', [
       'getIconBySystemClass',
       'getLabelBySystemClass',
+      'getCRMClassBySystemClass',
     ]),
   },
 };

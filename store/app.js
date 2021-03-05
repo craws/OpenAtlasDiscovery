@@ -10,8 +10,8 @@ export const state = () => ({
 
 export const getters = {
   getIconBySystemClass: (s) => (c) => s.classes.find(item => item.systemClass === c)['icon'],
-  getIconByCidocClass: (s) => (c) => s.classes.find(item => item.crmClass === c)['icon'],
   getLabelBySystemClass: (s) => ({ c, l }) => s.classes.find(item => item.systemClass === c)[l],
+  getCRMClassBySystemClass: (s) => (c) => s.classes.find(item => item.systemClass === c)['crmClass'],
 };
 
 export const mutations = {
