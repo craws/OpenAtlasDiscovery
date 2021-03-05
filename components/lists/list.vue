@@ -20,6 +20,23 @@
         @update:options="updateOptions"
       />
     </template>
+    <template v-slot:item.features[0].system_class="{ item }">
+      <v-tooltip right>
+        <template v-slot:activator="{ on, attrs }">
+          <v-icon
+            color="primary"
+            dark
+            v-bind="attrs"
+            v-on="on"
+          >
+            {{ getIconBySystemClass(item.features[0].system_class) }}
+          </v-icon>
+        </template>
+        <span>
+          {{ getLabelBySystemClass({ c: item.features[0].system_class, l: 'en' }) }}
+        </span>
+      </v-tooltip>
+    </template>
     <template v-slot:item.features[0].properties.title="{ item }">
       <nuxt-link :to="`/single/${item.features[0]['@id']}`">
         {{ item.features[0].properties.title }}
@@ -37,6 +54,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 
 export default {
   props: {
@@ -60,8 +78,8 @@ export default {
     });
     // eslint-disable-next-line prefer-destructuring
     this.items = p.body.result;
-    this.itemIndex = p.body.pagination[0].index;
-    this.totalItems = p.body.pagination[0].entities;
+    this.itemIndex = p.body.pagination.index;
+    this.totalItems = p.body.pagination.entities;
     this.loading = false;
   },
   data() {
@@ -75,6 +93,7 @@ export default {
       totalItems: 0,
       itemIndex: [],
       headers: [
+        { text: 'Class', value: 'features[0].system_class', width: '50px' },
         {
           text: 'Title',
           align: 'start',
@@ -87,7 +106,6 @@ export default {
           value: 'features[0].description[0].value',
           width: '500px',
         },
-        { text: 'Class', value: 'features[0].crmClass', width: '150px' },
       ],
     };
   },
@@ -100,6 +118,12 @@ export default {
       handler() { this.$fetch(); },
       deep: true,
     },
+  },
+  computed: {
+    ...mapGetters('app', [
+      'getIconBySystemClass',
+      'getLabelBySystemClass',
+    ]),
   },
 };
 </script>

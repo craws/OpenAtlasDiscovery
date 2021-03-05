@@ -8,11 +8,11 @@ export const state = () => ({
   classes,
 });
 
-export const getters = () => ({
+export const getters = {
   getIconBySystemClass: (s) => (c) => s.classes.find(item => item.systemClass === c)['icon'],
   getIconByCidocClass: (s) => (c) => s.classes.find(item => item.crmClass === c)['icon'],
   getLabelBySystemClass: (s) => ({ c, l }) => s.classes.find(item => item.systemClass === c)[l],
-});
+};
 
 export const mutations = {
   openQueryDrawer(state) {

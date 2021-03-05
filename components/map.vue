@@ -7,7 +7,8 @@
           <l-geo-json
             v-for="item in geojsonitems"
             :key="item.features[0]['@id']"
-            :geojson="item"></l-geo-json>
+            :geojson="item"
+          />
         </l-feature-group>
       </l-map>
     </div>
@@ -43,16 +44,6 @@ export default {
         '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
     };
   },
-  methods: {
-    setBounds() {
-      this.$nextTick(() => {
-        if (this.$refs.features) {
-          const bounds = this.$refs.features.mapObject.getBounds();
-          if (bounds._northEast) this.$refs.map.mapObject.fitBounds(bounds);
-        }
-      });
-    },
-  },
   watch: {
     geojsonitems: {
       handler() { this.setBounds(); },
@@ -62,8 +53,19 @@ export default {
   },
   beforeDestroy() {
     this.$nextTick(() => {
-      //this.$refs.map.mapObject.remove();
+      // this.$refs.map.mapObject.remove();
     });
+  },
+  methods: {
+    setBounds() {
+      console.log(this.geojsonitems);
+      this.$nextTick(() => {
+        if (this.$refs.features) {
+          const bounds = this.$refs.features.mapObject.getBounds();
+          if (bounds._northEast) this.$refs.map.mapObject.fitBounds(bounds);
+        }
+      });
+    },
   },
 };
 </script>
