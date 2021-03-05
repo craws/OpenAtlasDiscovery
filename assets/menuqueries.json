@@ -41,11 +41,11 @@
   },
   {
     "icon": "mdi-shape",
-    "text": "Objects",
+    "text": "Artifacts",
     "target": {
       "name": "map-q",
       "params": {
-        "q": "{ \"item\": \"object\" }"
+        "q": "{ \"item\": \"artifact\" }"
       }
     }
   }
