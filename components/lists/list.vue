@@ -56,7 +56,6 @@ export default {
     const p = await this.$api.Entities.get_api_0_2_code__item_({
       limit: this.options.itemsPerPage,
       first: this.itemIndex[page - 1] ? this.itemIndex[page - 1].start_id : null,
-      show: ['names'],
       ...this.filter,
     });
     // eslint-disable-next-line prefer-destructuring

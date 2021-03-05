@@ -83,7 +83,7 @@ export default {
       drawer: false,
       items: [
         { heading: 'Sample Queries' },
-      ].concat(menuitems),
+      ].concat(this.$store.state.app.menuitems),
     };
   },
 };

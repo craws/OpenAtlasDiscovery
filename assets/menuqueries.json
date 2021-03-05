@@ -10,6 +10,26 @@
     }
   },
   {
+    "icon": "mdi-text-box",
+    "text": "Sources",
+    "target": {
+      "name": "list-q",
+      "params": {
+        "q": "{ \"item\": \"source\" }"
+      }
+    }
+  },
+  {
+    "icon": "mdi-calendar",
+    "text": "Events",
+    "target": {
+      "name": "list-q",
+      "params": {
+        "q": "{ \"item\": \"event\" }"
+      }
+    }
+  },
+  {
     "icon": "mdi-map-marker",
     "text": "Places",
     "target": {
@@ -20,12 +40,12 @@
     }
   },
   {
-    "icon": "mdi-text-box",
-    "text": "References",
+    "icon": "mdi-shape",
+    "text": "Objects",
     "target": {
-      "name": "list-q",
+      "name": "map-q",
       "params": {
-        "q": "{ \"item\": \"reference\" }"
+        "q": "{ \"item\": \"object\" }"
       }
     }
   }

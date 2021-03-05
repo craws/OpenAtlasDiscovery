@@ -9,10 +9,10 @@ import list from '~/components/lists/list.vue';
 import queries from '~/mixins/queries';
 
 export default {
-  mixins: [queries],
   components: {
     list,
   },
+  mixins: [queries],
   data() {
     return {
       query: {},
