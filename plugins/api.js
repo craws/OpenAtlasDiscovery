@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow,no-param-reassign */
 import Vue from 'vue';
 import Swagger from 'swagger-client';
 import APISpec from '../assets/swagger.json';
