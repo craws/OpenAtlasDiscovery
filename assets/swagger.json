@@ -11,16 +11,12 @@
       "name": "Apache 2.0",
       "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "version": "0.2"
+    "version": "0.2-develop"
   },
   "servers": [
     {
       "url": "https://demo-dev.openatlas.eu",
-      "description": "Demo Server"
-    },
-    {
-      "url": "http://openatlas.sarfstation.de",
-      "description": "Bernis Development Server"
+      "description": "Demo Dev Server"
     }
   ],
   "tags": [
@@ -38,17 +34,64 @@
     }
   ],
   "paths": {
+    "/api/0.2/": {
+      "get": {
+        "tags": [
+          "Usage"
+        ],
+        "summary": "Usage endpoint\r",
+        "responses": {
+          "200": {
+            "description": "List of API Options",
+            "content": {
+              "application/ld+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsageModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Something went wrong. Please consult the error message."
+          }
+        }
+      }
+    },
+    "/api/0.2/class/": {
+      "get": {
+        "tags": [
+          "Usage"
+        ],
+        "summary": "Usage endpoint\r",
+        "responses": {
+          "200": {
+            "description": "List of API Options",
+            "content": {
+              "application/ld+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsageModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Something went wrong. Please consult the error message."
+          }
+        }
+      }
+    },
     "/api/0.2/class/{class_code}": {
       "get": {
         "tags": [
           "Entities"
         ],
         "summary": "Classes endpoint\r",
+        "description": "Retrieves a json with a list of entities based on their CIDOC CRM class code. The json contains a **result** and **pagination** key. All in OpenAtlas available codes can be found under `https://redmine.craws.net/projects/uni/wiki/OpenAtlas_and_CIDOC_CRM_class_mapping`. The result can also be filtered, ordered and manipulated through different parameters. By default results are orderd alphabetically and 20 entities are shown.",
         "parameters": [
           {
             "name": "class_code",
             "in": "path",
-            "description": "Need to be a Entity class of the CIDOC CRM (e.g. E21, E18, E33)",
+            "description": "Need to be a valid CIDOC CRM class code (e.g. E21, E18, E33)",
             "required": true,
             "style": "simple",
             "explode": false,
@@ -59,7 +102,7 @@
           {
             "name": "limit",
             "in": "query",
-            "description": "Number of geojson representation to be returned",
+            "description": "Number of entities returned per page",
             "required": false,
             "style": "form",
             "explode": true,
@@ -70,7 +113,7 @@
           {
             "name": "column",
             "in": "query",
-            "description": "The result will sorted by the given column",
+            "description": "The result will be sorted by the given column",
             "required": false,
             "style": "form",
             "explode": true,
@@ -83,7 +126,7 @@
                 "description",
                 "created",
                 "modified",
-                "system_type",
+                "system_class",
                 "begin_from",
                 "begin_to",
                 "end_from",
@@ -94,7 +137,7 @@
           {
             "name": "sort",
             "in": "query",
-            "description": "Result will be sorted asc/desc (by default by the name column)",
+            "description": "Result will be sorted asc/desc (default column is name)",
             "required": false,
             "style": "form",
             "explode": true,
@@ -109,7 +152,7 @@
           {
             "name": "filter",
             "in": "query",
-            "description": "Specify request with custom SQL filter method",
+            "description": "Specify request with custom SQL filter method. ",
             "required": false,
             "style": "form",
             "explode": true,
@@ -142,7 +185,7 @@
           {
             "name": "show",
             "in": "query",
-            "description": "Select which key should be shown e.g. when, types, relations, names, links, geometry, depictions, not",
+            "description": "Select which key should be shown. If 'not' is used, no other keys will be shown",
             "required": false,
             "style": "form",
             "explode": true,
@@ -185,7 +228,7 @@
         ],
         "responses": {
           "200": {
-            "description": "a geojson representation of the specified entity",
+            "description": "A json with a list of results and pagination information",
             "content": {
               "application/ld+json": {
                 "schema": {
@@ -195,22 +238,69 @@
             }
           },
           "404": {
-            "description": "not found"
+            "description": "Something went wrong. Please consult the error message."
           }
         }
       }
     },
-    "/api/0.2/code/{item}": {
+    "/api/0.2/classes/": {
+      "get": {
+        "tags": [
+          "Content"
+        ],
+        "summary": "Class Mapping endpoint\r",
+        "responses": {
+          "200": {
+            "description": "List of all available system classes",
+            "content": {
+              "application/ld+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClassMappingModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Something went wrong. Please consult the error message."
+          }
+        }
+      }
+    },
+    "/api/0.2/code/": {
+      "get": {
+        "tags": [
+          "Usage"
+        ],
+        "summary": "Usage endpoint\r",
+        "responses": {
+          "200": {
+            "description": "List of API Options",
+            "content": {
+              "application/ld+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsageModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Something went wrong. Please consult the error message."
+          }
+        }
+      }
+    },
+    "/api/0.2/code/{code}": {
       "get": {
         "tags": [
           "Entities"
         ],
         "summary": "Code endpoint\r",
+        "description": "Retrieves a json with a list of entities based on their OpenAtlas categorie. Available categories are **actor**, **event**, **place**, **source**, **reference**, **object**. The result can also be filtered, ordered and manipulated through different parameters. By default results are orderd alphabetically and 20 entities are shown.",
         "parameters": [
           {
-            "name": "item",
+            "name": "code",
             "in": "path",
-            "description": "A OA menu item e.g. actor, event, place, reference, source, object",
+            "description": "Need to be an OpenAtlas menu item",
             "required": true,
             "style": "simple",
             "explode": false,
@@ -229,7 +319,7 @@
           {
             "name": "limit",
             "in": "query",
-            "description": "Number of geojson representation to be returned",
+            "description": "Number of entities returned per page",
             "required": false,
             "style": "form",
             "explode": true,
@@ -240,7 +330,7 @@
           {
             "name": "column",
             "in": "query",
-            "description": "The result will sorted by the given column",
+            "description": "The result will be sorted by the given column",
             "required": false,
             "style": "form",
             "explode": true,
@@ -253,7 +343,7 @@
                 "description",
                 "created",
                 "modified",
-                "system_type",
+                "system_class",
                 "begin_from",
                 "begin_to",
                 "end_from",
@@ -264,7 +354,7 @@
           {
             "name": "sort",
             "in": "query",
-            "description": "Result will be sorted asc/desc (by default by the name column)",
+            "description": "Result will be sorted asc/desc (default column is name)",
             "required": false,
             "style": "form",
             "explode": true,
@@ -279,7 +369,7 @@
           {
             "name": "filter",
             "in": "query",
-            "description": "Specify request with custom SQL filter method",
+            "description": "Specify request with custom SQL filter method. ",
             "required": false,
             "style": "form",
             "explode": true,
@@ -312,7 +402,7 @@
           {
             "name": "show",
             "in": "query",
-            "description": "Select which key should be shown e.g. when, types, relations, names, links, geometry, depictions, not",
+            "description": "Select which key should be shown. If 'not' is used, no other keys will be shown",
             "required": false,
             "style": "form",
             "explode": true,
@@ -355,7 +445,7 @@
         ],
         "responses": {
           "200": {
-            "description": "a geojson representation of the specified entity",
+            "description": "A dictionary with a result dictionary and pagination information",
             "content": {
               "application/ld+json": {
                 "schema": {
@@ -365,7 +455,7 @@
             }
           },
           "404": {
-            "description": "not found"
+            "description": "Something went wrong. Please consult the error message."
           }
         }
       }
@@ -376,6 +466,7 @@
           "Content"
         ],
         "summary": "Content endpoint\r",
+        "description": "Retrieves a json of the content (Intro, Legal Notice and Contact) from the OpenAtlas instance. The language can be choosen with the **lang** parameter (en or de).",
         "parameters": [
           {
             "name": "language",
@@ -406,7 +497,7 @@
         ],
         "responses": {
           "200": {
-            "description": "List of OA content",
+            "description": "Json of OpenAtlas content (Intro, Legal Notice and Contact)",
             "content": {
               "application/ld+json": {
                 "schema": {
@@ -416,7 +507,30 @@
             }
           },
           "404": {
-            "description": "not found"
+            "description": "Something went wrong. Please consult the error message."
+          }
+        }
+      }
+    },
+    "/api/0.2/entity/": {
+      "get": {
+        "tags": [
+          "Usage"
+        ],
+        "summary": "Usage endpoint\r",
+        "responses": {
+          "200": {
+            "description": "List of API Options",
+            "content": {
+              "application/ld+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsageModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Something went wrong. Please consult the error message."
           }
         }
       }
@@ -427,6 +541,7 @@
           "Entities"
         ],
         "summary": "Entity endpoint\r",
+        "description": "Retrieves a geojson representations of an entity through the **id**.",
         "parameters": [
           {
             "name": "id_",
@@ -442,7 +557,7 @@
           {
             "name": "show",
             "in": "query",
-            "description": "Select which key should be shown e.g. when, types, relations, names, links, geometry, depictions, not",
+            "description": "Select which key should be shown. If 'not' is used, no other keys will be shown",
             "required": false,
             "style": "form",
             "explode": true,
@@ -474,7 +589,7 @@
         ],
         "responses": {
           "200": {
-            "description": "a geojson representation of the specified entity",
+            "description": "A geojson representation of the specified entity",
             "content": {
               "application/ld+json": {
                 "schema": {
@@ -484,7 +599,30 @@
             }
           },
           "404": {
-            "description": "not found"
+            "description": "Something went wrong. Please consult the error message."
+          }
+        }
+      }
+    },
+    "/api/0.2/latest/": {
+      "get": {
+        "tags": [
+          "Usage"
+        ],
+        "summary": "Usage endpoint\r",
+        "responses": {
+          "200": {
+            "description": "List of API Options",
+            "content": {
+              "application/ld+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsageModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Something went wrong. Please consult the error message."
           }
         }
       }
@@ -495,11 +633,12 @@
           "Entities"
         ],
         "summary": "Latest endpoint\r",
+        "description": "Retrieves a json of latest entries made in the OpenAtlas database. The number **latest** represents the amount of entities retrieved. **latest** can be any number between and including 1 and 100. The pagination information is alway `null`",
         "parameters": [
           {
             "name": "latest",
             "in": "path",
-            "description": "The amount of last enterd entities to be retrieved",
+            "description": "The amount of last enterd entities to be retrieved (Valid numbers between and including 1 and 100)",
             "required": true,
             "style": "simple",
             "explode": false,
@@ -510,7 +649,7 @@
           {
             "name": "show",
             "in": "query",
-            "description": "Select which key should be shown e.g. when, types, relations, names, links, geometry, depictions, not",
+            "description": "Select which key should be shown. If 'not' is used, no other keys will be shown",
             "required": false,
             "style": "form",
             "explode": true,
@@ -542,7 +681,7 @@
         ],
         "responses": {
           "200": {
-            "description": "a geojson representation of the specified entity",
+            "description": "A json with a result list and pagination information (null)",
             "content": {
               "application/ld+json": {
                 "schema": {
@@ -552,7 +691,30 @@
             }
           },
           "404": {
-            "description": "not found"
+            "description": "Something went wrong. Please consult the error message."
+          }
+        }
+      }
+    },
+    "/api/0.2/node_entities/": {
+      "get": {
+        "tags": [
+          "Usage"
+        ],
+        "summary": "Usage endpoint\r",
+        "responses": {
+          "200": {
+            "description": "List of API Options",
+            "content": {
+              "application/ld+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsageModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Something went wrong. Please consult the error message."
           }
         }
       }
@@ -563,11 +725,12 @@
           "Nodes"
         ],
         "summary": "Node endpoint\r",
+        "description": "Retrieves a json list of all entities directly linked to one specific node.",
         "parameters": [
           {
             "name": "id_",
             "in": "path",
-            "description": "The ID of an entity, which has to be a Node",
+            "description": "The ID of an entity, which has to be a node",
             "required": true,
             "style": "simple",
             "explode": false,
@@ -600,17 +763,40 @@
         ],
         "responses": {
           "200": {
-            "description": "a geojson representation of the specified entity",
+            "description": "A list of node entities linked to the given node",
             "content": {
               "application/ld+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/NodeModel"
+                  "$ref": "#/components/schemas/NodeAllModel"
                 }
               }
             }
           },
           "404": {
-            "description": "not found"
+            "description": "Something went wrong. Please consult the error message."
+          }
+        }
+      }
+    },
+    "/api/0.2/node_entities_all/": {
+      "get": {
+        "tags": [
+          "Usage"
+        ],
+        "summary": "Usage endpoint\r",
+        "responses": {
+          "200": {
+            "description": "List of API Options",
+            "content": {
+              "application/ld+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsageModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Something went wrong. Please consult the error message."
           }
         }
       }
@@ -621,11 +807,12 @@
           "Nodes"
         ],
         "summary": "Node endpoint\r",
+        "description": "Retrieves a json list of all entities linked to a specific node. This path also include all sub entities.",
         "parameters": [
           {
             "name": "id_",
             "in": "path",
-            "description": "The ID of an entity, which has to be a Node",
+            "description": "The ID of an entity, which has to be a node",
             "required": true,
             "style": "simple",
             "explode": false,
@@ -658,17 +845,77 @@
         ],
         "responses": {
           "200": {
-            "description": "a geojson representation of the specified entity",
+            "description": "A list of node entities linked to the given node",
             "content": {
               "application/ld+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/NodeModel"
+                  "$ref": "#/components/schemas/NodeAllModel"
                 }
               }
             }
           },
           "404": {
-            "description": "not found"
+            "description": "Something went wrong. Please consult the error message."
+          }
+        }
+      }
+    },
+    "/api/0.2/node_overview/": {
+      "get": {
+        "tags": [
+          "Nodes"
+        ],
+        "summary": "Node endpoint\r",
+        "description": "Retrieves a json list of all types",
+        "parameters": [
+          {
+            "name": "download",
+            "in": "query",
+            "description": "Triggers the file download of the given request",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of all types",
+            "content": {
+              "application/ld+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NodeOverviewModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Something went wrong. Please consult the error message."
+          }
+        }
+      }
+    },
+    "/api/0.2/overview_count/": {
+      "get": {
+        "tags": [
+          "Content"
+        ],
+        "summary": "Overview Count endpoint\r",
+        "responses": {
+          "200": {
+            "description": "Count of all entities",
+            "content": {
+              "application/ld+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OverviewCountModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Something went wrong. Please consult the error message."
           }
         }
       }
@@ -694,7 +941,7 @@
           {
             "name": "classes",
             "in": "query",
-            "description": "Need to be a Entity class of the CIDOC CRM (e.g. E21, E18, E33)",
+            "description": "Need to be a entity class code of the CIDOC CRM (e.g. E21, E18, E33). For further information visit https://redmine.craws.net/projects/uni/wiki/OpenAtlas_and_CIDOC_CRM_class_mapping",
             "required": false,
             "style": "form",
             "explode": true,
@@ -703,9 +950,9 @@
             }
           },
           {
-            "name": "items",
+            "name": "codes",
             "in": "query",
-            "description": "A OA menu item e.g. actor, event, place, reference, source, object",
+            "description": "Need to be an OpenAtlas menu items",
             "required": false,
             "style": "form",
             "explode": true,
@@ -724,7 +971,7 @@
           {
             "name": "limit",
             "in": "query",
-            "description": "Number of geojson representation to be returned",
+            "description": "Number of entities returned per page",
             "required": false,
             "style": "form",
             "explode": true,
@@ -735,7 +982,7 @@
           {
             "name": "column",
             "in": "query",
-            "description": "The result will sorted by the given column",
+            "description": "The result will be sorted by the given column",
             "required": false,
             "style": "form",
             "explode": true,
@@ -748,7 +995,7 @@
                 "description",
                 "created",
                 "modified",
-                "system_type",
+                "system_class",
                 "begin_from",
                 "begin_to",
                 "end_from",
@@ -759,7 +1006,7 @@
           {
             "name": "sort",
             "in": "query",
-            "description": "Result will be sorted asc/desc (by default by the name column)",
+            "description": "Result will be sorted asc/desc (default column is name)",
             "required": false,
             "style": "form",
             "explode": true,
@@ -774,7 +1021,7 @@
           {
             "name": "filter",
             "in": "query",
-            "description": "Specify request with custom SQL filter method",
+            "description": "Specify request with custom SQL filter method. ",
             "required": false,
             "style": "form",
             "explode": true,
@@ -807,7 +1054,7 @@
           {
             "name": "show",
             "in": "query",
-            "description": "Select which key should be shown e.g. when, types, relations, names, links, geometry, depictions, not",
+            "description": "Select which key should be shown. If 'not' is used, no other keys will be shown",
             "required": false,
             "style": "form",
             "explode": true,
@@ -850,7 +1097,7 @@
         ],
         "responses": {
           "200": {
-            "description": "a geojson representation of the specified entity",
+            "description": "A dictionary with a result dictionary and pagination information",
             "content": {
               "application/ld+json": {
                 "schema": {
@@ -860,7 +1107,30 @@
             }
           },
           "404": {
-            "description": "not found"
+            "description": "Something went wrong. Please consult the error message."
+          }
+        }
+      }
+    },
+    "/api/0.2/subunit/": {
+      "get": {
+        "tags": [
+          "Usage"
+        ],
+        "summary": "Usage endpoint\r",
+        "responses": {
+          "200": {
+            "description": "List of API Options",
+            "content": {
+              "application/ld+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsageModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Something went wrong. Please consult the error message."
           }
         }
       }
@@ -871,11 +1141,12 @@
           "Nodes"
         ],
         "summary": "Node endpoint\r",
+        "description": "Todo",
         "parameters": [
           {
             "name": "id_",
             "in": "path",
-            "description": "The ID of an entity, which has to be a Node",
+            "description": "The ID of an entity, which has to be a node",
             "required": true,
             "style": "simple",
             "explode": false,
@@ -908,17 +1179,40 @@
         ],
         "responses": {
           "200": {
-            "description": "a geojson representation of the specified entity",
+            "description": "A list of node entities linked to the given node",
             "content": {
               "application/ld+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/NodeModel"
+                  "$ref": "#/components/schemas/NodeOverviewModel"
                 }
               }
             }
           },
           "404": {
-            "description": "not found"
+            "description": "Something went wrong. Please consult the error message."
+          }
+        }
+      }
+    },
+    "/api/0.2/subunit_hierarchy/": {
+      "get": {
+        "tags": [
+          "Usage"
+        ],
+        "summary": "Usage endpoint\r",
+        "responses": {
+          "200": {
+            "description": "List of API Options",
+            "content": {
+              "application/ld+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsageModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Something went wrong. Please consult the error message."
           }
         }
       }
@@ -929,11 +1223,12 @@
           "Nodes"
         ],
         "summary": "Node endpoint\r",
+        "description": "Todo",
         "parameters": [
           {
             "name": "id_",
             "in": "path",
-            "description": "The ID of an entity, which has to be a Node",
+            "description": "The ID of an entity, which has to be a node",
             "required": true,
             "style": "simple",
             "explode": false,
@@ -966,17 +1261,228 @@
         ],
         "responses": {
           "200": {
-            "description": "a geojson representation of the specified entity",
+            "description": "A list of node entities linked to the given node",
             "content": {
               "application/ld+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/NodeModel"
+                  "$ref": "#/components/schemas/NodeOverviewModel"
                 }
               }
             }
           },
           "404": {
-            "description": "not found"
+            "description": "Something went wrong. Please consult the error message."
+          }
+        }
+      }
+    },
+    "/api/0.2/system_class/": {
+      "get": {
+        "tags": [
+          "Usage"
+        ],
+        "summary": "Usage endpoint\r",
+        "responses": {
+          "200": {
+            "description": "List of API Options",
+            "content": {
+              "application/ld+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsageModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Something went wrong. Please consult the error message."
+          }
+        }
+      }
+    },
+    "/api/0.2/system_class/{system_class}": {
+      "get": {
+        "tags": [
+          "Entities"
+        ],
+        "summary": "System_Class endpoint\r",
+        "description": "Retrieves a json with a list of entities based on their OpenAtlas system class. Available categories are **acquisition**, **activity**, **actor_appellation**, **administrative_unit**, **appellation**, **artifact**, **bibliography**, **edition**, **external_reference**, **feature**, **file**, **find**, **group**, **human_remains**, **move**, **object_location**, **person**, **place**, **source**, **reference_system**, **stratigraphic_unit**, **source_translation**, **type**,  The result can also be filtered, ordered and manipulated through different parameters.  By default results are orderd alphabetically and 20 entities are shown.",
+        "parameters": [
+          {
+            "name": "system_class",
+            "in": "path",
+            "description": "Need to be an OpenAtlas system class",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "acquisition",
+                "activity",
+                "actor_appellation",
+                "administrative_unit",
+                "appellation",
+                "artifact",
+                "bibliography",
+                "edition",
+                "external_reference",
+                "feature",
+                "file",
+                "find",
+                "group",
+                "human_remains",
+                "move",
+                "object_location",
+                "person",
+                "place",
+                "source",
+                "reference_system",
+                "stratigraphic_unit",
+                "source_translation",
+                "type"
+              ]
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of entities returned per page",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "column",
+            "in": "query",
+            "description": "The result will be sorted by the given column",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "id",
+                "class_code",
+                "name",
+                "description",
+                "created",
+                "modified",
+                "system_class",
+                "begin_from",
+                "begin_to",
+                "end_from",
+                "end_to"
+              ]
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Result will be sorted asc/desc (default column is name)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "description": "Specify request with custom SQL filter method. ",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "first",
+            "in": "query",
+            "description": "List of results start with given ID",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "last",
+            "in": "query",
+            "description": "List of results start with entity after given ID",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "show",
+            "in": "query",
+            "description": "Select which key should be shown. If 'not' is used, no other keys will be shown",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "when",
+                "types",
+                "relations",
+                "names",
+                "links",
+                "geometry",
+                "depictions",
+                "not"
+              ]
+            }
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "description": "Returns a number which represents the total count of the result",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "download",
+            "in": "query",
+            "description": "Triggers the file download of the given request",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A dictionary with a result dictionary and pagination information",
+            "content": {
+              "application/ld+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OutputModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Something went wrong. Please consult the error message."
           }
         }
       }
@@ -984,6 +1490,26 @@
   },
   "components": {
     "schemas": {
+      "ClassMappingModel": {
+        "type": "object",
+        "properties": {
+          "crmClass": {
+            "type": "string"
+          },
+          "en": {
+            "type": "string"
+          },
+          "icon": {
+            "type": "string"
+          },
+          "systemClass": {
+            "type": "string"
+          },
+          "view": {
+            "type": "string"
+          }
+        }
+      },
       "ContentModel": {
         "type": "object",
         "properties": {
@@ -1034,7 +1560,7 @@
           "@id": {
             "type": "string"
           },
-          "crmClass:": {
+          "crmClass": {
             "type": "string"
           },
           "depictions": {
@@ -1069,6 +1595,9 @@
             "items": {
               "$ref": "#/components/schemas/RelationModel"
             }
+          },
+          "system_class": {
+            "type": "string"
           },
           "type": {
             "type": "string"
@@ -1120,6 +1649,9 @@
           "identifier": {
             "type": "string"
           },
+          "reference_system": {
+            "type": "string"
+          },
           "type": {
             "type": "string"
           }
@@ -1130,6 +1662,46 @@
         "properties": {
           "alias": {
             "type": "string"
+          }
+        }
+      },
+      "NodeAllModel": {
+        "type": "object",
+        "properties": {
+          "nodes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NodeModel"
+            }
+          }
+        }
+      },
+      "NodeCategoryModel": {
+        "type": "object",
+        "properties": {
+          "cusxtom": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "places": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "standard": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "value": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         }
       },
@@ -1147,6 +1719,17 @@
           }
         }
       },
+      "NodeOverviewModel": {
+        "type": "object",
+        "properties": {
+          "types": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NodeCategoryModel"
+            }
+          }
+        }
+      },
       "OutputModel": {
         "type": "object",
         "properties": {
@@ -1157,10 +1740,18 @@
             }
           },
           "pagination": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/PaginationModel"
-            }
+            "$ref": "#/components/schemas/OutputModel_pagination"
+          }
+        }
+      },
+      "OverviewCountModel": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
           }
         }
       },
@@ -1245,6 +1836,17 @@
           }
         }
       },
+      "UsageModel": {
+        "type": "object",
+        "properties": {
+          "examples": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
       "WhenModel": {
         "type": "object",
         "properties": {
@@ -1263,13 +1865,33 @@
             "type": "string"
           }
         }
+      },
+      "OutputModel_pagination": {
+        "type": "object",
+        "properties": {
+          "entities": {
+            "type": "number"
+          },
+          "entity_per_page": {
+            "type": "number"
+          },
+          "index": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PaginationIndexModel"
+            }
+          },
+          "total_pages": {
+            "type": "number"
+          }
+        }
       }
     },
     "parameters": {
       "columnParam": {
         "name": "column",
         "in": "query",
-        "description": "The result will sorted by the given column",
+        "description": "The result will be sorted by the given column",
         "required": false,
         "style": "form",
         "explode": true,
@@ -1282,7 +1904,7 @@
             "description",
             "created",
             "modified",
-            "system_type",
+            "system_class",
             "begin_from",
             "begin_to",
             "end_from",
@@ -1315,7 +1937,7 @@
       "filterParam": {
         "name": "filter",
         "in": "query",
-        "description": "Specify request with custom SQL filter method",
+        "description": "Specify request with custom SQL filter method. ",
         "required": false,
         "style": "form",
         "explode": true,
@@ -1363,7 +1985,7 @@
       "limitParam": {
         "name": "limit",
         "in": "query",
-        "description": "Number of geojson representation to be returned",
+        "description": "Number of entities returned per page",
         "required": false,
         "style": "form",
         "explode": true,
@@ -1374,7 +1996,7 @@
       "showParam": {
         "name": "show",
         "in": "query",
-        "description": "Select which key should be shown e.g. when, types, relations, names, links, geometry, depictions, not",
+        "description": "Select which key should be shown. If 'not' is used, no other keys will be shown",
         "required": false,
         "style": "form",
         "explode": true,
@@ -1395,7 +2017,7 @@
       "sortParam": {
         "name": "sort",
         "in": "query",
-        "description": "Result will be sorted asc/desc (by default by the name column)",
+        "description": "Result will be sorted asc/desc (default column is name)",
         "required": false,
         "style": "form",
         "explode": true,
