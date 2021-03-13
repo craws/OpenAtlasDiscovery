@@ -33,10 +33,10 @@ export default {
     };
   },
   async mounted() {
-    const p = await this.$api.Entities.get_api_0_2_code__item_({
+    const p = await this.$api.Entities.get_api_0_2_code__code_({
       limit: 100,
       show: ['geometry'],
-      item: 'place',
+      code: 'place',
     });
     this.items = p.body.result;
     const content = await this.$api.Content.get_api_0_2_content_({});

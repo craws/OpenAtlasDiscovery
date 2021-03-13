@@ -5,7 +5,7 @@
     "target": {
       "name": "list-q",
       "params": {
-        "q": "{ \"item\": \"actor\" }"
+        "q": "{ \"codes\": \"actor\" }"
       }
     }
   },
@@ -15,7 +15,7 @@
     "target": {
       "name": "list-q",
       "params": {
-        "q": "{ \"item\": \"source\" }"
+        "q": "{ \"codes\": \"source\" }"
       }
     }
   },
@@ -25,7 +25,7 @@
     "target": {
       "name": "list-q",
       "params": {
-        "q": "{ \"item\": \"event\" }"
+        "q": "{ \"codes\": \"event\" }"
       }
     }
   },
@@ -35,7 +35,7 @@
     "target": {
       "name": "map-q",
       "params": {
-        "q": "{ \"item\": \"place\" }"
+        "q": "{ \"codes\": \"place\" }"
       }
     }
   },
@@ -45,7 +45,7 @@
     "target": {
       "name": "map-q",
       "params": {
-        "q": "{ \"item\": \"artifact\" }"
+        "q": "{ \"codes\": \"artifact\" }"
       }
     }
   }
