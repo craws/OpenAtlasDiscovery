@@ -1,13 +1,6 @@
 <template>
   <img
-    alt="OpenAtlas Logo"
-    src="/logo.png"
+    alt="OpenAtlasDiscovery Logo"
+    src="/OpenAtlasDiscovery_logo.png"
   >
 </template>
-
-<style>
-  .VuetifyLogo {
-    height: 180px;
-    width: 180px;
-  }
-</style>

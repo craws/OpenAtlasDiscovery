@@ -57,9 +57,7 @@
       <v-app-bar-nav-icon @click="$store.commit('app/toggleQueryDrawer')" />
       <nuxt-link to="/" @click="$store.commit('app/closeQueryDrawer')">
         <div class="logocaption d-none d-sm-flex">
-          <img class="barlogo ml-1" src="/logo.png">
-          <span class="title ml-1">OpenAtlas</span>
-          <span class="title font-weight-light mr-5">Discovery</span>
+          <img class="barlogo ml-1 mr-1" src="/OpenAtlasDiscovery_logo.png">
         </div>
       </nuxt-link>
       <querysearch />
@@ -112,8 +110,8 @@ td {
 }
 
 .barlogo {
-  height: 27px;
-  top: 8px;
+  height: 53px;
+  top: 2px;
   position: relative;
 }
 </style>
