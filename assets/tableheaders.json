@@ -37,6 +37,7 @@
     {
       "text": "Class",
       "value": "features[0].system_class",
+      "column": "class_code",
       "width": "20px"
     },
     {
@@ -44,6 +45,7 @@
       "align": "start",
       "sortable": true,
       "value": "features[0].properties.title",
+      "column": "name",
       "width": "200px"
     }
   ]

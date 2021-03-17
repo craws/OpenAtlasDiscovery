@@ -7,7 +7,7 @@
     </v-col>
     <v-col xs="12" lg="3">
       <v-data-table
-        :headers="headers"
+        :headers="$store.state.app.tableheaders.narrow"
         :items="items"
         :options.sync="options"
         :server-items-length="totalItems"
@@ -75,10 +75,13 @@ export default {
       page,
       itemsPerPage,
     } = this.options;
+    // eslint-disable-next-line no-underscore-dangle
     const p = await this.$api.Entities.get_api_0_2_query_({
-      limit: this.options.itemsPerPage,
+      limit: itemsPerPage,
       first: this.itemIndex[page - 1] ? this.itemIndex[page - 1].start_id : null,
       filter: this.filter,
+      column: sortBy ? this.getSortColumnByPath(sortBy[0]) : null,
+      sort: sortDesc[0] ? 'desc' : 'asc',
     });
     // eslint-disable-next-line prefer-destructuring
     this.items = p.body.result;
@@ -91,30 +94,22 @@ export default {
       items: [],
       loading: true,
       options: {
+        sortBy: [],
+        sortDesc: [],
+        page: 1,
         itemsPerPage: 50,
       },
       itemsPerPageOptions: [10, 20, 50],
       totalItems: 0,
       itemIndex: [],
-      headers: [
-        {
-          text: 'Class',
-          value: 'features[0].system_class',
-          width: '20px',
-        },
-        {
-          text: 'Title',
-          align: 'start',
-          sortable: true,
-          value: 'features[0].properties.title',
-          width: '200px',
-        },
-      ],
     };
   },
   watch: {
     options: {
-      handler() { this.$fetch(); },
+      handler(o, n) {
+        if ((o.sortBy !== n.sortBy) || (o.sortDesc !== n.sortDesc)) this.itemIndex = [];
+        this.$fetch();
+      },
       deep: true,
     },
     filter: {
@@ -127,6 +122,7 @@ export default {
       'getIconBySystemClass',
       'getLabelBySystemClass',
       'getCRMClassBySystemClass',
+      'getSortColumnByPath',
     ]),
   },
 };
