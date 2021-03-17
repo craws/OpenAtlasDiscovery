@@ -57,7 +57,7 @@
       <v-app-bar-nav-icon @click="$store.commit('app/toggleQueryDrawer')" />
       <nuxt-link to="/" @click="$store.commit('app/closeQueryDrawer')">
         <div class="logocaption d-none d-sm-flex">
-          <img class="barlogo ml-1 mr-1" src="/OpenAtlasDiscovery_logo.png">
+          <img class="barlogo ml-1 mr-1" alt="logo" src="/OpenAtlasDiscovery_logo.png">
         </div>
       </nuxt-link>
       <querysearch />
@@ -70,7 +70,6 @@
 </template>
 <script>
 import querysearch from '~/components/querysearch.vue';
-import menuitems from '../assets/menuqueries.json';
 
 export default {
   components: {

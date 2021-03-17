@@ -33,7 +33,7 @@
           </v-icon>
         </template>
         <span>
-         {{ getCRMClassBySystemClass(item.features[0].system_class) }}
+          {{ getCRMClassBySystemClass(item.features[0].system_class) }}
           -
           {{ getLabelBySystemClass({ c: item.features[0].system_class, l: 'en' }) }}
         </span>
@@ -74,9 +74,11 @@ export default {
       itemsPerPage,
     } = this.options;
     const p = await this.$api.Entities.get_api_0_2_query_({
-      limit: this.options.itemsPerPage,
+      limit: itemsPerPage,
       first: this.itemIndex[page - 1] ? this.itemIndex[page - 1].start_id : null,
       filter: this.filter,
+      column: this.sortColumnByPath(sortBy)[0],
+      sort: sortDesc ? 'desc' : 'asc',
     });
     // eslint-disable-next-line prefer-destructuring
     this.items = p.body.result;
@@ -95,17 +97,24 @@ export default {
       totalItems: 0,
       itemIndex: [],
       headers: [
-        { text: 'Class', value: 'features[0].system_class', width: '20px' },
+        {
+          text: 'Class',
+          value: 'features[0].system_class',
+          column: 'system_class',
+          width: '20px',
+        },
         {
           text: 'Title',
           align: 'start',
           sortable: true,
           value: 'features[0].properties.title',
+          column: 'title',
           width: '200px',
         },
         {
           text: 'Description',
           value: 'features[0].description[0].value',
+          column: 'description',
           width: '300px',
         },
         {
@@ -129,6 +138,14 @@ export default {
     filter: {
       handler() { this.$fetch(); },
       deep: true,
+    },
+  },
+  methods: {
+    sortColumnByPath(path) {
+      if (Array.isArray(this.headers) && Array.isArray(path)) {
+        return this.headers.filter((h) => h.value === path[0])
+      }
+      return [];
     },
   },
   computed: {
