@@ -1,6 +1,6 @@
 <template>
   <v-data-table
-    :headers="headers"
+    :headers="$store.state.app.tableheaders.wide"
     :items="items"
     :options.sync="options"
     :server-items-length="totalItems"
@@ -77,8 +77,8 @@ export default {
       limit: itemsPerPage,
       first: this.itemIndex[page - 1] ? this.itemIndex[page - 1].start_id : null,
       filter: this.filter,
-      column: this.sortColumnByPath(sortBy)[0],
-      sort: sortDesc ? 'desc' : 'asc',
+      column: sortBy ? this.getSortColumnByPath(sortBy[0]) : null,
+      sort: sortDesc[0] ? 'desc' : 'asc',
     });
     // eslint-disable-next-line prefer-destructuring
     this.items = p.body.result;
@@ -91,48 +91,22 @@ export default {
       items: [],
       loading: true,
       options: {
+        sortBy: [],
+        sortDesc: [],
+        page: 1,
         itemsPerPage: 10,
       },
-      itemsPerPageOptions: [10, 20, 50],
+      itemsPerPageOptions: [10, 20, 50, 100],
       totalItems: 0,
       itemIndex: [],
-      headers: [
-        {
-          text: 'Class',
-          value: 'features[0].system_class',
-          column: 'system_class',
-          width: '20px',
-        },
-        {
-          text: 'Title',
-          align: 'start',
-          sortable: true,
-          value: 'features[0].properties.title',
-          column: 'title',
-          width: '200px',
-        },
-        {
-          text: 'Description',
-          value: 'features[0].description[0].value',
-          column: 'description',
-          width: '300px',
-        },
-        {
-          text: 'Begin/From',
-          value: 'features[0].when.timespans[0].start.earliest',
-          width: '50px',
-        },
-        {
-          text: 'End/To',
-          value: 'features[0].when.timespans[0].end.latest',
-          width: '50px',
-        },
-      ],
     };
   },
   watch: {
     options: {
-      handler() { this.$fetch(); },
+      handler(o, n) {
+        if ((o.sortBy !== n.sortBy) || (o.sortDesc !== n.sortDesc)) this.itemIndex = [];
+        this.$fetch();
+      },
       deep: true,
     },
     filter: {
@@ -141,18 +115,13 @@ export default {
     },
   },
   methods: {
-    sortColumnByPath(path) {
-      if (Array.isArray(this.headers) && Array.isArray(path)) {
-        return this.headers.filter((h) => h.value === path[0])
-      }
-      return [];
-    },
   },
   computed: {
     ...mapGetters('app', [
       'getIconBySystemClass',
       'getLabelBySystemClass',
       'getCRMClassBySystemClass',
+      'getSortColumnByPath',
     ]),
   },
 };

@@ -1,71 +1,71 @@
 <template>
   <v-row no-gutters>
-  <v-col xs="0" lg="9">
-    <div class="fullheight">
-      <qmap v-if="!this.loading" :geojsonitems="items"></qmap>
-    </div>
-  </v-col>
-  <v-col xs="12" lg="3">
-    <v-data-table
-      :headers="headers"
-      :items="items"
-      :options.sync="options"
-      :server-items-length="totalItems"
-      :loading="loading"
-      :calculate-widths="true"
-      :hide-default-footer="true"
-    >
-      <template v-slot:top="{ pagination, options, updateOptions }">
-        <v-data-footer
-          :pagination="pagination"
-          :options="options"
-          :items-per-page-options="itemsPerPageOptions"
-          showFirstLastPage
-          @update:options="updateOptions"
-        />
-      </template>
-      <template v-slot:item.features[0].system_class="{ item }">
-        <v-tooltip right>
-          <template v-slot:activator="{ on, attrs }">
-            <v-icon
-              color="primary"
-              dark
-              v-bind="attrs"
-              v-on="on"
-            >
-              {{ getIconBySystemClass(item.features[0].system_class) }}
-            </v-icon>
-          </template>
-          <span>
-         {{ getCRMClassBySystemClass(item.features[0].system_class) }}
-          -
-          {{ getLabelBySystemClass({ c: item.features[0].system_class, l: 'en' }) }}
-        </span>
-        </v-tooltip>
-      </template>
-      <template v-slot:item.features[0].properties.title="{ item }">
-        <nuxt-link :to="`/single/${item.features[0]['@id'].split('/').splice(-1)[0]}`">
-          {{ item.features[0].properties.title }}
-        </nuxt-link>
-      </template>
-    </v-data-table>
-  </v-col>
+    <v-col xs="0" lg="9">
+      <div class="fullheight">
+        <qmap v-if="!this.loading" :geojsonitems="items" />
+      </div>
+    </v-col>
+    <v-col xs="12" lg="3">
+      <v-data-table
+        :headers="headers"
+        :items="items"
+        :options.sync="options"
+        :server-items-length="totalItems"
+        :loading="loading"
+        :calculate-widths="true"
+        :hide-default-footer="true"
+      >
+        <template v-slot:top="{ pagination, options, updateOptions }">
+          <v-data-footer
+            :pagination="pagination"
+            :options="options"
+            :items-per-page-options="itemsPerPageOptions"
+            show-first-last-page
+            @update:options="updateOptions"
+          />
+        </template>
+        <template v-slot:item.features[0].system_class="{ item }">
+          <v-tooltip right>
+            <template v-slot:activator="{ on, attrs }">
+              <v-icon
+                color="primary"
+                dark
+                v-bind="attrs"
+                v-on="on"
+              >
+                {{ getIconBySystemClass(item.features[0].system_class) }}
+              </v-icon>
+            </template>
+            <span>
+              {{ getCRMClassBySystemClass(item.features[0].system_class) }}
+              -
+              {{ getLabelBySystemClass({ c: item.features[0].system_class, l: 'en' }) }}
+            </span>
+          </v-tooltip>
+        </template>
+        <template v-slot:item.features[0].properties.title="{ item }">
+          <nuxt-link :to="`/single/${item.features[0]['@id'].split('/').splice(-1)[0]}`">
+            {{ item.features[0].properties.title }}
+          </nuxt-link>
+        </template>
+      </v-data-table>
+    </v-col>
   </v-row>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters } from 'vuex';
 import qmap from '~/components/map.vue';
 
 export default {
+  components: {
+    qmap,
+  },
   props: {
     filter: {
       type: Object,
       default: () => {},
     },
-  },
-  components: {
-    qmap,
   },
   async fetch() {
     this.loading = true;

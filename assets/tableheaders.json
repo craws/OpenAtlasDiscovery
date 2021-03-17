@@ -1,0 +1,50 @@
+{
+  "wide": [
+    {
+      "text": "Class",
+      "value": "features[0].system_class",
+      "column": "class_code",
+      "width": "20px"
+    },
+    {
+      "text": "Title",
+      "align": "start",
+      "sortable": true,
+      "value": "features[0].properties.title",
+      "column": "name",
+      "width": "200px"
+    },
+    {
+      "text": "Description",
+      "value": "features[0].description[0].value",
+      "column": "description",
+      "width": "300px"
+    },
+    {
+      "text": "Begin/From",
+      "value": "features[0].when.timespans[0].start.earliest",
+      "column": "begin_from",
+      "width": "50px"
+    },
+    {
+      "text": "End/To",
+      "value": "features[0].when.timespans[0].end.latest",
+      "column": "end_to",
+      "width": "50px"
+    }
+  ],
+  "narrow": [
+    {
+      "text": "Class",
+      "value": "features[0].system_class",
+      "width": "20px"
+    },
+    {
+      "text": "Title",
+      "align": "start",
+      "sortable": true,
+      "value": "features[0].properties.title",
+      "width": "200px"
+    }
+  ]
+}
