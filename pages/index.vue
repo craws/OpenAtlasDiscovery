@@ -7,7 +7,7 @@
     >
       <div class="text-center ontop splashtext">
         <logo />
-        <div v-html="body" ></div>
+        <div v-html="body" />
       </div>
     </v-layout>
     <div class="bgmap">
