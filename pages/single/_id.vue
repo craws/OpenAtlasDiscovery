@@ -19,19 +19,21 @@
                         color="primary"
                         dark
                         v-bind="attrs"
-                        v-on="on"
                         style="font-size:75px"
+                        v-on="on"
                       >
                         {{ getIconBySystemClass(item.features[0].system_class) }}
                       </v-icon>
                     </template>
                     <span>
-                {{ getCRMClassBySystemClass(item.features[0].system_class) }}
-                -
-                {{ getLabelBySystemClass({c: item.features[0].system_class, l: 'en'}) }}
-              </span>
+                      {{ getCRMClassBySystemClass(item.features[0].system_class) }}
+                      -
+                      {{ getLabelBySystemClass({c: item.features[0].system_class, l: 'en'}) }}
+                    </span>
                   </v-tooltip>
-                  <div class="text-h5">{{ item.features[0].properties.title }}</div>
+                  <div class="text-h5">
+                    {{ item.features[0].properties.title }}
+                  </div>
                 </v-row>
               </v-card>
             </v-col>
@@ -43,7 +45,8 @@
                 outlined
                 tile
               >
-                <div class="text-body-2" v-if="item.features[0].description">{{
+                <div v-if="item.features[0].description" class="text-body-2">
+                  {{
                     item.features[0].description[0].value
                   }}
                 </div>
@@ -53,8 +56,7 @@
         </v-col>
         <v-col
           xs="6"
-        >
-        </v-col>
+        />
       </v-row>
     </v-layout>
   </div>
@@ -62,16 +64,10 @@
 
 <script>
 
-import {mapGetters} from "vuex";
+import { mapGetters } from 'vuex';
 
 export default {
   components: {},
-  data() {
-    return {
-      item: {},
-      loading: false,
-    };
-  },
   async fetch() {
     this.loading = true;
     // eslint-disable-next-line no-underscore-dangle
@@ -82,17 +78,12 @@ export default {
     this.item = p.body;
     this.loading = false;
   },
-  watch: {
-    '$route.params': {
-      handler(s) {
-        console.log(s.id);
-        this.$fetch();
-      },
-      immediate: true,
-      deep: true,
-    },
+  data() {
+    return {
+      item: {},
+      loading: false,
+    };
   },
-  methods: {},
   computed: {
     ...mapGetters('app', [
       'getIconBySystemClass',
@@ -100,6 +91,15 @@ export default {
       'getCRMClassBySystemClass',
       'getSortColumnByPath',
     ]),
+  },
+  watch: {
+    '$route.params': {
+      handler() {
+        this.$fetch();
+      },
+      immediate: true,
+      deep: true,
+    },
   },
 };
 </script>
