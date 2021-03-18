@@ -48,5 +48,20 @@
       "column": "name",
       "width": "200px"
     }
+  ],
+  "relations": [
+    {
+      "text": "Relation",
+      "value": "relationType",
+      "width": "20px"
+    },
+    {
+      "text": "Title",
+      "align": "start",
+      "sortable": true,
+      "groupable": false,
+      "value": "label",
+      "width": "200px"
+    }
   ]
 }
