@@ -157,7 +157,7 @@
     "systemClass": "type",
     "crmClass": "E55",
     "view": "type",
-    "icon": null,
+    "icon": "mdi-code-braces",
     "en": "Type"
   }
 ]
