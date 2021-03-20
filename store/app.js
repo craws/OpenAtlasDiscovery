@@ -1,6 +1,7 @@
 import menuitems from '../assets/menuqueries.json';
 import classes from '../assets/classes.json';
 import tableheaders from '../assets/tableheaders.json';
+import templateprops from '../assets/templateprops.json';
 
 /* eslint-disable no-param-reassign,no-shadow */
 export const state = () => ({
@@ -8,6 +9,7 @@ export const state = () => ({
   menuitems,
   classes,
   tableheaders,
+  templateprops,
 });
 
 export const getters = {
@@ -21,6 +23,8 @@ export const getters = {
     if (h && h.column) return h.column;
     return null;
   },
+  hasTime: (s) => (c) => s.templateprops.hasTime.includes(c),
+  hasSex: (s) => (c) => s.templateprops.hasSex.includes(c),
 };
 
 export const mutations = {

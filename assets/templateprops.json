@@ -1,0 +1,4 @@
+{
+  "hasSex": ["person"],
+  "hasTime": ["place","person"]
+}

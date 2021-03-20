@@ -10,6 +10,7 @@
                 outlined
                 tile
               >
+                <!-- icon and title -->
                 <v-row align="center">
                   <v-tooltip right>
                     <template v-slot:activator="{ on, attrs }">
@@ -33,23 +34,61 @@
                     {{ item.features[0].properties.title }}
                   </div>
                 </v-row>
-              </v-card>
-            </v-col>
-            <v-col cols="12" xs="12" v-if="item.features[0].description">
-              <v-card
-                class="pa-4"
-                outlined
-                tile
-              >
-                <v-row align="center" class="pl-4 pb-4" >
-                  <v-icon class="pr-2">mdi-comment</v-icon>
-                  <div class="text-overline">Description</div>
+                <!-- begin, end and sex -->
+                <v-row class="pl-2" v-if="hasTime(item.features[0].system_class)">
+                  <v-col xs="4">
+                    <v-row align="center">
+                      <v-icon class="pr-2">
+                        mdi-logout
+                      </v-icon>
+                      <div class="text-overline">
+                        Begin / From
+                      </div>
+                      <div class="text-body-2 pl-2">
+                        {{ item.features[0].when.timespans[0].start.earliest ? item.features[0].when.timespans[0].start.earliest : item.features[0].when.timespans[0].start.latest }}
+                      </div>
+                    </v-row>
+                  </v-col>
+                  <v-col xs="4">
+                    <v-row align="center">
+                      <v-icon class="pr-2">
+                        mdi-login
+                      </v-icon>
+                      <div class="text-overline">
+                        End / To
+                      </div>
+                      <div class="text-body-2 pl-2">
+                        {{ item.features[0].when.timespans[0].end.latest ? item.features[0].when.timespans[0].end.latest : item.features[0].when.timespans[0].end.earliest }}
+                      </div>
+                    </v-row>
+                  </v-col>
+                  <v-col xs="4" v-if="hasSex(item.features[0].system_class)">
+                    <v-row align="center">
+                      <v-icon class="pr-2">
+                        mdi-sex
+                      </v-icon>
+                      <div class="text-overline">
+                        Sex
+                      </div>
+                      <div class="text-body-2 pl-2">
+                        {{ genderFromClass }}
+                      </div>
+                    </v-row>
+                  </v-col>
                 </v-row>
-                <div class="text-body-2">
-                  {{
-                    item.features[0].description[0].value
-                  }}
-                </div>
+                <!-- description -->
+                <v-row class="pl-2">
+                  <div
+                    v-if="item.features[0].description"
+                    class="text-body-2 pt-2"
+                    :class="{ lineclamp: isClamped }"
+                    @click="isClamped = !isClamped"
+                  >
+                    {{
+                      item.features[0].description[0].value
+                    }}
+                  </div>
+                </v-row>
               </v-card>
             </v-col>
             <v-col cols="12" xs="12">
@@ -58,9 +97,13 @@
                 outlined
                 tile
               >
-                <v-row align="center" class="pl-4" >
-                  <v-icon class="pr-2">mdi-comment</v-icon>
-                  <div class="text-overline">Relations</div>
+                <v-row align="center" class="pl-4">
+                  <v-icon class="pr-2">
+                    mdi-comment
+                  </v-icon>
+                  <div class="text-overline">
+                    Relations
+                  </div>
                 </v-row>
                 <v-row class="pl-4">
                   <v-data-table
@@ -75,9 +118,13 @@
                   >
                     <template v-slot:group.header="{ group, headers, toggle, isOpen }">
                       <td :colspan="headers.length">
-                        <v-btn @click="toggle" small icon :ref="group" :data-open="isOpen">
-                          <v-icon v-if="isOpen">mdi-chevron-up</v-icon>
-                          <v-icon v-else>mdi-chevron-down</v-icon>
+                        <v-btn :ref="group" small icon :data-open="isOpen" @click="toggle">
+                          <v-icon v-if="isOpen">
+                            mdi-chevron-up
+                          </v-icon>
+                          <v-icon v-else>
+                            mdi-chevron-down
+                          </v-icon>
                         </v-btn>
                         {{ group }}
                       </td>
@@ -93,9 +140,9 @@
             </v-col>
           </v-row>
         </v-col>
-        <v-col xs="6" >
-          <div style="height: calc(100vh - 72px)">
-            <qmap v-if="!this.loading" :geojsonitems="geojsonitems"/>
+        <v-col xs="6">
+          <div style="height: calc(50vh - 72px)">
+            <qmap v-if="!this.loading" :geojsonitems="geojsonitems" />
           </div>
         </v-col>
       </v-row>
@@ -128,6 +175,7 @@ export default {
       related: [],
       expanded: [],
       loading: false,
+      isClamped: true,
     };
   },
   methods: {
@@ -144,17 +192,17 @@ export default {
     closeAll() {
       Object.keys(this.$refs).forEach((k) => {
         if (this.$refs[k] && this.$refs[k].$attrs['data-open']) {
-          this.$refs[k].$el.click()
+          this.$refs[k].$el.click();
         }
-      })
+      });
     },
     openAll() {
       Object.keys(this.$refs).forEach((k) => {
         if (this.$refs[k] && !this.$refs[k].$attrs['data-open']) {
-          this.$refs[k].$el.click()
+          this.$refs[k].$el.click();
         }
-      })
-    }
+      });
+    },
   },
   computed: {
     ...mapGetters('app', [
@@ -162,13 +210,20 @@ export default {
       'getLabelBySystemClass',
       'getCRMClassBySystemClass',
       'getSortColumnByPath',
+      'hasTime',
+      'hasSex',
     ]),
-    geojsonitems() {
-      return [this.item, ...this.related];
-    },
     relationTypes() {
+      // eslint-disable-next-line max-len
       if (Array.isArray(this.item.features[0].relations)) return [...new Set(this.item.features[0].relations.map((item) => item.relationType))];
       return [];
+    },
+    genderFromClass() {
+      if (Array.isArray(this.item.features[0].relations)) {
+        if (this.item.features[0].relations.filter((r) => r.label === 'Male').length > 0) return 'Male';
+        if (this.item.features[0].relations.filter((r) => r.label === 'Female').length > 0) return 'Female';
+      }
+      return 'n/a';
     },
   },
   watch: {
@@ -185,3 +240,11 @@ export default {
   },
 };
 </script>
+<style>
+.lineclamp {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+</style>
