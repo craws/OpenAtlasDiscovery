@@ -41,6 +41,7 @@ export default {
     '~/css/main.css',
     '@mdi/font/css/materialdesignicons.css',
     'typeface-roboto/index.css',
+    'vue-json-viewer/style.css',
   ],
   /*
   ** Plugins to load before mounting the App

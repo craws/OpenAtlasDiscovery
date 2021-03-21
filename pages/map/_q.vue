@@ -1,6 +1,6 @@
 <template>
   <div>
-    <maplist :filter="query"></maplist>
+    <maplist :filter="query" />
   </div>
 </template>
 
@@ -9,10 +9,10 @@ import maplist from '~/components/lists/maplist.vue';
 import queries from '~/mixins/queries';
 
 export default {
-  mixins: [queries],
   components: {
     maplist,
   },
+  mixins: [queries],
   data() {
     return {
       query: {},

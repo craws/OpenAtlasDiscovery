@@ -45,7 +45,9 @@
                         Begin / From
                       </div>
                       <div class="text-body-2 pl-2">
-                        {{ item.features[0].when.timespans[0].start.earliest ? item.features[0].when.timespans[0].start.earliest : item.features[0].when.timespans[0].start.latest }}
+                        {{
+                          item.features[0].when.timespans[0].start.earliest ? item.features[0].when.timespans[0].start.earliest : item.features[0].when.timespans[0].start.latest
+                        }}
                       </div>
                     </v-row>
                   </v-col>
@@ -58,7 +60,9 @@
                         End / To
                       </div>
                       <div class="text-body-2 pl-2">
-                        {{ item.features[0].when.timespans[0].end.latest ? item.features[0].when.timespans[0].end.latest : item.features[0].when.timespans[0].end.earliest }}
+                        {{
+                          item.features[0].when.timespans[0].end.latest ? item.features[0].when.timespans[0].end.latest : item.features[0].when.timespans[0].end.earliest
+                        }}
                       </div>
                     </v-row>
                   </v-col>
@@ -141,9 +145,36 @@
           </v-row>
         </v-col>
         <v-col xs="6">
-          <div style="height: calc(50vh - 72px)">
-            <qmap v-if="!this.loading" :geojsonitems="geojsonitems" />
-          </div>
+          <v-tabs
+            right
+          >
+            <v-tab>Map</v-tab>
+            <v-tab>Graph</v-tab>
+            <v-tab>JSON</v-tab>
+            <v-tab-item>
+              <v-container fluid>
+                <div style="height: calc(50vh - 72px)">
+                  <qmap v-if="!this.loading" :geojsonitems="[item]"/>
+                </div>
+              </v-container>
+            </v-tab-item>
+            <v-tab-item>
+              <treegraph
+                v-if="!this.loading"
+                :treeobject="item"
+                :config="{}"
+              ></treegraph>
+            </v-tab-item>
+            <v-tab-item>
+              <json-viewer
+
+                :value="item"
+                :expand-depth=5
+                copyable
+                boxed
+                sort></json-viewer>
+            </v-tab-item>
+          </v-tabs>
         </v-col>
       </v-row>
     </v-layout>
@@ -151,12 +182,16 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import {mapGetters} from 'vuex';
+import JsonViewer from 'vue-json-viewer';
 import qmap from '~/components/map.vue';
+import treegraph from '~/components/treegraph.vue'
 
 export default {
   components: {
     qmap,
+    JsonViewer,
+    treegraph,
   },
   async fetch() {
     this.loading = true;
