@@ -7,6 +7,7 @@
 <script>
 /* eslint-disable no-underscore-dangle,no-param-reassign */
 import * as d3 from 'd3';
+import { mapGetters } from "vuex";
 
 export default {
   props: {
@@ -25,6 +26,16 @@ export default {
     return {
       loading: false,
     };
+  },
+  computed: {
+    ...mapGetters('app', [
+      'getIconBySystemClass',
+      'getLabelBySystemClass',
+      'getCRMClassBySystemClass',
+      'getSortColumnByPath',
+      'hasTime',
+      'hasSex',
+    ]),
   },
   watch: {},
   mounted() {

@@ -3,7 +3,7 @@
     <v-layout v-if="!loading" class="ma-1">
       <v-row no-gutters>
         <v-col xs="6">
-          <v-row no-gutters class="pr-1">
+          <v-row no-gutters>
             <v-col cols="12" xs="12">
               <v-card
                 class="pa-4"
@@ -145,36 +145,36 @@
           </v-row>
         </v-col>
         <v-col xs="6">
-          <v-tabs
-            right
+          <v-card
+            class="pa-4"
+            outlined
+            tile
           >
+          <v-tabs right>
             <v-tab>Map</v-tab>
             <v-tab>Graph</v-tab>
             <v-tab>JSON</v-tab>
             <v-tab-item>
-              <v-container fluid>
-                <div style="height: calc(50vh - 72px)">
-                  <qmap v-if="!this.loading" :geojsonitems="[item]"/>
-                </div>
-              </v-container>
+              <qmap v-if="!this.loading" :geojsonitems="[item]" style="height: calc(100vh - 154px)"/>
             </v-tab-item>
             <v-tab-item>
               <treegraph
                 v-if="!this.loading"
+                style="height: calc(100vh - 154px)"
                 :treeobject="item"
                 :config="{}"
               ></treegraph>
             </v-tab-item>
             <v-tab-item>
               <json-viewer
-
+                style="height: calc(100vh - 154px); overflow-y: auto;"
                 :value="item"
                 :expand-depth=5
                 copyable
-                boxed
                 sort></json-viewer>
             </v-tab-item>
           </v-tabs>
+          </v-card>
         </v-col>
       </v-row>
     </v-layout>
@@ -182,7 +182,7 @@
 </template>
 
 <script>
-import {mapGetters} from 'vuex';
+import { mapGetters } from 'vuex';
 import JsonViewer from 'vue-json-viewer';
 import qmap from '~/components/map.vue';
 import treegraph from '~/components/treegraph.vue'
@@ -276,6 +276,8 @@ export default {
 };
 </script>
 <style>
+
+
 .lineclamp {
   display: -webkit-box;
   -webkit-line-clamp: 3;
