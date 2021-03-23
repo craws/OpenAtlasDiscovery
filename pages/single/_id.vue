@@ -276,8 +276,6 @@ export default {
 };
 </script>
 <style>
-
-
 .lineclamp {
   display: -webkit-box;
   -webkit-line-clamp: 3;
