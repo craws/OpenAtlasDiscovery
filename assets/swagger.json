@@ -15,7 +15,7 @@
   },
   "servers": [
     {
-      "url": "http://127.0.0.1:5000",
+      "url": "https://demo-dev.openatlas.eu",
       "description": "Demo Dev Server"
     }
   ],
@@ -249,6 +249,7 @@
           "Content"
         ],
         "summary": "Class Mapping endpoint\r",
+        "description": "Provides a list of all available system classes, their CIDOC CRM mapping, which view they belong, which icon is used and the englisch name",
         "responses": {
           "200": {
             "description": "List of all available system classes",
@@ -903,6 +904,7 @@
           "Content"
         ],
         "summary": "Overview Count endpoint\r",
+        "description": "Provides a count of all types",
         "responses": {
           "200": {
             "description": "Count of all entities",
@@ -926,6 +928,7 @@
           "Entities"
         ],
         "summary": "Query endpoint\r",
+        "description": "Retrieves a list of Geojson representations by entity id, CIDOC CRM code or menu item",
         "parameters": [
           {
             "name": "entities",
@@ -965,6 +968,42 @@
                 "reference",
                 "source",
                 "object"
+              ]
+            }
+          },
+          {
+            "name": "system_classes",
+            "in": "query",
+            "description": "Need to be an OpenAtlas system class",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "acquisition",
+                "activity",
+                "actor_appellation",
+                "administrative_unit",
+                "appellation",
+                "artifact",
+                "bibliography",
+                "edition",
+                "external_reference",
+                "feature",
+                "file",
+                "find",
+                "group",
+                "human_remains",
+                "move",
+                "object_location",
+                "person",
+                "place",
+                "source",
+                "reference_system",
+                "stratigraphic_unit",
+                "source_translation",
+                "type"
               ]
             }
           },
@@ -1183,7 +1222,7 @@
             "content": {
               "application/ld+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/NodeOverviewModel"
+                  "$ref": "#/components/schemas/NodeAllModel"
                 }
               }
             }
@@ -1265,7 +1304,7 @@
             "content": {
               "application/ld+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/NodeOverviewModel"
+                  "$ref": "#/components/schemas/NodeAllModel"
                 }
               }
             }
@@ -1486,6 +1525,43 @@
           }
         }
       }
+    },
+    "/api/0.2/type_tree/": {
+      "get": {
+        "tags": [
+          "Nodes"
+        ],
+        "summary": "Type Tree endpoint\r",
+        "description": "Shows every *Type* in the OA instance, with its root and subs, so a tree can be build",
+        "parameters": [
+          {
+            "name": "download",
+            "in": "query",
+            "description": "Triggers the file download of the given request",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of all *Types*",
+            "content": {
+              "application/ld+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TypeTreeModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Something went wrong. Please consult the error message."
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1679,7 +1755,7 @@
       "NodeCategoryModel": {
         "type": "object",
         "properties": {
-          "cusxtom": {
+          "custom": {
             "type": "array",
             "items": {
               "type": "string"
@@ -1797,6 +1873,15 @@
           },
           "relationType": {
             "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "when": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WhenModel"
+            }
           }
         }
       },
@@ -1825,14 +1910,19 @@
       "TypeModel": {
         "type": "object",
         "properties": {
-          "hierarchy": {
-            "type": "string"
-          },
-          "identifier": {
-            "type": "string"
-          },
-          "label": {
-            "type": "string"
+          "Type_IDs": {
+            "$ref": "#/components/schemas/TypeModel_Type_IDs"
+          }
+        }
+      },
+      "TypeTreeModel": {
+        "type": "object",
+        "properties": {
+          "type_tree": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TypeModel"
+            }
           }
         }
       },
@@ -1883,6 +1973,56 @@
           },
           "total_pages": {
             "type": "number"
+          }
+        }
+      },
+      "TypeModel_Type_IDs": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer"
+          },
+          "count_subs": {
+            "type": "integer"
+          },
+          "description": {
+            "type": "string"
+          },
+          "first": {
+            "type": "integer"
+          },
+          "id": {
+            "type": "integer"
+          },
+          "last": {
+            "type": "integer"
+          },
+          "locked": {
+            "type": "boolean"
+          },
+          "name": {
+            "type": "string"
+          },
+          "note": {
+            "type": "string"
+          },
+          "origin_id": {
+            "type": "integer"
+          },
+          "root": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
+          },
+          "standard": {
+            "type": "boolean"
+          },
+          "subs": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
           }
         }
       }
