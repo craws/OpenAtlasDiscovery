@@ -15,8 +15,8 @@
   },
   "servers": [
     {
-      "url": "https://demo-dev.openatlas.eu",
-      "description": "Demo Dev Server"
+      "url": "http://127.0.0.1:5000",
+      "description": "Local Dev Server"
     }
   ],
   "tags": [

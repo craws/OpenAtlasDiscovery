@@ -1,6 +1,6 @@
 <template>
   <client-only>
-    <div id="treegraph" class="treecontainer"/>
+    <div id="treegraph" class="treecontainer" />
   </client-only>
 </template>
 
@@ -66,7 +66,6 @@ export default {
 
     if (root.children) root.children.forEach(collapse);
     update(root);
-
 
     function collapse(d) {
       if (d.children) {
@@ -141,7 +140,7 @@ export default {
       const linkEnter = link.enter().insert('path', 'g')
         .attr('class', 'link')
         .attr('d', () => {
-          const o = {x: source.x0, y: source.y0};
+          const o = { x: source.x0, y: source.y0 };
           return diagonal(o, o);
         });
 

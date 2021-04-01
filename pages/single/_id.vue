@@ -35,7 +35,7 @@
                   </div>
                 </v-row>
                 <!-- begin, end and sex -->
-                <v-row class="pl-2" v-if="hasTime(item.features[0].system_class)">
+                <v-row v-if="hasTime(item.features[0].system_class)" class="pl-2">
                   <v-col xs="4">
                     <v-row align="center">
                       <v-icon class="pr-2">
@@ -66,7 +66,7 @@
                       </div>
                     </v-row>
                   </v-col>
-                  <v-col xs="4" v-if="hasSex(item.features[0].system_class)">
+                  <v-col v-if="hasSex(item.features[0].system_class)" xs="4">
                     <v-row align="center">
                       <v-icon class="pr-2">
                         mdi-sex
@@ -150,30 +150,31 @@
             outlined
             tile
           >
-          <v-tabs right>
-            <v-tab>Map</v-tab>
-            <v-tab>Graph</v-tab>
-            <v-tab>JSON</v-tab>
-            <v-tab-item>
-              <qmap v-if="!this.loading" :geojsonitems="[item]" style="height: calc(100vh - 154px)"/>
-            </v-tab-item>
-            <v-tab-item>
-              <treegraph
-                v-if="!this.loading"
-                style="height: calc(100vh - 154px)"
-                :treeobject="item"
-                :config="{}"
-              ></treegraph>
-            </v-tab-item>
-            <v-tab-item>
-              <json-viewer
-                style="height: calc(100vh - 154px); overflow-y: auto;"
-                :value="item"
-                :expand-depth=5
-                copyable
-                sort></json-viewer>
-            </v-tab-item>
-          </v-tabs>
+            <v-tabs right>
+              <v-tab>Map</v-tab>
+              <v-tab>Graph</v-tab>
+              <v-tab>JSON</v-tab>
+              <v-tab-item>
+                <qmap v-if="!this.loading" :geojsonitems="[item]" style="height: calc(100vh - 154px)" />
+              </v-tab-item>
+              <v-tab-item>
+                <treegraph
+                  v-if="!this.loading"
+                  style="height: calc(100vh - 154px)"
+                  :treeobject="item"
+                  :config="{}"
+                />
+              </v-tab-item>
+              <v-tab-item>
+                <json-viewer
+                  style="height: calc(100vh - 154px); overflow-y: auto;"
+                  :value="item"
+                  :expand-depth="5"
+                  copyable
+                  sort
+                />
+              </v-tab-item>
+            </v-tabs>
           </v-card>
         </v-col>
       </v-row>
@@ -185,7 +186,7 @@
 import { mapGetters } from 'vuex';
 import JsonViewer from 'vue-json-viewer';
 import qmap from '~/components/map.vue';
-import treegraph from '~/components/treegraph.vue'
+import treegraph from '~/components/treegraph.vue';
 
 export default {
   components: {
