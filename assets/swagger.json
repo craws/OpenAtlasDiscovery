@@ -11,11 +11,11 @@
       "name": "Apache 2.0",
       "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "version": "0.2-develop"
+    "version": "0.2"
   },
   "servers": [
     {
-      "url": "http://127.0.0.1:5000",
+      "url": "https://demo.openatlas.eu/",
       "description": "Local Dev Server"
     }
   ],

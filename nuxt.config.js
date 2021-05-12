@@ -49,6 +49,7 @@ export default {
   */
   plugins: [
     '@/plugins/api.js',
+    { src: '@/node_modules/d3/dist/d3.js', ssr: false },
   ],
   /*
   ** Auto import components

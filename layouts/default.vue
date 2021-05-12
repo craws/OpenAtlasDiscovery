@@ -81,7 +81,16 @@ export default {
       items: [
         { heading: 'Sample Queries' },
       ].concat(this.$store.state.app.menuitems),
+      title: '',
     };
+  },
+  async mounted() {
+    const content = await this.$api.Content.get_api_0_2_content_({});
+    this.$store.commit('app/setSiteName', content.body['site-name']);
+    this.title = content.body['site-name'];
+  },
+  head() {
+    return { title: this.title };
   },
 };
 </script>

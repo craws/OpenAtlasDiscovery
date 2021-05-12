@@ -5,6 +5,7 @@ import templateprops from '../assets/templateprops.json';
 
 /* eslint-disable no-param-reassign,no-shadow */
 export const state = () => ({
+  siteName: '',
   queryDrawer: false,
   menuitems,
   classes,
@@ -36,6 +37,9 @@ export const mutations = {
   },
   toggleQueryDrawer(state) {
     state.queryDrawer = !state.queryDrawer;
+  },
+  setSiteName(state, name) {
+    state.SiteName = name;
   },
 };
 

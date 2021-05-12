@@ -162,7 +162,6 @@
                   v-if="!this.loading"
                   style="height: calc(100vh - 154px)"
                   :treeobject="item"
-                  :config="{}"
                 />
               </v-tab-item>
               <v-tab-item>
