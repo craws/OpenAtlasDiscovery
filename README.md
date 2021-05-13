@@ -61,7 +61,7 @@ $ npm run export
 The resulting files in the /dist folder can be served from any web server or be exposed through
 nuxt using
 ```
-npm run server
+npm run start
 ```
 When you are serving the application from your own server (ie Apache) you need to configure it
 accordingly to avoid 404 responses on dynamically generated routes. Some examples can be found
