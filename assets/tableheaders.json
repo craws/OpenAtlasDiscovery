@@ -2,7 +2,7 @@
   "wide": [
     {
       "text": "Class",
-      "value": "features[0].system_class",
+      "value": "features[0].systemClass",
       "column": "class_code",
       "width": "20px"
     },
@@ -36,7 +36,7 @@
   "narrow": [
     {
       "text": "Class",
-      "value": "features[0].system_class",
+      "value": "features[0].systemClass",
       "column": "class_code",
       "width": "20px"
     },

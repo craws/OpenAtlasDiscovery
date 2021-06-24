@@ -126,7 +126,7 @@
     "en": "Physical Thing"
   },
   {
-    "systemClass": "reference_system",
+    "systemClass": "referenceSystem",
     "crmClass": "E32",
     "view": null,
     "icon": null,

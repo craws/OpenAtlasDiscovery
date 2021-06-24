@@ -21,13 +21,13 @@
                         style="font-size:75px"
                         v-on="on"
                       >
-                        {{ getIconBySystemClass(item.features[0].system_class) }}
+                        {{ getIconBySystemClass(item.features[0].systemClass) }}
                       </v-icon>
                     </template>
                     <span>
-                      {{ getCRMClassBySystemClass(item.features[0].system_class) }}
+                      {{ getCRMClassBySystemClass(item.features[0].systemClass) }}
                       -
-                      {{ getLabelBySystemClass({c: item.features[0].system_class, l: 'en'}) }}
+                      {{ getLabelBySystemClass({c: item.features[0].systemClass, l: 'en'}) }}
                     </span>
                   </v-tooltip>
                   <div class="text-h5">
@@ -35,7 +35,7 @@
                   </div>
                 </v-row>
                 <!-- begin, end and sex -->
-                <v-row v-if="hasTime(item.features[0].system_class)" class="pl-2">
+                <v-row v-if="hasTime(item.features[0].systemClass)" class="pl-2">
                   <v-col xs="4">
                     <v-row align="center">
                       <v-icon class="pr-2">
@@ -66,7 +66,7 @@
                       </div>
                     </v-row>
                   </v-col>
-                  <v-col v-if="hasSex(item.features[0].system_class)" xs="4">
+                  <v-col v-if="hasSex(item.features[0].systemClass)" xs="4">
                     <v-row align="center">
                       <v-icon class="pr-2">
                         mdi-sex
@@ -155,7 +155,7 @@
               <v-tab>Graph</v-tab>
               <v-tab>JSON</v-tab>
               <v-tab-item>
-                <qmap v-if="!this.loading" :geojsonitems="[item]" style="height: calc(100vh - 154px)" />
+                <qmap v-if="!this.loading" :geojsonitems="[item].concat(related)" style="height: calc(100vh - 154px)" />
               </v-tab-item>
               <v-tab-item>
                 <treegraph
@@ -201,7 +201,7 @@ export default {
     });
     // eslint-disable-next-line prefer-destructuring
     this.item = p.body;
-    // await this.fetchRelated();
+    await this.fetchRelated('object_location');
     this.loading = false;
   },
   data() {
@@ -214,9 +214,9 @@ export default {
     };
   },
   methods: {
-    async fetchRelated() {
-      // eslint-disable-next-line no-restricted-syntax
-      for (const id of this.item.features[0].relations) {
+    async fetchRelated(type) {
+      // eslint-disable-next-line no-restricted-syntax,max-len
+      for (const id of this.item.features[0].relations.filter((r) => r.relationSystemClass === type)) {
         // eslint-disable-next-line no-await-in-loop,no-underscore-dangle
         const ri = await this.$api.Entities.get_api_0_2_entity__id__({
           id_: id.relationTo.split('/').splice(-1, 1),
