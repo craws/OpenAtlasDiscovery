@@ -15,8 +15,8 @@
   },
   "servers": [
     {
-      "url": "http://127.0.0.1:5000/",
-      "description": "Local Dev Server"
+      "url": "https://connec.acdh.oeaw.ac.at/",
+      "description": "Connec Production Server"
     }
   ],
   "tags": [
