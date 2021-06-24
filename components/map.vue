@@ -21,7 +21,8 @@ export default {
   props: {
     options: {
       type: Object,
-      default: () => {},
+      default: () => {
+      },
     },
     geojsonitems: {
       type: Array,
@@ -46,7 +47,9 @@ export default {
   },
   watch: {
     geojsonitems: {
-      handler() { this.setBounds(); },
+      handler() {
+        this.delayedHandler();
+      },
       deep: true,
       immediate: true,
     },
@@ -57,14 +60,17 @@ export default {
     });
   },
   methods: {
-    setBounds() {
+    delayedHandler() {
       this.$nextTick(() => {
         if (this.$refs.features) {
-          const bounds = this.$refs.features.mapObject.getBounds();
-          // eslint-disable-next-line no-underscore-dangle
-          if (bounds._northEast) this.$refs.map.mapObject.fitBounds(bounds);
+          this.setBounds();
         }
       });
+    },
+    setBounds() {
+      const bounds = this.$refs.features.mapObject.getBounds();
+      // eslint-disable-next-line no-underscore-dangle
+      if (bounds._northEast) this.$refs.map.mapObject.fitBounds(bounds);
     },
   },
 };
@@ -76,14 +82,16 @@ export default {
   height: 100%;
 }
 
- #vizTreeV circle {
-   fill: #fff;
-   stroke: #54a8ff;
-   stroke-width: 3px;
- }
+#vizTreeV circle {
+  fill: #fff;
+  stroke: #54a8ff;
+  stroke-width: 3px;
+}
+
 #vizTreeV .node text {
   font: 12px sans-serif;
 }
+
 #vizTreeV .link {
   fill: none;
   stroke: #ccc;
