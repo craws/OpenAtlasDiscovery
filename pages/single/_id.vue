@@ -155,7 +155,7 @@
               <v-tab>Graph</v-tab>
               <v-tab>JSON</v-tab>
               <v-tab-item>
-                <qmap v-if="!this.loading" :geojsonitems="[item]" style="height: calc(100vh - 154px)" />
+                <qmap v-if="!this.loading" :geojsonitems="[item].concat(related)" style="height: calc(100vh - 154px)" />
               </v-tab-item>
               <v-tab-item>
                 <treegraph
@@ -201,7 +201,7 @@ export default {
     });
     // eslint-disable-next-line prefer-destructuring
     this.item = p.body;
-    // await this.fetchRelated();
+    await this.fetchRelated('object_location');
     this.loading = false;
   },
   data() {
@@ -214,9 +214,9 @@ export default {
     };
   },
   methods: {
-    async fetchRelated() {
-      // eslint-disable-next-line no-restricted-syntax
-      for (const id of this.item.features[0].relations) {
+    async fetchRelated(type) {
+      // eslint-disable-next-line no-restricted-syntax,max-len
+      for (const id of this.item.features[0].relations.filter((r) => r.relationSystemClass === type)) {
         // eslint-disable-next-line no-await-in-loop,no-underscore-dangle
         const ri = await this.$api.Entities.get_api_0_2_entity__id__({
           id_: id.relationTo.split('/').splice(-1, 1),
