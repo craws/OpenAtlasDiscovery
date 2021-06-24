@@ -21,13 +21,13 @@
                         style="font-size:75px"
                         v-on="on"
                       >
-                        {{ getIconBySystemClass(item.features[0].system_class) }}
+                        {{ getIconBySystemClass(item.features[0].systemClass) }}
                       </v-icon>
                     </template>
                     <span>
-                      {{ getCRMClassBySystemClass(item.features[0].system_class) }}
+                      {{ getCRMClassBySystemClass(item.features[0].systemClass) }}
                       -
-                      {{ getLabelBySystemClass({c: item.features[0].system_class, l: 'en'}) }}
+                      {{ getLabelBySystemClass({c: item.features[0].systemClass, l: 'en'}) }}
                     </span>
                   </v-tooltip>
                   <div class="text-h5">
@@ -35,7 +35,7 @@
                   </div>
                 </v-row>
                 <!-- begin, end and sex -->
-                <v-row v-if="hasTime(item.features[0].system_class)" class="pl-2">
+                <v-row v-if="hasTime(item.features[0].systemClass)" class="pl-2">
                   <v-col xs="4">
                     <v-row align="center">
                       <v-icon class="pr-2">
@@ -66,7 +66,7 @@
                       </div>
                     </v-row>
                   </v-col>
-                  <v-col v-if="hasSex(item.features[0].system_class)" xs="4">
+                  <v-col v-if="hasSex(item.features[0].systemClass)" xs="4">
                     <v-row align="center">
                       <v-icon class="pr-2">
                         mdi-sex

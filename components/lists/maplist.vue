@@ -24,7 +24,7 @@
             @update:options="updateOptions"
           />
         </template>
-        <template v-slot:item.features[0].system_class="{ item }">
+        <template v-slot:item.features[0].systemClass="{ item }">
           <v-tooltip right>
             <template v-slot:activator="{ on, attrs }">
               <v-icon
@@ -33,13 +33,13 @@
                 v-bind="attrs"
                 v-on="on"
               >
-                {{ getIconBySystemClass(item.features[0].system_class) }}
+                {{ getIconBySystemClass(item.features[0].systemClass) }}
               </v-icon>
             </template>
             <span>
-              {{ getCRMClassBySystemClass(item.features[0].system_class) }}
+              {{ getCRMClassBySystemClass(item.features[0].systemClass) }}
               -
-              {{ getLabelBySystemClass({ c: item.features[0].system_class, l: 'en' }) }}
+              {{ getLabelBySystemClass({ c: item.features[0].systemClass, l: 'en' }) }}
             </span>
           </v-tooltip>
         </template>
@@ -78,13 +78,13 @@ export default {
     // eslint-disable-next-line no-underscore-dangle
     const p = await this.$api.Entities.get_api_0_2_query_({
       limit: itemsPerPage,
-      first: this.itemIndex[page - 1] ? this.itemIndex[page - 1].start_id : null,
+      first: this.itemIndex[page - 1] ? this.itemIndex[page - 1].startID : null,
       filter: this.filter,
       column: sortBy ? this.getSortColumnByPath(sortBy[0]) : null,
       sort: sortDesc[0] ? 'desc' : 'asc',
     });
     // eslint-disable-next-line prefer-destructuring
-    this.items = p.body.result;
+    this.items = p.body.results;
     this.itemIndex = p.body.pagination.index;
     this.totalItems = p.body.pagination.entities;
     this.loading = false;

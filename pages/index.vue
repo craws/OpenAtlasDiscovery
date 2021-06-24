@@ -38,7 +38,7 @@ export default {
       show: ['geometry'],
       code: 'place',
     });
-    this.items = p.body.result;
+    this.items = p.body.results;
     const content = await this.$api.Content.get_api_0_2_content_({});
     this.body = content.body.intro;
     this.loading = false;

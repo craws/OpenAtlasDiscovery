@@ -86,8 +86,8 @@ export default {
   },
   async mounted() {
     const content = await this.$api.Content.get_api_0_2_content_({});
-    this.$store.commit('app/setSiteName', content.body['site-name']);
-    this.title = content.body['site-name'];
+    this.$store.commit('app/setSiteName', content.body['siteName']);
+    this.title = content.body['siteName'];
   },
   head() {
     return { title: this.title };
