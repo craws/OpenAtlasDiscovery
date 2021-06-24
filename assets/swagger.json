@@ -15,8 +15,8 @@
   },
   "servers": [
     {
-      "url": "https://demo-dev.openatlas.eu/",
-      "description": "Demo Dev Server"
+      "url": "https://demo.openatlas.eu/",
+      "description": "Demo Server"
     }
   ],
   "tags": [
