@@ -63,17 +63,40 @@
       <querysearch />
       <v-spacer />
     </v-app-bar>
-    <v-main>
+    <v-main v-if="!loading">
       <nuxt />
     </v-main>
   </v-app>
 </template>
 <script>
+import { mapMutations } from 'vuex';
 import querysearch from '~/components/querysearch.vue';
 
 export default {
   components: {
     querysearch,
+  },
+  async fetch() {
+    const content = await this.$api.Content.get_api_0_2_content_({});
+    this.setSiteName(content.body.siteName);
+    this.title = content.body.siteName;
+    const g = await this.$api.Content.get_api_0_2_geometric_entities_();
+    this.setGeoItems(g.body.features.map((f) => ({
+      features: [f],
+      type: 'FeatureCollection',
+    })));
+    const p = await this.$api.Entities.get_api_0_2_code__code_({
+      limit: 2000,
+      code: 'event',
+      show: 'when',
+    });
+    this.setTempItems(p.body.results.map((r) => {
+      if (r.features[0].when.timespans[0].start.earliest) return `${r.features[0].when.timespans[0].start.earliest}T00:00:00.000Z`;
+      return null;
+    })
+      .filter((r) => r !== null)
+      .map((d) => new Date(d)));
+    this.loading = false;
   },
   data() {
     return {
@@ -82,15 +105,18 @@ export default {
         { heading: 'Sample Queries' },
       ].concat(this.$store.state.app.menuitems),
       title: '',
+      loading: true,
     };
-  },
-  async mounted() {
-    const content = await this.$api.Content.get_api_0_2_content_({});
-    this.$store.commit('app/setSiteName', content.body.siteName);
-    this.title = content.body.siteName;
   },
   head() {
     return { title: this.title };
+  },
+  methods: {
+    ...mapMutations('app', [
+      'setGeoItems',
+      'setTempItems',
+      'setSiteName',
+    ]),
   },
 };
 </script>
