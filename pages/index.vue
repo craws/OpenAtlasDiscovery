@@ -1,22 +1,105 @@
 <template>
-  <div>
-    <v-layout
-      column
-      justify-center
-      align-center
+  <v-container class="bgmap">
+    <v-row
+      no-gutters
+      style="height: 70%"
     >
-      <div class="text-center ontop splashtext">
-        <logo />
-        <div v-html="body" />
-      </div>
-    </v-layout>
-    <div class="bgmap">
-      <qmap v-if="!loading" :geojsonitems="items" :options="{ zoomControl: false }" />
-    </div>
-  </div>
+      <v-col
+        cols="12"
+        sm="6"
+        md="8"
+      >
+        <v-card
+          outlined
+          class="fill-height"
+          tile
+        >
+          <qmap v-if="!loading" :geojsonitems="getGeoItems" :options="{ zoomControl: false }" />
+        </v-card>
+      </v-col>
+      <v-col
+        cols="12"
+        sm="6"
+        md="4"
+      >
+        <v-card
+          class="fill-height pa-2"
+          tile
+          outlined
+        >
+          <v-list-item two-line>
+            <v-list-item-content>
+              <v-list-item-title class="text-h2">
+                {{ content.siteName }}
+              </v-list-item-title>
+              <v-list-item-subtitle v-html="content.intro" />
+            </v-list-item-content>
+          </v-list-item>
+          <v-list>
+            <v-list-item>
+              <v-list-item-avatar>
+                <v-icon
+                  class="grey lighten-1"
+                  dark
+                >
+                  mdi-comment-text-multiple
+                </v-icon>
+              </v-list-item-avatar>
+              <v-list-item-content>
+                <v-list-item-title>Contact</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+            <v-list-item>
+              <v-list-item-avatar>
+                <v-icon
+                  class="grey lighten-1"
+                  dark
+                >
+                  mdi-gavel
+                </v-icon>
+              </v-list-item-avatar>
+              <v-list-item-content>
+                <v-list-item-title>Legal Information</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
+        </v-card>
+      </v-col>
+    </v-row>
+    <v-row
+      no-gutters
+      style="height: 30%"
+    >
+      <v-col
+        cols="12"
+        sm="6"
+        md="4"
+      >
+        <v-card
+          class="fill-height"
+          outlined
+          tile
+        >
+          <logo />
+        </v-card>
+      </v-col>
+      <v-col
+        cols="12"
+        sm="6"
+        md="8"
+      >
+        <v-card
+          class="fill-height pa-2"
+          outlined
+          tile
+        />
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import Logo from '~/components/Logo.vue';
 import qmap from '~/components/map.vue';
 
@@ -28,20 +111,24 @@ export default {
   data() {
     return {
       items: [],
-      body: 'loading...',
+      content: {
+        contact: '',
+        intro: 'loading...',
+        legalNotice: '',
+        siteName: '',
+      },
       loading: true,
     };
   },
   async mounted() {
-    const p = await this.$api.Entities.get_api_0_2_code__code_({
-      limit: 100,
-      show: ['geometry'],
-      code: 'place',
-    });
-    this.items = p.body.results;
-    const content = await this.$api.Content.get_api_0_2_content_({});
-    this.body = content.body.intro;
+    const c = await this.$api.Content.get_api_0_2_content_({});
+    this.content = c.body;
     this.loading = false;
+  },
+  computed: {
+    ...mapGetters('app', [
+      'getGeoItems',
+    ]),
   },
 };
 </script>
@@ -56,8 +143,9 @@ export default {
 
 .bgmap {
   height: calc(100vh - 64px);
-  width: 100%;
+  max-width: 100% !important;
   position: absolute;
   top: 0px;
+  padding: 0px;
 }
 </style>
