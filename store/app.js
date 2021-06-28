@@ -11,6 +11,9 @@ export const state = () => ({
   classes,
   tableheaders,
   templateprops,
+  eventDates: [],
+  geoItems: [],
+  tempItems: [],
 });
 
 export const getters = {
@@ -26,6 +29,8 @@ export const getters = {
   },
   hasTime: (s) => (c) => s.templateprops.hasTime.includes(c),
   hasSex: (s) => (c) => s.templateprops.hasSex.includes(c),
+  getGeoItems: (s) => s.geoItems,
+  getTempItems: (s) => s.tempItems,
 };
 
 export const mutations = {
@@ -40,6 +45,12 @@ export const mutations = {
   },
   setSiteName(state, name) {
     state.SiteName = name;
+  },
+  setGeoItems(state, items) {
+    state.geoItems = items;
+  },
+  setTempItems(state, items) {
+    state.tempItems = items;
   },
 };
 
