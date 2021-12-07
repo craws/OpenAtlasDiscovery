@@ -14,7 +14,7 @@
           class="fill-height"
           tile
         >
-          <qmap v-if="!loading" :geojsonitems="getGeoItems" :options="{ zoomControl: false }" />
+          <qmap v-if="!loading" :geojsonitems="getGeoItemsAsFeatureCollection" :options="{ zoomControl: false }" />
         </v-card>
       </v-col>
       <v-col
@@ -127,7 +127,7 @@ export default {
   },
   computed: {
     ...mapGetters('app', [
-      'getGeoItems',
+      'getGeoItemsAsFeatureCollection',
     ]),
   },
 };

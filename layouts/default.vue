@@ -78,24 +78,16 @@ export default {
   },
   async fetch() {
     const content = await this.$api.Content.get_api_0_2_content_({});
-    this.setSiteName(content.body.siteName);
+    this.setSiteContent(content.body);
     this.title = content.body.siteName;
     const g = await this.$api.Content.get_api_0_2_geometric_entities_();
-    this.setGeoItems(g.body.features.map((f) => ({
-      features: [f],
-      type: 'FeatureCollection',
-    })));
+    this.setGeoItems(g.body);
     const p = await this.$api.Entities.get_api_0_2_code__code_({
       limit: 2000,
       code: 'event',
       show: 'when',
     });
-    this.setTempItems(p.body.results.map((r) => {
-      if (r.features[0].when.timespans[0].start.earliest) return `${r.features[0].when.timespans[0].start.earliest}T00:00:00.000Z`;
-      return null;
-    })
-      .filter((r) => r !== null)
-      .map((d) => new Date(d)));
+    this.setTempItems(p.body.results);
     this.loading = false;
   },
   data() {
@@ -115,7 +107,7 @@ export default {
     ...mapMutations('app', [
       'setGeoItems',
       'setTempItems',
-      'setSiteName',
+      'setSiteContent',
     ]),
   },
 };

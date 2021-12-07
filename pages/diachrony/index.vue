@@ -14,7 +14,7 @@
           class="fill-height"
           tile
         >
-          <qmap v-if="!loading" :geojsonitems="getGeoItems" :options="{ zoomControl: false }" />
+          <qmap v-if="!loading" :geojsonitems="getGeoItemsAsFeatureCollection" :options="{ zoomControl: false }" />
         </v-card>
       </v-col>
       <v-col
@@ -92,17 +92,14 @@ export default {
     };
   },
   computed: {
+    ...mapGetters('app', [
+      'getTempItemsAsTimeStamps',
+      'getGeoItemsAsFeatureCollection',
+    ]),
     slideritems() {
-      return this.items.map((r) => {
-        if (r.features[0].when.timespans[0].start.earliest) return `${r.features[0].when.timespans[0].start.earliest}T00:00:00.000Z`;
-        return null;
-      })
-        .filter((r) => r !== null)
+      return this.getTempItemsAsTimeStamps
         .map((d) => new Date(d));
     },
-    ...mapGetters('app', [
-      'getGeoItems',
-    ]),
   },
   watch: {
   },

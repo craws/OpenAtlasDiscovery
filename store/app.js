@@ -5,7 +5,7 @@ import templateprops from '../assets/templateprops.json';
 
 /* eslint-disable no-param-reassign,no-shadow */
 export const state = () => ({
-  siteName: '',
+  siteContent: '',
   queryDrawer: false,
   menuitems,
   classes,
@@ -18,7 +18,7 @@ export const state = () => ({
 
 export const getters = {
   getIconBySystemClass: (s) => (c) => s.classes.find((item) => item.systemClass === c).icon,
-  getLabelBySystemClass: (s) => ({ c, l }) => s.classes.find((item) => item.systemClass === c)[l],
+  getLabelBySystemClass: (s) => ({c, l}) => s.classes.find((item) => item.systemClass === c)[l],
   getCRMClassBySystemClass: (s) => (c) => s.classes.find((item) => item.systemClass === c).crmClass,
   getSortColumnByPath: (s) => (p) => {
     let h = s.tableheaders.wide.find((h) => h.value === p);
@@ -31,6 +31,18 @@ export const getters = {
   hasSex: (s) => (c) => s.templateprops.hasSex.includes(c),
   getGeoItems: (s) => s.geoItems,
   getTempItems: (s) => s.tempItems,
+  getGeoItemsAsFeatureCollection: (s) => s.geoItems.features.map((f) => ({
+    features: [f],
+    type: 'FeatureCollection',
+  })),
+  getTempItemsAsTimeStamps: (s) => s.tempItems.map((r) => {
+    if (r.features[0].when.timespans[0].start.earliest !== 'None') return `${r.features[0].when.timespans[0].start.earliest}T00:00:00.000Z`;
+    if (r.features[0].when.timespans[0].end.earliest !== 'None') return `${r.features[0].when.timespans[0].end.earliest}T00:00:00.000Z`;
+    return null;
+  }).filter((r) => r),
+  getGeoItemById: (s) => (id) => s.geoItems.filter((f) => f.properties.id === id)[0],
+  getGeometryById: (s) => (id) => s.geoItems.filter((f) => f.properties.id === id)
+    .map((f) => f.geometry)[0],
 };
 
 export const mutations = {
@@ -43,8 +55,8 @@ export const mutations = {
   toggleQueryDrawer(state) {
     state.queryDrawer = !state.queryDrawer;
   },
-  setSiteName(state, name) {
-    state.SiteName = name;
+  setSiteContent(state, content) {
+    state.SiteContent = content;
   },
   setGeoItems(state, items) {
     state.geoItems = items;
@@ -54,6 +66,4 @@ export const mutations = {
   },
 };
 
-export const actions = {
-
-};
+export const actions = {};
