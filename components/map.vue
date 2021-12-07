@@ -54,11 +54,6 @@ export default {
       immediate: true,
     },
   },
-  beforeDestroy() {
-    this.$nextTick(() => {
-      // this.$refs.map.mapObject.remove();
-    });
-  },
   methods: {
     delayedHandler() {
       this.$nextTick(() => {
