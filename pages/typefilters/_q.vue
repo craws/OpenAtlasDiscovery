@@ -7,10 +7,12 @@
 <script>
 import list from '~/components/lists/list.vue';
 import queries from '~/mixins/queries';
+import diachrony from '~/mixins/diachrony';
 
 export default {
   components: {
     list,
+    diachrony,
   },
   mixins: [queries],
   data() {
