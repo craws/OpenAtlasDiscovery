@@ -30,7 +30,7 @@
     "swagger-client": "^3.17.0",
     "typeface-roboto": "^1.1.13",
     "vue-histogram-slider": "^0.3.8",
-    "vue-json-viewer": "^2.2.20",
+    "vue-json-viewer": "^2.2.21",
     "vuetify": "^2.6.1"
   },
   "devDependencies": {
@@ -39,7 +39,7 @@
     "@nuxtjs/eslint-config": "^3.0.0",
     "@nuxtjs/eslint-config-typescript": "^2.0.0",
     "@nuxtjs/eslint-module": "^2.0.0",
-    "@nuxtjs/vuetify": "^1.12.2",
+    "@nuxtjs/vuetify": "^1.12.3",
     "babel-eslint": "^10.1.0",
     "eslint": "^7.32.0",
     "eslint-config-airbnb": "^18.2.0",
