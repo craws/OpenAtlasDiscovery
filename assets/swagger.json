@@ -15,7 +15,7 @@
   },
   "servers": [
     {
-      "url": "https://connec.acdh.oeaw.ac.at/",
+      "url": "https://connec.openatlas.eu/",
       "description": "Connec Production Server"
     }
   ],

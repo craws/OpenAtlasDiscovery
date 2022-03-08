@@ -18,7 +18,7 @@ export const state = () => ({
 
 export const getters = {
   getIconBySystemClass: (s) => (c) => s.classes.find((item) => item.systemClass === c).icon,
-  getLabelBySystemClass: (s) => ({c, l}) => s.classes.find((item) => item.systemClass === c)[l],
+  getLabelBySystemClass: (s) => ({ c, l }) => s.classes.find((item) => item.systemClass === c)[l],
   getCRMClassBySystemClass: (s) => (c) => s.classes.find((item) => item.systemClass === c).crmClass,
   getSortColumnByPath: (s) => (p) => {
     let h = s.tableheaders.wide.find((h) => h.value === p);

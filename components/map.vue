@@ -7,11 +7,14 @@
           <l-marker
             v-for="item in pointsFromGeoJSON"
             :key="item.features[0]['@id']"
-            :lat-lng="item.features[0].geometry.coordinates.slice().reverse()"/>
+            :lat-lng="item.features[0].geometry.coordinates.slice().reverse()"
+          />
           <l-popup
             v-for="item in pointsFromGeoJSON"
             :key="item.features[0]['@id']"
-          >{{ item.features[0].geometry.title }}</l-popup>
+          >
+            {{ item.features[0].geometry.title }}
+          </l-popup>
         </l-feature-group>
       </l-map>
     </div>
@@ -48,6 +51,14 @@ export default {
         '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
     };
   },
+  computed: {
+    pointsFromGeoJSON() {
+      return this.geojsonitems.filter((f) => {
+        if (f.features[0].geometry && f.features[0].geometry.type === 'Point') return true;
+        return false;
+      });
+    },
+  },
   watch: {
     geojsonitems: {
       handler() {
@@ -55,14 +66,6 @@ export default {
       },
       deep: true,
       immediate: true,
-    },
-  },
-  computed: {
-    pointsFromGeoJSON() {
-      return this.geojsonitems.filter((f) => {
-        if (f.features[0].geometry && f.features[0].geometry.type === 'Point') return true;
-        return false;
-      });
     },
   },
   methods: {
