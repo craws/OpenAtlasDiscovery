@@ -203,7 +203,7 @@ export default {
                 toLatLng
               ], {
               color: this.getCaseStudyColor(caseStudy) || 'rgba(255,255,255,0.5)',
-              weight: 4, animate : animate
+              weight: 4, animate : this.animate && animate
 
             });
             this.map?.addLayer(curvedPath);
