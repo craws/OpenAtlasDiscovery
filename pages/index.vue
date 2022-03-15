@@ -1,116 +1,155 @@
 <template>
   <v-container class="bgmap">
-    <v-row
-      no-gutters
-      style="height: 50%"
-    >
-      <v-col
-        cols="12"
-        sm="6"
-        md="8"
-      >
-        <v-card
-          outlined
-          class="fill-height"
-          tile
-        >
-          <qmap v-if="!loading" :geojsonitems="getGeoItemsAsFeatureCollection" :options="{ zoomControl: false }"/>
+    <v-row no-gutters style="height: 100%">
+      <v-col cols="12" sm="6" md="8">
+        <v-card outlined class="full-height"tile>
+          <qmap :events="getEvents" :filter="filter" :animate="animate" />
         </v-card>
       </v-col>
-      <v-col
-        cols="12"
-        sm="6"
-        md="4"
-      >
-        <v-card
-          class="fill-height pa-2"
-          tile
-          outlined
-        >
-          <v-list-item two-line>
-            <v-list-item-content>
-              <v-list-item-title class="text-h2">
-                {{ content.siteName }}
-              </v-list-item-title>
-              <v-list-item-subtitle v-html="content.intro"/>
-            </v-list-item-content>
-          </v-list-item>
-          <v-list>
-            <v-list-item>
-              <v-list-item-avatar>
-                <v-icon
-                  class="grey lighten-1"
-                  dark
-                >
-                  mdi-comment-text-multiple
-                </v-icon>
-              </v-list-item-avatar>
-              <v-list-item-content>
-                <v-list-item-title>Contact</v-list-item-title>
-                <v-list-item-subtitle v-html="content.contact"></v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
-            <v-list-item>
-              <v-list-item-avatar>
-                <v-icon
-                  class="grey lighten-1"
-                  dark
-                >
-                  mdi-gavel
-                </v-icon>
-              </v-list-item-avatar>
-              <v-list-item-content>
-                <v-list-item-title>Legal Information</v-list-item-title>
-                <v-list-item-subtitle>{{ content.legalNotice }}</v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
-          </v-list>
-        </v-card>
-      </v-col>
-    </v-row>
-    <v-row
-      no-gutters
-      style="height: 50%"
-    >
-      <v-col cols="12">
-        <v-row>
-          <v-col
-            cols="3"
-            sm="6"
-            md="3"
-            v-for="item in items"
-          >
-            <v-card
+      <v-col cols="12" sm="6" md="4">
+        <v-card class="full-height pa-2 overflow-auto" tile outlined>
+          <v-card-title>Filter Settings</v-card-title>
+          <v-card-subtitle>Timeline</v-card-subtitle>
+          <v-card-text>
+            {{ timeLabels[time[0]] }} AD - {{ timeLabels[time[1]] }} AD
+            <v-range-slider v-model="time" :max="5" step="1" ticks="always" tick-size="3" />
+          </v-card-text>
 
-              class="mx-auto"
-              max-width="344"
-            >
-              <v-card-text v-if="item.features[0]">
-                <div>Case Study</div>
-                <p class="text-h4 text--primary">
-                  {{ item.features[0].properties.title }}
-                </p>
-                <div class="text--primary" v-if="item.features[0].description">
-                  {{ item.features[0].description[0].value }}
+          <v-card-subtitle>CaseStudies</v-card-subtitle>
+          <v-card-text>
+            <v-row no-gutters>
+              <v-col cols="12" v-for="item in caseStudyCheckboxes" :key="item.id">
+                <div class="d-flex justify-space-between align-center">
+                  <v-checkbox v-model="item.selected" :label="item.name"></v-checkbox>
+                  <v-btn
+                    icon
+                    @click="item.expanded = !item.expanded"
+                    class="expand-button"
+                    :class="{ clicked: item.expanded }"
+                  >
+                    <v-icon>mdi-chevron-right</v-icon>
+                  </v-btn>
                 </div>
-              </v-card-text>
-              <v-card-actions>
-                <v-btn
-                  text
-                >
-                  Learn More
-                </v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-col>
-        </v-row>
+
+                <v-expand-transition>
+                  <v-row no-gutters class="ml-5" v-if="item.expanded">
+                    <v-col cols="12" v-for="subitem in item.subtypes" :key="subitem.id">
+                      <v-checkbox
+                        :disabled="!item.selected"
+                        class="mt-0"
+                        v-model="subitem.selected"
+                        :label="subitem.name"
+                      ></v-checkbox>
+                    </v-col>
+                  </v-row>
+                </v-expand-transition>
+              </v-col>
+            </v-row>
+          </v-card-text>
+          <v-card-subtitle>Event Type</v-card-subtitle>
+          <v-card-text>
+            <v-row no-gutters>
+              <v-col cols="12">
+                <v-autocomplete
+                  label="Event Types"
+                  v-model="eventTypes"
+                  :items="getEventTypes"
+                  item-text="name"
+                  item-value="id"
+                  multiple
+                  outlined
+                  chips
+                ></v-autocomplete>
+              </v-col>
+            </v-row>
+          </v-card-text>
+          <v-card-text>
+            <v-row no-gutters>
+              <v-col cols="3">Sender</v-col>
+              <v-col cols="5" class="px-2">
+                <v-autocomplete
+                dense
+                  :items="getPersons"
+                  item-text="properties.title"
+                  item-value="id"
+                  v-model="sender.id"
+                  :disabled="!!sender.sex"
+                  outlined
+                ></v-autocomplete>
+              </v-col>
+              <v-col cols="4">
+                <v-autocomplete
+                dense
+                  v-model="sender.sex"
+                  label="Sex"
+                  outlined
+                  clearable
+                  :items="['Male', 'Female']"
+                ></v-autocomplete>
+              </v-col>
+            </v-row>
+            <v-row no-gutters>
+              <v-col cols="3" >Recipient</v-col>
+              <v-col cols="5" class="px-2" >
+                <v-autocomplete
+                  dense
+                  :items="getPersons"
+                  item-text="properties.title"
+                  item-value="id"
+                  v-model="recipient.id"
+                  :disabled="!!recipient.sex"
+                  outlined
+                ></v-autocomplete>
+              </v-col>
+              <v-col cols="4">
+                <v-autocomplete
+                  dense
+
+                  v-model="recipient.sex"
+                  label="Sex"
+                  outlined
+                  clearable
+                  :items="['Male', 'Female']"
+                ></v-autocomplete>
+              </v-col>
+            </v-row>
+            <v-row no-gutters>
+              <v-col cols="3">Bearer</v-col>
+              <v-col cols="5" class="px-2">
+                <v-autocomplete
+                dense
+                  :items="getPersons"
+                  item-text="properties.title"
+                  item-value="id"
+                  v-model="bearer.id"
+                  :disabled="!!bearer.sex"
+                  outlined
+                ></v-autocomplete>
+              </v-col>
+              <v-col cols="4">
+                <v-autocomplete
+                dense
+                  v-model="bearer.sex"
+                  label="Sex"
+                  outlined
+                  clearable
+                  :items="['Male', 'Female']"
+                ></v-autocomplete>
+              </v-col>
+            </v-row>
+          </v-card-text>
+          <v-card-text>
+                  <v-checkbox v-model="animate" label="animate"></v-checkbox>
+
+          </v-card-text>
+        </v-card>
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script>
-import {mapGetters} from 'vuex';
+import { mapGetters } from 'vuex';
 import Logo from '~/components/Logo.vue';
 import qmap from '~/components/map.vue';
 
@@ -121,7 +160,14 @@ export default {
   },
   data() {
     return {
+      animate:false,
+      sender: { id: undefined, sex: undefined },
+      recipient: { id: undefined, sex: undefined },
+      bearer: { id: undefined, sex: undefined },
+      timeLabels: [350, 400, 450, 500, 600, 650],
+      time: [0, 5],
       items: [],
+      filterCaseStudies: [],
       casestudies: [633, 13064, 9362, 1420],
       content: {
         contact: '',
@@ -131,38 +177,48 @@ export default {
       },
       loading: true,
       reveal: false,
+      eventTypes: [],
+      caseStudyCheckboxes: [],
     };
   },
   async mounted() {
-    const c = await this.$api.Content.get_api_0_2_content_({});
-    this.content = c.body;
-    // eslint-disable-next-line no-restricted-syntax
-    for (const ct of this.casestudies) {
-      // eslint-disable-next-line no-await-in-loop,no-underscore-dangle
-      const cf = await this.$api.Entities.get_api_0_2_entity__id__({
-        id_: ct,
-      });
-      this.items.push(cf.body);
-    }
-    console.log(this.items);
-    this.loading = false;
+
+    this.caseStudyCheckboxes = this.getCaseStudies.map(x => ({ ...x, subtypes: x.subtypes.map(y => ({ ...y, selected: true })), selected: true, expanded: false }))
+
   },
+
   computed: {
     ...mapGetters('app', [
       'getGeoItemsAsFeatureCollection',
     ]),
+    ...mapGetters('data', ['getEvents', 'getCaseStudies', 'getEventTypes', 'getPersons']),
+    filter() {
+      return {
+        caseStudies: this.caseStudyCheckboxes.filter(x => x.selected).flatMap(x => [x.id, ...x.subtypes.filter(y => y.selected).map(y => y.id)]),
+        from: `0${this.timeLabels[this.time[0]]}-01-01`,
+        to: `0${this.timeLabels[this.time[1]]}-01-01`,
+        eventTypes: this.eventTypes,
+        sender: this.sender,
+        bearer: this.bearer,
+        recipient: this.recipient,
+      }
+    },
   },
+  methods: {
+    clickOnCaseStudie(item) {
+      if (this.filterCaseStudies.includes(item.id)) {
+        this.filterCaseStudies = this.filterCaseStudies.filter(x => ![item.id, ...item.subtypes.map(x => x.id)].includes(x));
+      } else {
+        this.filterCaseStudies = [...this.filterCaseStudies, item.id, ...item.subtypes.map(x => x.id)];
+      }
+    }
+  }
 };
 </script>
-<style>
-
-.splashtext {
-  position: relative;
-  background-color: rgba(255, 255, 255, 0.8);
-  top: 15vh;
-  width: 100%;
+<style scoped>
+.full-height{
+  height: calc(100vh - 64px);
 }
-
 .bgmap {
   height: calc(100vh - 64px);
   max-width: 100% !important;
@@ -171,10 +227,11 @@ export default {
   padding: 0px;
 }
 
-.v-card--reveal {
-  bottom: 0;
-  opacity: 1 !important;
-  position: absolute;
-  width: 100%;
+.expand-button {
+  transition: all ease-in-out 100ms;
+}
+
+.expand-button.clicked {
+  transform: rotate(90deg);
 }
 </style>

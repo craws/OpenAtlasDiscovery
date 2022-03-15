@@ -81,7 +81,7 @@ export default {
       sort: sortDesc[0] ? 'desc' : 'asc',
     };
     // eslint-disable-next-line no-underscore-dangle
-    const p = await this.$api.Entities.get_api_0_2_query_(query);
+    const p = await this.$api.Entities.get_api_0_3_query_(query);
     // eslint-disable-next-line prefer-destructuring
     this.items = p.body.results;
     this.itemIndex = p.body.pagination.index;

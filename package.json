@@ -16,6 +16,7 @@
     "lint": "npm run lint:js"
   },
   "dependencies": {
+    "@elfalem/leaflet-curve": "^0.9.1",
     "@mdi/font": "^5.6.55",
     "@nuxt/content": "^1.15.1",
     "@nuxt/typescript-runtime": "^0.4.10",
@@ -25,6 +26,7 @@
     "d3": "^6.7.0",
     "d3-tip": "^0.9.1",
     "leaflet": "^1.7.1",
+    "leaflet-textpath": "^1.2.3",
     "nuxt": "^2.15.8",
     "nuxt-leaflet": "^0.0.27",
     "swagger-client": "^3.18.4",
