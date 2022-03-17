@@ -1,8 +1,11 @@
 <template>
   <v-container class="bgmap">
+    <v-overlay :value="!getEventsLoaded" z-index="9999">
+      <v-progress-circular indeterminate size="64" />
+    </v-overlay>
     <v-row no-gutters style="height: 100%">
       <v-col cols="12" sm="6" md="8">
-        <v-card outlined class="full-height"tile>
+        <v-card outlined class="full-height" tile>
           <qmap :events="getEvents" :filter="filter" :animate="animate" />
         </v-card>
       </v-col>
@@ -18,28 +21,28 @@
           <v-card-subtitle>CaseStudies</v-card-subtitle>
           <v-card-text>
             <v-row no-gutters>
-              <v-col cols="12" v-for="item in caseStudyCheckboxes" :key="item.id">
+              <v-col v-for="item in caseStudyCheckboxes" :key="item.id" cols="12">
                 <div class="d-flex justify-space-between align-center">
-                  <v-checkbox v-model="item.selected" :label="item.name"></v-checkbox>
+                  <v-checkbox v-model="item.selected" :label="item.name" />
                   <v-btn
                     icon
-                    @click="item.expanded = !item.expanded"
                     class="expand-button"
                     :class="{ clicked: item.expanded }"
+                    @click="item.expanded = !item.expanded"
                   >
                     <v-icon>mdi-chevron-right</v-icon>
                   </v-btn>
                 </div>
 
                 <v-expand-transition>
-                  <v-row no-gutters class="ml-5" v-if="item.expanded">
-                    <v-col cols="12" v-for="subitem in item.subtypes" :key="subitem.id">
+                  <v-row v-if="item.expanded" no-gutters class="ml-5">
+                    <v-col v-for="subitem in item.subtypes" :key="subitem.id" cols="12">
                       <v-checkbox
+                        v-model="subitem.selected"
                         :disabled="!item.selected"
                         class="mt-0"
-                        v-model="subitem.selected"
                         :label="subitem.name"
-                      ></v-checkbox>
+                      />
                     </v-col>
                   </v-row>
                 </v-expand-transition>
@@ -51,96 +54,101 @@
             <v-row no-gutters>
               <v-col cols="12">
                 <v-autocomplete
-                  label="Event Types"
                   v-model="eventTypes"
+                  label="Event Types"
                   :items="getEventTypes"
                   item-text="name"
                   item-value="id"
                   multiple
                   outlined
                   chips
-                ></v-autocomplete>
+                />
               </v-col>
             </v-row>
           </v-card-text>
-          <v-card-text>
+          <v-card-text v-if="getPersonsLoaded">
             <v-row no-gutters>
-              <v-col cols="3">Sender</v-col>
+              <v-col cols="3">
+                Sender
+              </v-col>
               <v-col cols="5" class="px-2">
                 <v-autocomplete
-                dense
+                  v-model="sender.id"
+                  dense
                   :items="getPersons"
                   item-text="properties.title"
                   item-value="id"
-                  v-model="sender.id"
                   :disabled="!!sender.sex"
                   outlined
-                ></v-autocomplete>
+                />
               </v-col>
               <v-col cols="4">
                 <v-autocomplete
-                dense
                   v-model="sender.sex"
+                  dense
                   label="Sex"
                   outlined
                   clearable
                   :items="['Male', 'Female']"
-                ></v-autocomplete>
+                />
               </v-col>
             </v-row>
             <v-row no-gutters>
-              <v-col cols="3" >Recipient</v-col>
-              <v-col cols="5" class="px-2" >
-                <v-autocomplete
-                  dense
-                  :items="getPersons"
-                  item-text="properties.title"
-                  item-value="id"
-                  v-model="recipient.id"
-                  :disabled="!!recipient.sex"
-                  outlined
-                ></v-autocomplete>
+              <v-col cols="3">
+                Recipient
               </v-col>
-              <v-col cols="4">
-                <v-autocomplete
-                  dense
-
-                  v-model="recipient.sex"
-                  label="Sex"
-                  outlined
-                  clearable
-                  :items="['Male', 'Female']"
-                ></v-autocomplete>
-              </v-col>
-            </v-row>
-            <v-row no-gutters>
-              <v-col cols="3">Bearer</v-col>
               <v-col cols="5" class="px-2">
                 <v-autocomplete
-                dense
+                  v-model="recipient.id"
+                  dense
                   :items="getPersons"
                   item-text="properties.title"
                   item-value="id"
-                  v-model="bearer.id"
-                  :disabled="!!bearer.sex"
+                  :disabled="!!recipient.sex"
                   outlined
-                ></v-autocomplete>
+                />
               </v-col>
               <v-col cols="4">
                 <v-autocomplete
-                dense
-                  v-model="bearer.sex"
+                  v-model="recipient.sex"
+
+                  dense
                   label="Sex"
                   outlined
                   clearable
                   :items="['Male', 'Female']"
-                ></v-autocomplete>
+                />
+              </v-col>
+            </v-row>
+            <v-row no-gutters>
+              <v-col cols="3">
+                Bearer
+              </v-col>
+              <v-col cols="5" class="px-2">
+                <v-autocomplete
+                  v-model="bearer.id"
+                  dense
+                  :items="getPersons"
+                  item-text="properties.title"
+                  item-value="id"
+                  :disabled="!!bearer.sex"
+                  outlined
+                />
+              </v-col>
+              <v-col cols="4">
+                <v-autocomplete
+                  v-model="bearer.sex"
+                  dense
+                  label="Sex"
+                  outlined
+                  clearable
+                  :items="['Male', 'Female']"
+                />
               </v-col>
             </v-row>
           </v-card-text>
           <v-card-text>
-                  <v-checkbox v-model="animate" label="animate"></v-checkbox>
-
+            <v-checkbox v-model="animate" label="animate" />
           </v-card-text>
         </v-card>
       </v-col>
@@ -160,10 +168,19 @@ export default {
   },
   data() {
     return {
-      animate:false,
-      sender: { id: undefined, sex: undefined },
-      recipient: { id: undefined, sex: undefined },
-      bearer: { id: undefined, sex: undefined },
+      animate: false,
+      sender: {
+        id: undefined,
+        sex: undefined,
+      },
+      recipient: {
+        id: undefined,
+        sex: undefined,
+      },
+      bearer: {
+        id: undefined,
+        sex: undefined,
+      },
       timeLabels: [350, 400, 450, 500, 600, 650],
       time: [0, 5],
       items: [],
@@ -182,43 +199,54 @@ export default {
     };
   },
   async mounted() {
-
-    this.caseStudyCheckboxes = this.getCaseStudies.map(x => ({ ...x, subtypes: x.subtypes.map(y => ({ ...y, selected: true })), selected: true, expanded: false }))
-
+    this.caseStudyCheckboxes = this.getCaseStudies.map((x) => ({
+      ...x,
+      subtypes: x.subtypes.map((y) => ({
+        ...y,
+        selected: true,
+      })),
+      selected: true,
+      expanded: false,
+    }));
   },
 
   computed: {
     ...mapGetters('app', [
       'getGeoItemsAsFeatureCollection',
     ]),
-    ...mapGetters('data', ['getEvents', 'getCaseStudies', 'getEventTypes', 'getPersons']),
+    ...mapGetters('data', ['getEvents', 'getCaseStudies', 'getEventTypes', 'getPersons', 'getEventsLoaded', 'getPersonsLoaded']),
     filter() {
       return {
-        caseStudies: this.caseStudyCheckboxes.filter(x => x.selected).flatMap(x => [x.id, ...x.subtypes.filter(y => y.selected).map(y => y.id)]),
+        caseStudies: this.caseStudyCheckboxes.filter((x) => x.selected)
+          .flatMap((x) => [x.id, ...x.subtypes.filter((y) => y.selected)
+            .map((y) => y.id)]),
         from: `0${this.timeLabels[this.time[0]]}-01-01`,
         to: `0${this.timeLabels[this.time[1]]}-01-01`,
         eventTypes: this.eventTypes,
         sender: this.sender,
         bearer: this.bearer,
         recipient: this.recipient,
-      }
+      };
     },
   },
   methods: {
-    clickOnCaseStudie(item) {
+    clickOnCaseStudy(item) {
       if (this.filterCaseStudies.includes(item.id)) {
-        this.filterCaseStudies = this.filterCaseStudies.filter(x => ![item.id, ...item.subtypes.map(x => x.id)].includes(x));
+        this.filterCaseStudies = this.filterCaseStudies.filter((x) => ![item.id,
+          ...item.subtypes.map((x) => x.id)].includes(x));
       } else {
-        this.filterCaseStudies = [...this.filterCaseStudies, item.id, ...item.subtypes.map(x => x.id)];
+        this.filterCaseStudies = [...this.filterCaseStudies,
+          item.id, ...item.subtypes.map((x) => x.id)];
       }
-    }
-  }
+    },
+  },
 };
 </script>
 <style scoped>
-.full-height{
+.full-height {
   height: calc(100vh - 64px);
 }
+
 .bgmap {
   height: calc(100vh - 64px);
   max-width: 100% !important;
