@@ -27,7 +27,12 @@
                     <span>
                       {{ getCRMClassBySystemClass(item.features[0].systemClass) }}
                       -
-                      {{ getLabelBySystemClass({c: item.features[0].systemClass, l: 'en'}) }}
+                      {{
+                        getLabelBySystemClass({
+                          c: item.features[0].systemClass,
+                          l: 'en'
+                        })
+                      }}
                     </span>
                   </v-tooltip>
                   <div class="text-h5">
@@ -46,7 +51,9 @@
                       </div>
                       <div class="text-body-2 pl-2">
                         {{
-                          item.features[0].when.timespans[0].start.earliest ? item.features[0].when.timespans[0].start.earliest : item.features[0].when.timespans[0].start.latest
+                          item.features[0].when.timespans[0].start.earliest ?
+                            item.features[0].when.timespans[0].start.earliest :
+                            item.features[0].when.timespans[0].start.latest
                         }}
                       </div>
                     </v-row>
@@ -61,7 +68,9 @@
                       </div>
                       <div class="text-body-2 pl-2">
                         {{
-                          item.features[0].when.timespans[0].end.latest ? item.features[0].when.timespans[0].end.latest : item.features[0].when.timespans[0].end.earliest
+                          item.features[0].when.timespans[0].end.latest ?
+                            item.features[0].when.timespans[0].end.latest :
+                            item.features[0].when.timespans[0].end.earliest
                         }}
                       </div>
                     </v-row>
@@ -155,7 +164,7 @@
               <v-tab>Graph</v-tab>
               <v-tab>JSON</v-tab>
               <v-tab-item>
-                <qmap v-if="!this.loading" :geojsonitems="[item].concat(related)" style="height: calc(100vh - 154px)" />
+                <qmap :events="events" style="height: calc(100vh - 154px)" :animate="true"/>
               </v-tab-item>
               <v-tab-item>
                 <treegraph
@@ -196,7 +205,7 @@ export default {
   async fetch() {
     this.loading = true;
     // eslint-disable-next-line no-underscore-dangle
-    const p = await this.$api.Entities.get_api_0_2_entity__id__({
+    const p = await this.$api.Entities.get_api_0_3_entity__id__({
       id_: this.$route.params.id,
     });
     // eslint-disable-next-line prefer-destructuring
@@ -218,25 +227,28 @@ export default {
       // eslint-disable-next-line no-restricted-syntax,max-len
       for (const id of this.item.features[0].relations.filter((r) => r.relationSystemClass === type)) {
         // eslint-disable-next-line no-await-in-loop,no-underscore-dangle
-        const ri = await this.$api.Entities.get_api_0_2_entity__id__({
-          id_: id.relationTo.split('/').splice(-1, 1),
+        const ri = await this.$api.Entities.get_api_0_3_entity__id__({
+          id_: id.relationTo.split('/')
+            .splice(-1, 1),
         });
         this.related.push(ri.body);
       }
     },
     closeAll() {
-      Object.keys(this.$refs).forEach((k) => {
-        if (this.$refs[k] && this.$refs[k].$attrs['data-open']) {
-          this.$refs[k].$el.click();
-        }
-      });
+      Object.keys(this.$refs)
+        .forEach((k) => {
+          if (this.$refs[k] && this.$refs[k].$attrs['data-open']) {
+            this.$refs[k].$el.click();
+          }
+        });
     },
     openAll() {
-      Object.keys(this.$refs).forEach((k) => {
-        if (this.$refs[k] && !this.$refs[k].$attrs['data-open']) {
-          this.$refs[k].$el.click();
-        }
-      });
+      Object.keys(this.$refs)
+        .forEach((k) => {
+          if (this.$refs[k] && !this.$refs[k].$attrs['data-open']) {
+            this.$refs[k].$el.click();
+          }
+        });
     },
   },
   computed: {
@@ -248,10 +260,15 @@ export default {
       'hasTime',
       'hasSex',
     ]),
+    ...mapGetters('data', ['getEvents']),
     relationTypes() {
       // eslint-disable-next-line max-len
       if (Array.isArray(this.item.features[0].relations)) return [...new Set(this.item.features[0].relations.map((item) => item.relationType))];
       return [];
+    },
+    events() {
+      console.log(this.getEvents);
+      return this.getEvents.filter((e) => e.toPlace == parseInt(this.$route.params.id) || e.fromPlace === parseInt(this.$route.params.id));
     },
     genderFromClass() {
       if (Array.isArray(this.item.features[0].relations)) {
