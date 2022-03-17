@@ -117,7 +117,7 @@ async function loadAllFromCidocClass(cidocClass) {
     cidoc_class: cidocClass,
   });
   let localItems = [...p.body.results]
-  await Promise.all(Array.from({ length: p.body.pagination.totalPages - 55 }, async (x, i) => {
+  await Promise.all(Array.from({ length: p.body.pagination.totalPages - 1 }, async (x, i) => {
     const q = await Vue.prototype.$api.Entities.get_api_0_3_cidoc_class__cidoc_class_({
       limit: 30,
       cidoc_class: cidocClass,
