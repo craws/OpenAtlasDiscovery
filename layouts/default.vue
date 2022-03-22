@@ -54,7 +54,7 @@
   </v-app>
 </template>
 <script>
-import { mapMutations, mapActions } from 'vuex';
+import { mapMutations } from 'vuex';
 import querysearch from '~/components/querysearch.vue';
 
 export default {
@@ -70,10 +70,6 @@ export default {
       title: '',
     };
   },
-  async mounted() {
-    await Promise.all([this.loadTypeTree(),
-      this.loadTypeTree(), this.loadPersons(), this.loadGeoItems(), this.loadEvents()]);
-  },
   head() {
     return { title: this.title };
   },
@@ -83,7 +79,6 @@ export default {
       'setTempItems',
       'setSiteContent',
     ]),
-    ...mapActions('data', ['loadGeoItems', 'loadEvents', 'loadTypeTree', 'loadPersons']),
   },
 };
 </script>

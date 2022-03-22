@@ -157,7 +157,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 import Logo from '~/components/Logo.vue';
 import qmap from '~/components/map.vue';
 
@@ -199,6 +199,8 @@ export default {
     };
   },
   async mounted() {
+    await Promise.all([this.loadTypeTree(),
+      this.loadTypeTree(), this.loadPersons(), this.loadGeoItems(), this.loadEvents()]);
     this.caseStudyCheckboxes = this.getCaseStudies.map((x) => ({
       ...x,
       subtypes: x.subtypes.map((y) => ({
@@ -230,10 +232,11 @@ export default {
     },
   },
   methods: {
+    ...mapActions('data', ['loadGeoItems', 'loadEvents', 'loadTypeTree', 'loadPersons']),
     clickOnCaseStudy(item) {
       if (this.filterCaseStudies.includes(item.id)) {
         this.filterCaseStudies = this.filterCaseStudies.filter((x) => ![item.id,
-          ...item.subtypes.map((x) => x.id)].includes(x));
+          ...item.subtypes.map((y) => y.id)].includes(x));
       } else {
         this.filterCaseStudies = [...this.filterCaseStudies,
           item.id, ...item.subtypes.map((x) => x.id)];
@@ -251,8 +254,8 @@ export default {
   height: calc(100vh - 64px);
   max-width: 100% !important;
   position: absolute;
-  top: 0px;
-  padding: 0px;
+  top: 0;
+  padding: 0;
 }
 
 .expand-button {
