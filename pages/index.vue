@@ -253,7 +253,6 @@ export default {
 .bgmap {
   height: calc(100vh - 64px);
   max-width: 100% !important;
-  position: absolute;
   top: 0;
   padding: 0;
 }
