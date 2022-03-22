@@ -1,6 +1,6 @@
 <template>
   <img
-    alt="OpenAtlasDiscovery Logo"
-    src="/OpenAtlasDiscovery_logo.png"
+    alt="Connec Logo"
+    src="/connecLogo.png"
   >
 </template>

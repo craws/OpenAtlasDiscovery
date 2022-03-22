@@ -42,7 +42,7 @@
       <v-app-bar-nav-icon @click="$store.commit('app/toggleQueryDrawer')" />
       <nuxt-link to="/" @click="$store.commit('app/closeQueryDrawer')">
         <div class="logocaption d-none d-sm-flex">
-          <img class="barlogo ml-1 mr-1" alt="logo" src="/OpenAtlasDiscovery_logo.png">
+          <img class="barlogo ml-1 mr-1" alt="logo" src="/connecLogo.jpg">
         </div>
       </nuxt-link>
       <querysearch />
@@ -70,9 +70,7 @@ export default {
       title: '',
     };
   },
-  head() {
-    return { title: this.title };
-  },
+
   methods: {
     ...mapMutations('app', [
       'setGeoItems',
