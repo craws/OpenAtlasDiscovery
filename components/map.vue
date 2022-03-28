@@ -67,12 +67,6 @@ export default {
         'radius': 10,
 
       },
-      caseStudy: {
-        '633': 'rgba(33,33,200,0.5)',
-        '6934': 'rgba(33,33,200,0.5)',
-        '8184': 'rgba(33,33,200,0.5)',
-        '938': 'rgba(33,33,200,0.5)',
-      },
       pointLayer: null,
       lineLayer: [],
       lineLayers: {},
@@ -128,17 +122,17 @@ export default {
             if (!this.lineLayers[e.id]) return;
             let show = true;
             //casestudies
-            const typeIds = e.relations.filter(y => y.relationType === 'crm:P2 has type')
-              .map(y => y.relationTo.split('/')
-                .pop());
-            show = show && this.filter.caseStudies.some(y => typeIds.includes(y));
+          const typeIds = e.relations.filter(y => y.relationType === 'crm:P2 has type')
+            .map(y => y.relationTo.split('/')
+              .pop());
+          show = show && this.filter.caseStudies.some(y => (typeIds.includes(y.toString())));
 
             //time
             show = show && (!this.filter.from || new Date(e.when.timespans[0].start.earliest) >= new Date(this.filter.from))
               && (!this.filter.to || new Date(e.when.timespans[0].end.earliest) <= new Date(this.filter.to));
 
             //event types
-            show = show && (this.filter.eventTypes.length == 0 || this.filter.eventTypes.some(x => e.types.find(x => x.hierarchy === 'Event')
+            show = show && (this.filter.eventTypes.length === 0 || this.filter.eventTypes.some(x => e.types.find(x => x.hierarchy === 'Event')
               ?.identifier
               .split('/')
               .pop() === x.toString()));
@@ -240,7 +234,7 @@ export default {
               'Q', midPointLatLng,
               toLatLng
             ], {
-              color: this.getCaseStudyColor(caseStudy) || 'rgba(255,255,255,0.5)',
+              color: this.getCaseStudyColor(parseInt(caseStudy,10)) || 'rgba(255,255,255,0.5)',
               weight: 4,
               animate: this.animate && animate
 

@@ -23,7 +23,7 @@
             <v-row no-gutters>
               <v-col v-for="item in caseStudyCheckboxes" :key="item.id" cols="12">
                 <div class="d-flex justify-space-between align-center">
-                  <v-checkbox v-model="item.selected" :label="item.name" />
+                  <v-checkbox v-model="item.selected" :label="item.name" :color="item.color"/>
                   <v-btn
                     icon
                     class="expand-button"
@@ -39,8 +39,8 @@
                     <v-col v-for="subitem in item.subtypes" :key="subitem.id" cols="12">
                       <v-checkbox
                         v-model="subitem.selected"
-                        :disabled="!item.selected"
                         class="mt-0"
+                        :color="item.color"
                         :label="subitem.name"
                       />
                     </v-col>
@@ -185,7 +185,6 @@ export default {
       time: [0, 5],
       items: [],
       filterCaseStudies: [],
-      casestudies: [633, 13064, 9362, 1420],
       content: {
         contact: '',
         intro: 'loading...',
@@ -199,8 +198,10 @@ export default {
     };
   },
   async mounted() {
-    await Promise.all([this.loadTypeTree(),
-      this.loadTypeTree(), this.loadPersons(), this.loadGeoItems(), this.loadEvents()]);
+    if (!this.getEventsLoaded) {
+      await this.loadTypeTree();
+      await Promise.all([this.loadPersons(), this.loadGeoItems(), this.loadEvents()]);
+    }
     this.caseStudyCheckboxes = this.getCaseStudies.map((x) => ({
       ...x,
       subtypes: x.subtypes.map((y) => ({
@@ -219,8 +220,8 @@ export default {
     ...mapGetters('data', ['getEvents', 'getCaseStudies', 'getEventTypes', 'getPersons', 'getEventsLoaded', 'getPersonsLoaded']),
     filter() {
       return {
-        caseStudies: this.caseStudyCheckboxes.filter((x) => x.selected)
-          .flatMap((x) => [x.id, ...x.subtypes.filter((y) => y.selected)
+        caseStudies: this.caseStudyCheckboxes
+          .flatMap((x) => [!!x.selected && x.id, ...x.subtypes.filter((y) => y.selected)
             .map((y) => y.id)]),
         from: `0${this.timeLabels[this.time[0]]}-01-01`,
         to: `0${this.timeLabels[this.time[1]]}-01-01`,
