@@ -85,7 +85,7 @@ export const actions = {
     const g = await Vue.prototype.$api.Content.get_api_0_3_geometric_entities_();
     const dict = g.body.features.reduce((map, item) => ({
       ...map,
-      [item.properties.objectId]: item
+      [item.properties.objectId + 1]: item
     }), {});
     commit('SET_GEO_ITEMS', dict);
   },
@@ -105,8 +105,8 @@ export const actions = {
         .pop();
       return {
         ...x.features[0],
-        fromPlace: parseInt(fromPlace) - 1,
-        toPlace: parseInt(toPlace) - 1,
+        fromPlace: parseInt(fromPlace),
+        toPlace: parseInt(toPlace),
         id: x.features[0]['@id'].split('/')
           .pop(),
       };

@@ -26,8 +26,8 @@
             <span class="text-body-1">
               <nuxt-link
                 v-if="!!movedFrom"
-                :to="`/single/${movedFrom.relationTo.split('/').pop()}`"
-              >{{ movedFrom.label }}
+                :to="`/single/${parseInt(movedFrom.relationTo.split('/').pop(),10)-1}`"
+              >{{ movedFrom.label.split('Location of')[1] }}
               </nuxt-link>
               <span v-else> unknown</span>
             </span>
@@ -37,8 +37,8 @@
             <span class="text-body-1">
               <nuxt-link
                 v-if="!!movedTo"
-                :to="`/single/${movedTo.relationTo.split('/').pop()}`"
-              >{{ movedTo.label }}
+                :to="`/single/${parseInt(movedTo.relationTo.split('/').pop(),10)-1}`"
+              >{{ movedTo.label.split('Location of')[1] }}
               </nuxt-link>
               <span v-else> unknown</span>
             </span>

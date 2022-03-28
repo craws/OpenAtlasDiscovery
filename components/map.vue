@@ -170,21 +170,22 @@ export default {
     }
   },
   methods: {
+
     addPlacesToMap(placeIds) {
       const routeToPage = (id) => {
-        console.log(id);
         this.$router.push(`/single/${id}`);
       };
+      const popup = (f, l) => {
+        let myPopup = L.DomUtil.create('div', 'infoWindow');
+        myPopup.innerHTML = `<p>${f.properties.name} | ${f.properties.objectName} </p><input id="detailButton" type="button" value="Details">`;
+        myPopup.lastChild.addEventListener('click', () => routeToPage(f.properties.objectId), false);
+        l.bindPopup(myPopup);
+      }
       const places = placeIds.map(x => this.getGeoItems[x])
         .filter(Boolean);
       this.pointLayer = new L.GeoJSON(places, {
-        onEachFeature: function (f, l) {
-          let myPopup = L.DomUtil.create('div', 'infoWindow');
-          myPopup.innerHTML = `<p>${f.properties.name}</p><input id="detailButton" type="button" value="Details">`;
-          console.log(f);
-          myPopup.lastChild.addEventListener('click', () => routeToPage(f.properties.objectId), false);
-          l.bindPopup(myPopup);
-        },
+        filter:  (feature) => feature?.geometry?.type === "Point",
+        onEachFeature: (f, l) => popup(f,l),
         pointToLayer: function (feature, latlng) {
           return L.circleMarker(latlng, {
             'color': '#000000',
@@ -196,6 +197,12 @@ export default {
           });
         }
       });
+      this.polyLayer = new L.GeoJSON(places, {
+        filter: (feature) => feature?.geometry?.type !== "Point",
+        onEachFeature: (f, l) => popup(f, l),
+      });
+      this.map?.addLayer(this.polyLayer);
+
       this.map?.addLayer(this.pointLayer);
 
     },
@@ -217,7 +224,13 @@ export default {
             ?.identifier
             .split('/')
             .pop();
-          const toLatLng = toPlace.geometry.type === 'Point' ? [...toPlace.geometry.coordinates].reverse() : [0, 0];
+          const getLatLng= (place) => {
+              if(place.geometry.type === 'Point') return [...toPlace.geometry.coordinates].reverse();
+
+            const {lat,lng} = new L.GeoJSON(place).getBounds().getCenter();
+            return [lat,lng];
+          }
+          const toLatLng = getLatLng(toPlace);
           const fromLatLng = fromPlace.geometry.type === 'Point' ? [...fromPlace.geometry.coordinates].reverse() : [0, 0];
           const {
             midPointLatLng,

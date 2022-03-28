@@ -264,8 +264,8 @@ export default {
       return [];
     },
     events() {
-      return this.getEvents.filter((e) => e.toPlace === parseInt(this.$route.params.id, 10)
-        || e.fromPlace === parseInt(this.$route.params.id, 10));
+      return this.getEvents.filter((e) => e.toPlace === parseInt(this.$route.params.id, 10)+1
+        || e.fromPlace === parseInt(this.$route.params.id, 10)+1);
     },
     genderFromClass() {
       if (Array.isArray(this.item.features[0].relations)) {
