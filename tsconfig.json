@@ -27,7 +27,6 @@
       "@types/node",
       "@nuxt/types",
       "@nuxt/vue-app",
-      "nuxt-leaflet"
     ]
   },
   "exclude": [

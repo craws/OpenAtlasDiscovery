@@ -40,7 +40,7 @@ export default {
   css: [
     '~/css/main.css',
     '@mdi/font/css/materialdesignicons.css',
-    'typeface-roboto/index.css',
+    '@fontsource/roboto/latin.css',
     'vue-json-viewer/style.css',
   ],
   /*
@@ -72,7 +72,6 @@ export default {
     '@nuxtjs/axios',
     // Doc: https://github.com/nuxt/content
     '@nuxt/content',
-    'nuxt-leaflet',
   ],
   /*
   ** Axios module configuration
