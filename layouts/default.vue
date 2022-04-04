@@ -47,6 +47,7 @@
       </nuxt-link>
       <querysearch />
       <v-spacer />
+      <nuxt-link to="/network">Persons</nuxt-link>
     </v-app-bar>
     <v-main>
       <nuxt />
@@ -55,7 +56,7 @@
   </v-app>
 </template>
 <script>
-import { mapMutations } from 'vuex';
+import { mapActions, mapMutations } from 'vuex';
 import querysearch from '~/components/querysearch.vue';
 
 export default {
@@ -71,13 +72,16 @@ export default {
       title: '',
     };
   },
-
+async mounted(){
+  await this.loadTypeTree();
+},
   methods: {
     ...mapMutations('app', [
       'setGeoItems',
       'setTempItems',
       'setSiteContent',
     ]),
+    ...mapActions('data',['loadTypeTree']),
   },
 };
 </script>

@@ -9,7 +9,6 @@ import 'leaflet/dist/leaflet.css';
 import { mapGetters } from 'vuex';
 import L from 'leaflet';
 import '@elfalem/leaflet-curve';
-import 'leaflet-textpath';
 
 export default {
   props: {
@@ -32,7 +31,7 @@ export default {
     },
     markeritems: {
       type: Array,
-      default: () => [],
+      default: () => [{from:'3482', to:'5437'}],
     },
     filter: {
       type: Object,

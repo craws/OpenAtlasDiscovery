@@ -19,35 +19,9 @@
           </v-card-text>
 
           <v-card-subtitle>CaseStudies</v-card-subtitle>
+          <filter-case-studies v-model="caseStudies"></filter-case-studies>
           <v-card-text>
-            <v-row no-gutters>
-              <v-col v-for="item in caseStudyCheckboxes" :key="item.id" cols="12">
-                <div class="d-flex justify-space-between align-center">
-                  <v-checkbox v-model="item.selected" :label="item.name" :color="item.color"/>
-                  <v-btn
-                    icon
-                    class="expand-button"
-                    :class="{ clicked: item.expanded }"
-                    @click="item.expanded = !item.expanded"
-                  >
-                    <v-icon>mdi-chevron-right</v-icon>
-                  </v-btn>
-                </div>
 
-                <v-expand-transition>
-                  <v-row v-if="item.expanded" no-gutters class="ml-5">
-                    <v-col v-for="subitem in item.subtypes" :key="subitem.id" cols="12">
-                      <v-checkbox
-                        v-model="subitem.selected"
-                        class="mt-0"
-                        :color="item.color"
-                        :label="subitem.name"
-                      />
-                    </v-col>
-                  </v-row>
-                </v-expand-transition>
-              </v-col>
-            </v-row>
           </v-card-text>
           <v-card-subtitle>Event Type</v-card-subtitle>
           <v-card-text>
@@ -169,6 +143,7 @@ export default {
   data() {
     return {
       animate: false,
+      caseStudies:[],
       sender: {
         id: undefined,
         sex: undefined,
@@ -194,7 +169,6 @@ export default {
       loading: true,
       reveal: false,
       eventTypes: [],
-      caseStudyCheckboxes: [],
     };
   },
   async mounted() {
@@ -202,15 +176,7 @@ export default {
       await this.loadTypeTree();
       await Promise.all([this.loadPersons(), this.loadGeoItems(), this.loadEvents()]);
     }
-    this.caseStudyCheckboxes = this.getCaseStudies.map((x) => ({
-      ...x,
-      subtypes: x.subtypes.map((y) => ({
-        ...y,
-        selected: true,
-      })),
-      selected: true,
-      expanded: false,
-    }));
+
   },
 
   computed: {
@@ -220,9 +186,7 @@ export default {
     ...mapGetters('data', ['getEvents', 'getCaseStudies', 'getEventTypes', 'getPersons', 'getEventsLoaded', 'getPersonsLoaded']),
     filter() {
       return {
-        caseStudies: this.caseStudyCheckboxes
-          .flatMap((x) => [!!x.selected && x.id, ...x.subtypes.filter((y) => y.selected)
-            .map((y) => y.id)]),
+        caseStudies: this.caseStudies,
         from: `0${this.timeLabels[this.time[0]]}-01-01`,
         to: `0${this.timeLabels[this.time[1]]}-01-01`,
         eventTypes: this.eventTypes,
@@ -234,15 +198,7 @@ export default {
   },
   methods: {
     ...mapActions('data', ['loadGeoItems', 'loadEvents', 'loadTypeTree', 'loadPersons']),
-    clickOnCaseStudy(item) {
-      if (this.filterCaseStudies.includes(item.id)) {
-        this.filterCaseStudies = this.filterCaseStudies.filter((x) => ![item.id,
-          ...item.subtypes.map((y) => y.id)].includes(x));
-      } else {
-        this.filterCaseStudies = [...this.filterCaseStudies,
-          item.id, ...item.subtypes.map((x) => x.id)];
-      }
-    },
+
   },
 };
 </script>
@@ -258,11 +214,5 @@ export default {
   padding: 0;
 }
 
-.expand-button {
-  transition: all ease-in-out 100ms;
-}
 
-.expand-button.clicked {
-  transform: rotate(90deg);
-}
 </style>
