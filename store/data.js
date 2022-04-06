@@ -61,7 +61,6 @@ export const actions = {
     const eventTypes = Object.values(g.body.typeTree)
       .filter(x => x.root.includes(27));
 
-
     const colors = ['#f44336',
       '#2196f3',
       '#4caf50',
@@ -69,37 +68,52 @@ export const actions = {
       '#ffeb3b',
       '#009688',
       '#607d8b'];
-    const getcolor = (nonce) => { return colors.length !== 0 ? colors.shift() :
-    `#${+ Math.floor(parseFloat(`0.${nonce}`) * 16777215).toString(16) }`};
-    const caseStudies = g.body.typeTree[137].subs.filter(x => x !== 13465).map(cs => ({
-      ...g.body.typeTree[cs],
-      subtypes: g.body.typeTree[cs].subs.map(sub => g.body.typeTree[sub]),
-      color:getcolor(cs)
-    }));
+    const getcolor = (nonce) => {
+      return colors.length !== 0 ? colors.shift() :
+        `#${+Math.floor(parseFloat(`0.${nonce}`) * 16777215)
+          .toString(16)}`;
+    };
+    const caseStudies = g.body.typeTree[137].subs.filter(x => x !== 13465)
+      .map(cs => ({
+        ...g.body.typeTree[cs],
+        subtypes: g.body.typeTree[cs].subs.map(sub => g.body.typeTree[sub]),
+        color: getcolor(cs)
+      }));
 
     commit('SET_EVENT_TYPES', eventTypes);
     commit('SET_CASE_STUDIES', caseStudies);
 
   },
   async loadGeoItems({ commit }) {
+    const places = await loadAllFromCidocClass('place', ['relations']);
+
+    console.log('plätzle', places);
+    console.time('geo');
     const g = await Vue.prototype.$api.Content.get_api_0_3_geometric_entities_();
-    const dict = g.body.features.reduce((map, item) => ({
-      ...map,
-      [item.properties.objectId + 1]: item
-    }), {});
+    const dict = g.body.features.reduce((map, item) => {
+      const locationId = parseInt(places.find(p => p.features[0]['@id'] === `http://connec.openatlas.eu/entity/${item.properties.objectId}`)
+        ?.features[0]?.relations?.find(x => x.relationSystemClass === 	"object_location")?.relationTo.split('/').pop(),10);
+      return {
+        ...map,
+        [locationId]: item
+      };
+    }, {});
+    console.timeEnd('geo');
+    console.log('geo', dict);
+    console.log('geoData', dict);
     commit('SET_GEO_ITEMS', dict);
   },
   async loadEvents({ commit }) {
     commit('SET_EVENTS_LOADED', false);
-    const localItems = await loadAllFromCidocClass('E9');
+    const localItems = await loadAllFromCidocClass('event', ['when', 'relations', 'types']);
     console.time('fix');
     const list = localItems.map(x => {
 
-      const fromPlace = x.features[0].relations.find(y => y.relationType === 'crm:P27 moved from')
+      const fromPlace = x.features[0]?.relations?.find(y => y.relationType === 'crm:P27 moved from')
         ?.relationTo
         .split('/')
         .pop();
-      const toPlace = x.features[0].relations.find(y => y.relationType === 'crm:P26 moved to')
+      const toPlace = x.features[0]?.relations?.find(y => y.relationType === 'crm:P26 moved to')
         ?.relationTo
         .split('/')
         .pop();
@@ -118,7 +132,7 @@ export const actions = {
   },
   async loadPersons({ commit }) {
     commit('SET_PERSONS_LOADED', false);
-    const localItems = await loadAllFromCidocClass('E21');
+    const localItems = await loadAllFromCidocClass('actor', ['relations', 'types']);
     const list = localItems.map(x => ({
       ...x.features[0],
       id: x.features[0]['@id'].split('/')
@@ -144,30 +158,20 @@ export const actions = {
     commit('SET_PERSONS_LOADED', true);
   },
   async loadGroups({ commit }) {
-    const localItems = await loadAllFromCidocClass('E74');
-    const list = localItems.map(x => x.features[0]);
-    commit('SET_GROUPS', list);
+    //const localItems = await loadAllFromCidocClass('E74',['when']);
+    //const list = localItems.map(x => x.features[0]);
+    //commit('SET_GROUPS', list);
   },
 };
 
-async function loadAllFromCidocClass(cidocClass) {
-  console.time(`load ${cidocClass}`);
-
-  const p = await Vue.prototype.$api.Entities.get_api_0_3_cidoc_class__cidoc_class_({
-    limit: 30,
-    cidoc_class: cidocClass,
+async function loadAllFromCidocClass(viewClass, show) {
+  console.time(`load ${viewClass}`);
+  const p = await Vue.prototype.$api.Entities.get_api_0_3_query_({
+    limit: 99999,
+    view_classes: viewClass,
+    show: show,
   });
-  let localItems = [...p.body.results]
-  await Promise.all(Array.from({ length: p.body.pagination.totalPages - 1 }, async (x, i) => {
-    const q = await Vue.prototype.$api.Entities.get_api_0_3_cidoc_class__cidoc_class_({
-      limit: 30,
-      cidoc_class: cidocClass,
-      show: ['when', 'relations', 'types'],
-      page: i + 2
-    });
-
-    localItems = [...localItems, ...q.body.results];
-  }));
-  console.timeEnd(`load ${cidocClass}`);
+  let localItems = [...p.body.results];
+  console.timeEnd(`load ${viewClass}`);
   return localItems;
 }

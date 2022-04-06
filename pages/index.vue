@@ -174,7 +174,10 @@ export default {
   async mounted() {
     if (!this.getEventsLoaded) {
       await this.loadTypeTree();
-      await Promise.all([this.loadPersons(), this.loadGeoItems(), this.loadEvents()]);
+      await this.loadGeoItems();
+      await this.loadEvents();
+      await this.loadPersons();
+
     }
 
   },
