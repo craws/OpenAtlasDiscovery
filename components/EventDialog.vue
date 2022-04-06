@@ -19,15 +19,15 @@
         {{ event.label }}
       </v-card-title>
 
-      <v-card-text v-if="loaded" class="pt-4">
+      <v-card-text v-if="loaded" style="overflow:hidden" class="pt-4">
         <v-row no-gutters>
           <v-col cols="12" sm="4" class="d-flex flex-column">
             <span class="text-caption mb-n2">Origin</span>
             <span class="text-body-1">
               <nuxt-link
                 v-if="!!movedFrom"
-                :to="`/single/${parseInt(movedFrom.relationTo.split('/').pop(),10)-1}`"
-              >{{ movedFrom.label.split('Location of')[1] }}
+                :to="`/single/${movedFrom.relationTo.split('/').pop()}`"
+              >{{ movedFrom.label }}
               </nuxt-link>
               <span v-else> unknown</span>
             </span>
@@ -37,8 +37,8 @@
             <span class="text-body-1">
               <nuxt-link
                 v-if="!!movedTo"
-                :to="`/single/${parseInt(movedTo.relationTo.split('/').pop(),10)-1}`"
-              >{{ movedTo.label.split('Location of')[1] }}
+                :to="`/single/${movedTo.relationTo.split('/').pop()}`"
+              >{{ movedTo.label}}
               </nuxt-link>
               <span v-else> unknown</span>
             </span>
@@ -82,16 +82,16 @@
           </v-col>
         </v-row>
       </v-card-text>
-      <v-progress-circular
-        v-else
-
-        style="width:100%;"
-        class="my-15 d-flex"
-        :size="50"
-        color="primary"
-        indeterminate
-      />
-
+      <v-card-text         v-else
+      >
+        <v-progress-linear
+          color="primary"
+          class="mt-4"
+          indeterminate
+          rounded
+          height="6"
+        ></v-progress-linear>
+      </v-card-text>
       <v-divider />
 
       <v-card-actions>
@@ -117,14 +117,17 @@ export default {
       dialog: false,
       loaded: false,
       eventDetail: undefined,
+      locationFrom: undefined,
+      locationTo: undefined,
     };
   },
   computed: {
     movedFrom() {
-      return this.eventDetail?.relations.find((x) => x.relationType === 'crm:P27 moved from');
+
+      return this.locationFrom?.relations.find((x) => x.relationType === "crm:P53i is former or current location of");
     },
     movedTo() {
-      return this.eventDetail?.relations.find((x) => x.relationType === 'crm:P26 moved to');
+      return this.locationTo?.relations.find((x) => x.relationType === 	"crm:P53i is former or current location of");
     },
     sender() {
       return this.eventDetail?.relations.find((x) => x.type === 'Sender');
@@ -144,9 +147,27 @@ export default {
             .pop(),
         });
         [this.eventDetail] = p.body.features;
-        this.loaded = true;
       }
     },
+    async eventDetail() {
+      const lFrom = this.eventDetail?.relations.find((x) => x.relationType === 'crm:P27 moved from');
+      if (!!lFrom) {
+        const f = await this.$api.Entities.get_api_0_3_entity__id__({
+          id_: lFrom?.relationTo.split('/')
+            .pop(),
+        });
+        [this.locationFrom] = f.body.features;
+      }
+      const lTo = this.eventDetail?.relations.find((x) => x.relationType === 'crm:P26 moved to');
+      if (!!lTo) {
+        const t = await this.$api.Entities.get_api_0_3_entity__id__({
+          id_: lTo?.relationTo.split('/')
+            .pop(),
+        });
+        [this.locationTo] = t.body.features;
+      }
+      this.loaded = true;
+    }
   },
 };
 </script>
