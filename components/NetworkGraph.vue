@@ -5,8 +5,6 @@
 </template>
 
 <script>
-import { Network } from 'vis-network';
-import { DataSet } from 'vis-data';
 import { mapGetters } from 'vuex';
 
 export default {

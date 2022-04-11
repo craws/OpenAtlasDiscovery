@@ -2,10 +2,10 @@ import Vue from 'vue';
 
 export const state = () => ({
   geoItems: {},
-  events: [],
+  events: {},
   eventTypes: [],
   caseStudies: [],
-  persons: [],
+  persons: {},
   groups: [],
   eventToPerson: {},
   eventsLoaded: false,
@@ -51,6 +51,9 @@ export const mutations = {
   },
   SET_PERSONS_LOADED(state, personsLoaded) {
     state.personsLoaded = personsLoaded;
+  },
+  UPDATE_PERSON(state, personId, properties) {
+    state.persons[personId] = {...(state.persons[personId]||[]), ...properties };
   }
 
 };
@@ -92,7 +95,7 @@ export const actions = {
     const g = await Vue.prototype.$api.Content.get_api_0_3_geometric_entities_();
     const dict = g.body.features.reduce((map, item) => {
       const locationId = parseInt(places.find(p => p.features[0]['@id'] === `http://connec.openatlas.eu/entity/${item.properties.objectId}`)
-        ?.features[0]?.relations?.find(x => x.relationSystemClass === 	"object_location")?.relationTo.split('/').pop(),10);
+        ?.features[0]?.relations?.find(x => x.relationSystemClass === "object_location")?.relationTo.split('/').pop(), 10);
       return {
         ...map,
         [locationId]: item
@@ -105,57 +108,71 @@ export const actions = {
   },
   async loadEvents({ commit }) {
     commit('SET_EVENTS_LOADED', false);
-    const localItems = await loadAllFromCidocClass('event', ['when', 'relations', 'types']);
-    console.time('fix');
-    const list = localItems.map(x => {
 
-      const fromPlace = x.features[0]?.relations?.find(y => y.relationType === 'crm:P27 moved from')
+    const events = await loadAllFromCidocClass('event', ['when', 'relations', 'types']);
+    console.time('fix');
+    const eventDict = events.reduce((dict, event) => {
+      const eventId = event.features[0]['@id'].split('/').pop()
+      const fromPlace = event.features[0]?.relations?.find(y => y.relationType === 'crm:P27 moved from')
         ?.relationTo
         .split('/')
         .pop();
-      const toPlace = x.features[0]?.relations?.find(y => y.relationType === 'crm:P26 moved to')
+      const toPlace = event.features[0]?.relations?.find(y => y.relationType === 'crm:P26 moved to')
         ?.relationTo
         .split('/')
         .pop();
+      let sender = event.features[0]?.relations?.find(y => y.relationType === "crm:P11 had participant" && y.type === "Sender");
+      if(sender) sender.id = sender?.relationTo.split('/').pop();
+      let recipient = event.features[0]?.relations?.find(y => y.relationType === "crm:P11 had participant" && y.type === "Recipient");
+      if(recipient) recipient.id = recipient?.relationTo.split('/').pop();
+      let bearer = event.features[0]?.relations?.find(y => y.relationType === "crm:P11 had participant" && y.type === "Bearer");
+      if(bearer) bearer.id = bearer?.relationTo.split('/').pop();
       return {
-        ...x.features[0],
-        fromPlace: parseInt(fromPlace),
-        toPlace: parseInt(toPlace),
-        id: x.features[0]['@id'].split('/')
-          .pop(),
+        ...dict,
+        [eventId]: {
+          ...event.features[0],
+          fromPlace: parseInt(fromPlace),
+          toPlace: parseInt(toPlace),
+          id: eventId,
+          sender,
+          bearer,
+          recipient
+        }
       };
-    });
-    console.timeEnd('fix');
-    commit('SET_EVENTS', list);
+    }, {});
+
+    const personDict = [...Object.values(eventDict).map(x => x.sender),
+      Object.values(eventDict).map(x => x.recipient),
+      Object.values(eventDict).map(x => x.bearer)].filter(Boolean).reduce((dict, person)=>({
+        ...dict,
+        [person.id] : person
+      }),{})
+
+    commit('SET_EVENTS', eventDict);
+    commit('SET_PERSONS', personDict);
     commit('SET_EVENTS_LOADED', true);
+    console.timeEnd('fix');
+
 
   },
   async loadPersons({ commit }) {
     commit('SET_PERSONS_LOADED', false);
-    const localItems = await loadAllFromCidocClass('actor', ['relations', 'types']);
-    const list = localItems.map(x => ({
-      ...x.features[0],
-      id: x.features[0]['@id'].split('/')
-        .pop()
-    }));
-
-    const eventToPerson = list.reduce((dict, current) => {
-      const id = current.id;
-      const sex = current.types?.find(x => x.hierarchy === 'Sex')?.label;
-      const connections = current.relations?.filter(x => x.relationType === 'crm:P11i participated in' && x.relationSystemClass === 'move')
-        .reduce((relations, currentRelation) => ({
-          ...relations,
-          [`${currentRelation.type} ${currentRelation.relationTo?.split('/')
-            .pop()}`]: {
-            id,
-            sex
-          }
-        }), {});
-      return ({ ...dict, ...connections });
-    }, {});
-    commit('SET_PERSONS', list);
-    commit('SET_EVENT_TO_PERSON', eventToPerson);
+    const localItems = await loadAllFromCidocClass('actor', ['types']);
+    console.time('afterPerson')
+  
+    const persons = localItems.reduce((dict,person) => {
+        const id = person.features[0]['@id'].split('/').pop();
+        const sex = person.features[0].types?.find(y => y.hierarchy === 'Sex')?.label;
+        const label = person.features[0].properties.title
+      return{
+        ...dict,
+        [id]:{id,sex,label}
+      }
+    },{});
+    commit('SET_PERSONS', persons);
     commit('SET_PERSONS_LOADED', true);
+    console.timeEnd('afterPerson')
+
   },
   async loadGroups({ commit }) {
     //const localItems = await loadAllFromCidocClass('E74',['when']);
@@ -166,12 +183,33 @@ export const actions = {
 
 async function loadAllFromCidocClass(viewClass, show) {
   console.time(`load ${viewClass}`);
+  const limit = 100;
+
   const p = await Vue.prototype.$api.Entities.get_api_0_3_query_({
-    limit: 99999,
+    limit,
     view_classes: viewClass,
     show: show,
   });
+
+  let promises = [];
   let localItems = [...p.body.results];
+
+  for (let i = 2; i <= p.body.pagination.totalPages; i++) {
+    const promise = {
+      func: Vue.prototype.$api.Entities.get_api_0_3_query_,
+      arg: {
+        limit,
+        view_classes: viewClass,
+        show,
+        page: i
+      }
+    };
+    promises.push(promise);
+  }
+
+  const results = await Promise.all(promises.map((prom) => prom.func(prom.arg)))
+  localItems.push(...results.flatMap(x => x.body.results))
+
   console.timeEnd(`load ${viewClass}`);
   return localItems;
 }

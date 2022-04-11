@@ -40,7 +40,7 @@
               </v-col>
             </v-row>
           </v-card-text>
-          <v-card-text v-if="getPersonsLoaded">
+          <v-card-text >
             <v-row no-gutters>
               <v-col cols="3">
                 Sender
@@ -49,8 +49,8 @@
                 <v-autocomplete
                   v-model="sender.id"
                   dense
-                  :items="getPersons"
-                  item-text="properties.title"
+                  :items="Object.values(getPersons)"
+                  item-text="label"
                   item-value="id"
                   :disabled="!!sender.sex"
                   outlined
@@ -75,8 +75,8 @@
                 <v-autocomplete
                   v-model="recipient.id"
                   dense
-                  :items="getPersons"
-                  item-text="properties.title"
+                  :items="Object.values(getPersons)"
+                  item-text="label"
                   item-value="id"
                   :disabled="!!recipient.sex"
                   outlined
@@ -102,8 +102,8 @@
                 <v-autocomplete
                   v-model="bearer.id"
                   dense
-                  :items="getPersons"
-                  item-text="properties.title"
+                  :items="Object.values(getPersons)"
+                  item-text="label"
                   item-value="id"
                   :disabled="!!bearer.sex"
                   outlined
@@ -173,11 +173,14 @@ export default {
   },
   async mounted() {
     if (!this.getEventsLoaded) {
-      await this.loadTypeTree();
-      await this.loadGeoItems();
-      await this.loadEvents();
-      await this.loadPersons();
-
+    console.time('loadAll')
+    await Promise.all([
+      this.loadTypeTree(),
+      this.loadGeoItems(),
+      this.loadEvents(),
+      ]);
+    console.timeEnd('loadAll')
+    this.loadPersons()
     }
 
   },

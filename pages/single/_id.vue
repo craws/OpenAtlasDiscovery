@@ -3,13 +3,7 @@
     <v-layout v-if="!loading">
       <v-row no-gutters class="pa-1" style="height: calc(100vh - 64px); max-width: 100%">
         <v-col cols="12" sm="5" style="max-height: 100%">
-          <v-card
-            class="pa-4 overflow-auto"
-            outlined
-            tile
-            max-width="100%"
-            max-height="100%"
-          >
+          <v-card class="pa-4 overflow-auto" outlined tile max-width="100%" max-height="100%">
             <v-card-text>
               <!-- icon and title -->
               <v-row align="center">
@@ -21,9 +15,7 @@
                       v-bind="attrs"
                       style="font-size:75px"
                       v-on="on"
-                    >
-                      {{ getIconBySystemClass(item.features[0].systemClass) }}
-                    </v-icon>
+                    >{{ getIconBySystemClass(item.features[0].systemClass) }}</v-icon>
                   </template>
                   <span>
                     {{ getCRMClassBySystemClass(item.features[0].systemClass) }}
@@ -36,20 +28,14 @@
                     }}
                   </span>
                 </v-tooltip>
-                <div class="text-h5">
-                  {{ item.features[0].properties.title }}
-                </div>
+                <div class="text-h5">{{ item.features[0].properties.title }}</div>
               </v-row>
               <!-- begin, end and sex -->
               <v-row v-if="hasTime(item.features[0].systemClass)" class="pl-2">
                 <v-col xs="4">
                   <v-row align="center">
-                    <v-icon class="pr-2">
-                      mdi-logout
-                    </v-icon>
-                    <div class="text-overline">
-                      Begin / From
-                    </div>
+                    <v-icon class="pr-2">mdi-logout</v-icon>
+                    <div class="text-overline">Begin / From</div>
                     <div class="text-body-2 pl-2">
                       {{
                         item.features[0].when.timespans[0].start.earliest ?
@@ -61,12 +47,8 @@
                 </v-col>
                 <v-col xs="4">
                   <v-row align="center">
-                    <v-icon class="pr-2">
-                      mdi-login
-                    </v-icon>
-                    <div class="text-overline">
-                      End / To
-                    </div>
+                    <v-icon class="pr-2">mdi-login</v-icon>
+                    <div class="text-overline">End / To</div>
                     <div class="text-body-2 pl-2">
                       {{
                         item.features[0].when.timespans[0].end.latest ?
@@ -78,15 +60,9 @@
                 </v-col>
                 <v-col v-if="hasSex(item.features[0].systemClass)" xs="4">
                   <v-row align="center">
-                    <v-icon class="pr-2">
-                      mdi-sex
-                    </v-icon>
-                    <div class="text-overline">
-                      Sex
-                    </div>
-                    <div class="text-body-2 pl-2">
-                      {{ genderFromClass }}
-                    </div>
+                    <v-icon class="pr-2">mdi-sex</v-icon>
+                    <div class="text-overline">Sex</div>
+                    <div class="text-body-2 pl-2">{{ genderFromClass }}</div>
                   </v-row>
                 </v-col>
               </v-row>
@@ -104,9 +80,7 @@
                 </div>
                 <v-col cols="12">
                   <v-list v-if="!!destinationEvents && destinationEvents.length !== 0">
-                    <v-list-group
-                      :value="false"
-                    >
+                    <v-list-group :value="false">
                       <template v-slot:activator>
                         <v-list-item-title>Destination of</v-list-item-title>
                       </template>
@@ -116,16 +90,14 @@
                         height="250px"
                         item-height="50px"
                       >
-                        <template v-slot:default="{item}">
+                        <template v-slot:default="{ item }">
                           <event-dialog :event="item" />
                         </template>
                       </v-virtual-scroll>
                     </v-list-group>
                   </v-list>
                   <v-list v-if="!!originEvents && originEvents.length !== 0">
-                    <v-list-group
-                      :value="false"
-                    >
+                    <v-list-group :value="false">
                       <template v-slot:activator>
                         <v-list-item-title>Origin of</v-list-item-title>
                       </template>
@@ -135,7 +107,7 @@
                         height="250px"
                         item-height="60px"
                       >
-                        <template v-slot:default="{item}">
+                        <template v-slot:default="{ item }">
                           <event-dialog :event="item" />
                         </template>
                       </v-virtual-scroll>
@@ -146,12 +118,8 @@
             </v-card-text>
           </v-card>
         </v-col>
-        <v-col cols="12" sm="">
-          <v-card
-            class="pa-4"
-            outlined
-            tile
-          >
+        <v-col cols="12" sm>
+          <v-card class="pa-4" outlined tile>
             <v-tabs right>
               <v-tab>Map</v-tab>
               <v-tab>Graph</v-tab>
@@ -264,38 +232,40 @@ export default {
       return [];
     },
     events() {
-      return this.getEvents.filter((e) => e.toPlace === parseInt(this.$route.params.id, 10)+1
-        || e.fromPlace === parseInt(this.$route.params.id, 10)+1);
-    },
-    genderFromClass() {
-      if (Array.isArray(this.item.features[0].relations)) {
-        if (this.item.features[0].relations.filter((r) => r.label === 'Male').length > 0) return 'Male';
-        if (this.item.features[0].relations.filter((r) => r.label === 'Female').length > 0) return 'Female';
-      }
-      return 'n/a';
-    },
-    destinationEvents() {
-      return this.related.flatMap((x) => x?.features[0]?.relations
-        ?.filter((y) => y.relationType === 'crm:P26i was destination of' && y.relationSystemClass === 'move'));
-    },
-    originEvents() {
-      return this.related.flatMap((x) => x?.features[0]?.relations
-        ?.filter((y) => y.relationType === 'crm:P27i was origin of' && y.relationSystemClass === 'move'));
-    },
-  },
-  watch: {
-    '$route.params': {
-      handler() {
-        this.$fetch();
+      return Object.keys(this.getEvents).reduce((filtered, key,sd) => {
+        if (this.getEvents[key]?.toPlace == parseInt(this.$route.params.id, 10)+1  || this.getEvents[key]?.fromPlace == parseInt(this.$route.params.id, 10)+1) filtered[key] = this.getEvents[key];
+        return filtered;
+      }, {});
       },
-      immediate: true,
-      deep: true,
+      genderFromClass() {
+        if (Array.isArray(this.item.features[0].relations)) {
+          if (this.item.features[0].relations.filter((r) => r.label === 'Male').length > 0) return 'Male';
+          if (this.item.features[0].relations.filter((r) => r.label === 'Female').length > 0) return 'Female';
+        }
+        return 'n/a';
+      },
+      destinationEvents() {
+        return this.related.flatMap((x) => x?.features[0]?.relations
+          ?.filter((y) => y.relationType === 'crm:P26i was destination of' && y.relationSystemClass === 'move'));
+      },
+      originEvents() {
+        return this.related.flatMap((x) => x?.features[0]?.relations
+          ?.filter((y) => y.relationType === 'crm:P27i was origin of' && y.relationSystemClass === 'move'));
+      },
     },
-  },
-  created() {
-    this.closeAll();
-  },
-};
+    watch: {
+      '$route.params': {
+        handler() {
+          this.$fetch();
+        },
+        immediate: true,
+        deep: true,
+      },
+    },
+    created() {
+      this.closeAll();
+    },
+  };
 </script>
 <style>
 .lineclamp {
@@ -304,5 +274,4 @@ export default {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-
 </style>

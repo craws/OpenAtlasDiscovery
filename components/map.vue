@@ -17,8 +17,8 @@ export default {
       default: () => false,
     },
     events: {
-      type: Array,
-      default: () => [],
+      type: Object,
+      default: () => { },
     },
     options: {
       type: Object,
@@ -31,7 +31,7 @@ export default {
     },
     markeritems: {
       type: Array,
-      default: () => [{from:'3482', to:'5437'}],
+      default: () => [{ from: '3482', to: '5437' }],
     },
     filter: {
       type: Object,
@@ -91,7 +91,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('data', ['getEvents', 'getGeoItems', 'getCaseStudies', 'getCaseStudyColor', 'getEventToPerson']),
+    ...mapGetters('data', ['getEvents', 'getGeoItems', 'getCaseStudies', 'getCaseStudyColor', 'getEventToPerson', 'getPersons']),
     locations() {
       return Object.values(this.getGeoItems);
     }
@@ -117,40 +117,44 @@ export default {
             this.map?.removeLayer(layer);
           });
 
-        this.events.forEach(e => {
-            if (!this.lineLayers[e.id]) return;
-            let show = true;
-            //casestudies
+        Object.values(this.events).forEach(e => {
+          if (!this.lineLayers[e.id]) return;
+          let show = true;
+          //casestudies
           const typeIds = e.relations.filter(y => y.relationType === 'crm:P2 has type')
             .map(y => y.relationTo.split('/')
               .pop());
           show = show && this.filter.caseStudies.some(y => (typeIds.includes(y.toString())));
 
-            //time
-            show = show && (!this.filter.from || new Date(e.when.timespans[0].start.earliest) >= new Date(this.filter.from))
-              && (!this.filter.to || new Date(e.when.timespans[0].end.earliest) <= new Date(this.filter.to));
+          //time
+          show = show && (!this.filter.from || new Date(e.when.timespans[0].start.earliest) >= new Date(this.filter.from))
+            && (!this.filter.to || new Date(e.when.timespans[0].end.earliest) <= new Date(this.filter.to));
 
-            //event types
-            show = show && (this.filter.eventTypes.length === 0 || this.filter.eventTypes.some(x => e.types.find(x => x.hierarchy === 'Event')
-              ?.identifier
-              .split('/')
-              .pop() === x.toString()));
+          //event types
+          show = show && (this.filter.eventTypes.length === 0 || this.filter.eventTypes.some(x => e.types.find(x => x.hierarchy === 'Event')
+            ?.identifier
+            .split('/')
+            .pop() === x.toString()));
 
-            //sex
-            show = show && (!this.filter.sender.sex || this.getEventToPerson[`Sender ${e.id}`]?.sex === this.filter.sender.sex);
-            show = show && (!this.filter.bearer.sex || this.getEventToPerson[`Bearer ${e.id}`]?.sex === this.filter.bearer.sex);
-            show = show && (!this.filter.recipient.sex || this.getEventToPerson[`Recipient ${e.id}`]?.sex === this.filter.recipient.sex);
 
-            //actor
-            show = show && (!!this.filter.sender.sex || !this.filter.sender.id || this.getEventToPerson[`Sender ${e.id}`]?.id === this.filter.sender.id);
-            show = show && (!!this.filter.bearer.sex || !this.filter.bearer.id || this.getEventToPerson[`Bearer ${e.id}`]?.id === this.filter.bearer.id);
-            show = show && (!!this.filter.recipient.sex || !this.filter.recipient.id || this.getEventToPerson[`Recipient ${e.id}`]?.id === this.filter.recipient.id);
+          const senderId = this.getEvents[e.id]?.sender?.id;
+          const bearerId = this.getEvents[e.id]?.bearer?.id;
+          const recipientId = this.getEvents[e.id]?.recipient?.id;
 
-            if (show) {
-              this.map?.addLayer(this.lineLayers[e.id]);
-              places = [...places, e.toPlace, e.fromPlace];
-            }
+          //sex
+          show = show && (!this.filter.sender.sex || this.getPersons[senderId]?.sex === this.filter.sender.sex);
+          show = show && (!this.filter.bearer.sex || this.getPersons[bearerId]?.sex === this.filter.bearer.sex);
+          show = show && (!this.filter.recipient.sex || this.getPersons[recipientId]?.sex === this.filter.recipient.sex);
+          //actor
+          show = show && (!!this.filter.sender.sex || !this.filter.sender.id || senderId === this.filter.sender.id);
+          show = show && (!!this.filter.bearer.sex || !this.filter.bearer.id || bearerId === this.filter.bearer.id);
+          show = show && (!!this.filter.recipient.sex || !this.filter.recipient.id || recipientId === this.filter.recipient.id);
+
+          if (show) {
+            this.map?.addLayer(this.lineLayers[e.id]);
+            places = [...places, e.toPlace, e.fromPlace];
           }
+        }
         );
         places = [...new Set(places)];
         this.map?.removeLayer(this.pointLayer);
@@ -183,8 +187,8 @@ export default {
       const places = placeIds.map(x => this.getGeoItems[x])
         .filter(Boolean);
       this.pointLayer = new L.GeoJSON(places, {
-        filter:  (feature) => feature?.geometry?.type === "Point",
-        onEachFeature: (f, l) => popup(f,l),
+        filter: (feature) => feature?.geometry?.type === "Point",
+        onEachFeature: (f, l) => popup(f, l),
         pointToLayer: function (feature, latlng) {
           return L.circleMarker(latlng, {
             'color': '#000000',
@@ -213,21 +217,21 @@ export default {
       this.lineLayers = {};
 
       let places = [];
-      this.events.forEach(element => {
+      Object.values(this.events).forEach(element => {
         const toPlace = this.getGeoItems[element.toPlace];
         const fromPlace = this.getGeoItems[element.fromPlace];
         if (toPlace && fromPlace) {
           places = [...places, element.toPlace, element.fromPlace];
 
-          const caseStudy = element.types.find(x => x.hierarchy === 'Case study')
+          const caseStudy = element?.types?.find(x => x.hierarchy === 'Case study')
             ?.identifier
             .split('/')
             .pop();
-          const getLatLng= (place) => {
-              if(place.geometry.type === 'Point') return [...toPlace.geometry.coordinates].reverse();
+          const getLatLng = (place) => {
+            if (place.geometry.type === 'Point') return [...toPlace.geometry.coordinates].reverse();
 
-            const {lat,lng} = new L.GeoJSON(place).getBounds().getCenter();
-            return [lat,lng];
+            const { lat, lng } = new L.GeoJSON(place).getBounds().getCenter();
+            return [lat, lng];
           }
           const toLatLng = getLatLng(toPlace);
           const fromLatLng = fromPlace.geometry.type === 'Point' ? [...fromPlace.geometry.coordinates].reverse() : [0, 0];
@@ -246,11 +250,11 @@ export default {
               'Q', midPointLatLng,
               toLatLng
             ], {
-              color: this.getCaseStudyColor(parseInt(caseStudy,10)) || 'rgba(255,255,255,0.5)',
-              weight: 4,
-              animate: this.animate && animate
+            color: this.getCaseStudyColor(parseInt(caseStudy, 10)) || 'rgba(255,255,255,0.5)',
+            weight: 4,
+            animate: this.animate && animate
 
-            });
+          });
           this.map?.addLayer(curvedPath);
 
           this.lineLayers[element.id] = curvedPath;
