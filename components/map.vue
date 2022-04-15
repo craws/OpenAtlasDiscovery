@@ -99,6 +99,7 @@ export default {
   watch: {
     animate() {
       this.fillMap();
+      this.applyFilter();
     },
     events: {
       handler() {
@@ -110,7 +111,22 @@ export default {
     },
     filter: {
       handler() {
-        let places = [];
+       this.applyFilter();
+      },
+      deep: true,
+      immediate: true,
+    },
+    locations: {
+      handler() {
+
+      },
+      deep: true,
+      immediate: true
+    }
+  },
+  methods: {
+    applyFilter(){
+       let places = [];
 
         Object.values(this.lineLayers)
           .forEach((layer) => {
@@ -160,28 +176,15 @@ export default {
         this.map?.removeLayer(this.pointLayer);
         this.addPlacesToMap(places);
 
-      },
-      deep: true,
-      immediate: true,
     },
-    locations: {
-      handler() {
-
-      },
-      deep: true,
-      immediate: true
-    }
-  },
-  methods: {
-
     addPlacesToMap(placeIds) {
       const routeToPage = (id) => {
         this.$router.push(`/single/${id}`);
       };
       const popup = (f, l) => {
         let myPopup = L.DomUtil.create('div', 'infoWindow');
-        myPopup.innerHTML = `<p>${f.properties.name} | ${f.properties.objectName} </p><input id="detailButton" type="button" value="Details">`;
-        myPopup.lastChild.addEventListener('click', () => routeToPage(f.properties.objectId), false);
+        myPopup.innerHTML = `<p>${f.properties.name}</p><input id="detailButton" type="button" value="Details">`;
+        myPopup.lastChild.addEventListener('click', () => routeToPage(f.properties.id), false);
         l.bindPopup(myPopup);
       }
       const places = placeIds.map(x => this.getGeoItems[x])
@@ -229,7 +232,7 @@ export default {
             .pop();
           const getLatLng = (place) => {
             if (place.geometry.type === 'Point') return [...toPlace.geometry.coordinates].reverse();
-
+            console.log(place)
             const { lat, lng } = new L.GeoJSON(place).getBounds().getCenter();
             return [lat, lng];
           }
