@@ -15,3 +15,35 @@ const APIClient = {
   },
 };
 Vue.use(APIClient);
+
+export const loadAllFromCidocClass = async(viewClass, show,limit) => {
+  console.time(`load ${viewClass}`);
+
+  const p = await Vue.prototype.$api.Entities.get_api_0_3_query_({
+    limit,
+    view_classes: viewClass,
+    show: show,
+  });
+
+  let promises = [];
+  let localItems = [...p.body.results];
+
+  for (let i = 2; i <= p.body.pagination.totalPages; i++) {
+    const promise = {
+      func: Vue.prototype.$api.Entities.get_api_0_3_query_,
+      arg: {
+        limit,
+        view_classes: viewClass,
+        show,
+        page: i
+      }
+    };
+    promises.push(promise);
+  }
+
+  const results = await Promise.all(promises.map((prom) => prom.func(prom.arg)))
+  localItems.push(...results.flatMap(x => x.body.results))
+
+  console.timeEnd(`load ${viewClass}`);
+  return localItems;
+}
