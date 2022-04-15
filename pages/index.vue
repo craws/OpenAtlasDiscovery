@@ -174,9 +174,9 @@ export default {
   async mounted() {
     if (!this.getEventsLoaded) {
     console.time('loadAll')
+    await  this.loadGeoItems(),
     await Promise.all([
       this.loadTypeTree(),
-      this.loadGeoItems(),
       this.loadEvents(),
       ]);
     console.timeEnd('loadAll')

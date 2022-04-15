@@ -88,23 +88,27 @@ export const actions = {
 
   },
   async loadGeoItems({ commit }) {
-    const places = await loadAllFromCidocClass('place', ['relations']);
+    const places = await loadAllFromCidocClass('place', ['relations','geometry']);
 
     console.log('plätzle', places);
     console.time('geo');
-    const g = await Vue.prototype.$api.Content.get_api_0_3_geometric_entities_();
-    const dict = g.body.features.reduce((map, item) => {
-      const locationId = parseInt(places.find(p => p.features[0]['@id'] === `http://connec.openatlas.eu/entity/${item.properties.objectId}`)
-        ?.features[0]?.relations?.find(x => x.relationSystemClass === "object_location")?.relationTo.split('/').pop(), 10);
+    const newplaces = places.reduce((dict, current) => {
+      const id = parseInt(current.features[0]['@id'].split('/').pop());
+      const locationId = parseInt(current.features[0].relations?.find(x => x.relationSystemClass === "object_location")?.relationTo.split('/').pop(), 10);
+      if(!current.features[0].geometry?.coordinates) return dict;
       return {
-        ...map,
-        [locationId]: item
-      };
-    }, {});
-    console.timeEnd('geo');
-    console.log('geo', dict);
-    console.log('geoData', dict);
-    commit('SET_GEO_ITEMS', dict);
+        ...dict,
+        [locationId]: {
+          properties:{id,
+            name: current.features[0].properties.title,
+            },
+          geometry: {coordinates: current.features[0].geometry.coordinates, type:current.features[0].geometry.type},
+          type:'Feature'
+        }
+      }  
+    },{})
+
+    commit('SET_GEO_ITEMS', newplaces);
   },
   async loadEvents({ commit }) {
     commit('SET_EVENTS_LOADED', false);
