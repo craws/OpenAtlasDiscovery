@@ -35,7 +35,12 @@
         <span>
           {{ getCRMClassBySystemClass(item.features[0].systemClass) }}
           -
-          {{ getLabelBySystemClass({ c: item.features[0].systemClass, l: 'en' }) }}
+          {{
+            getLabelBySystemClass({
+              c: item.features[0].systemClass,
+              l: 'en'
+            })
+          }}
         </span>
       </v-tooltip>
     </template>
@@ -62,7 +67,8 @@ export default {
   props: {
     filter: {
       type: Object,
-      default: () => {},
+      default: () => {
+      },
     },
   },
   async fetch() {
@@ -74,8 +80,9 @@ export default {
       itemsPerPage,
     } = this.options;
     const query = {
+      view_classes: this.$route.query?.['view_classes'],
       limit: itemsPerPage,
-      first: this.itemIndex[page - 1] ? this.itemIndex[page - 1].startId : null,
+      page,
       filter: this.filter,
       column: sortBy ? this.getSortColumnByPath(sortBy[0]) : null,
       sort: sortDesc[0] ? 'desc' : 'asc',
@@ -112,12 +119,13 @@ export default {
       deep: true,
     },
     filter: {
-      handler() { this.$fetch(); },
+      handler() {
+        this.$fetch();
+      },
       deep: true,
     },
   },
-  methods: {
-  },
+  methods: {},
   computed: {
     ...mapGetters('app', [
       'getIconBySystemClass',

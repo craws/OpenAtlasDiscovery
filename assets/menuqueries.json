@@ -4,8 +4,8 @@
     "text": "Actors",
     "target": {
       "name": "list-q",
-      "params": {
-        "q": "{ \"codes\": \"actor\" }"
+      "query": {
+        "view_classes": "actor"
       }
     }
   },
@@ -14,8 +14,8 @@
     "text": "Sources",
     "target": {
       "name": "list-q",
-      "params": {
-        "q": "{ \"codes\": \"source\" }"
+      "query": {
+        "view_classes": "source"
       }
     }
   },
@@ -24,8 +24,8 @@
     "text": "Events",
     "target": {
       "name": "list-q",
-      "params": {
-        "q": "{ \"codes\": \"event\" }"
+      "query": {
+        "view_classes": "event"
       }
     }
   },
@@ -33,9 +33,9 @@
     "icon": "mdi-map-marker",
     "text": "Places",
     "target": {
-      "name": "map-q",
-      "params": {
-        "q": "{ \"codes\": \"place\" }"
+      "name": "list-q",
+      "query": {
+        "view_classes": "place"
       }
     }
   },
@@ -43,9 +43,9 @@
     "icon": "mdi-shape",
     "text": "Artifacts",
     "target": {
-      "name": "map-q",
-      "params": {
-        "q": "{ \"codes\": \"artifact\" }"
+      "name": "list-q",
+      "query": {
+        "view_classes": "artifact"
       }
     }
   }
