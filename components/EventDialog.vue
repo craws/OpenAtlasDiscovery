@@ -81,6 +81,13 @@
             </span>
           </v-col>
         </v-row>
+        <v-row v-if="!!source && source.descriptions.length !== 0 && source.descriptions[0].value !== ''">
+          <v-col cols="12">
+            <p class="text-subtitle-1">Source</p>
+            <p class="text-body-1 source-text">{{source.descriptions[0].value}}</p>
+
+          </v-col>
+        </v-row>
       </v-card-text>
       <v-card-text         v-else
       >
@@ -119,6 +126,8 @@ export default {
       eventDetail: undefined,
       locationFrom: undefined,
       locationTo: undefined,
+      artifact: undefined,
+      source:undefined
     };
   },
   computed: {
@@ -166,6 +175,24 @@ export default {
         });
         [this.locationTo] = t.body.features;
       }
+
+      const artifact = this.eventDetail?.relations.find((x) => x.relationType === "crm:P25 moved");
+      if (!!artifact) {
+        const a = await this.$api.Entities.get_api_0_3_entity__id__({
+          id_: artifact?.relationTo.split('/')
+            .pop(),
+        });
+        [this.artifact] = a.body.features;
+      }
+
+      const source = this.artifact?.relations.find((x) => x.relationType === 	"crm:P128 carries");
+      if (!!source) {
+        const s = await this.$api.Entities.get_api_0_3_entity__id__({
+          id_: source?.relationTo.split('/')
+            .pop(),
+        });
+        [this.source] = s.body.features;
+      }
       this.loaded = true;
     }
   },
@@ -178,5 +205,9 @@ export default {
   word-wrap: break-word;
   word-break: normal;
   hyphens: auto;
+}
+.source-text{
+  max-height:300px;
+  overflow:auto;
 }
 </style>
