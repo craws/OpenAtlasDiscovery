@@ -20,12 +20,14 @@
                 class="mb-n5"
                 v-model="eventTypes"
                 label="Event Types"
-                :items="getEventTypes"
+                :items="eventTypesOrdered"
                 item-text="name"
                 item-value="id"
                 multiple
                 outlined
-                chips
+                clearable
+                deletable-chips
+                small-chips
               />
             </map-control-expand>
 
@@ -204,6 +206,11 @@ export default {
         recipient: this.recipient,
       };
     },
+    eventTypesOrdered(){
+      const firstItems = [639, 939, 8185]
+      console.log(this.getEventTypes.filter(x => firstItems.includes(x.name)),'eventTypes')
+      return [...this.getEventTypes].sort((x,y) =>  firstItems.includes(x.id) ? -1 : firstItems.includes(y.id) ? 1 : 0);
+    }
   },
   methods: {
     ...mapActions('data', ['loadGeoItems', 'loadEvents', 'loadTypeTree', 'loadPersons']),
