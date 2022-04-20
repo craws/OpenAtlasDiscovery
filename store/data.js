@@ -64,12 +64,19 @@ export const actions = {
     const eventTypes = Object.values(g.body.typeTree)
       .filter(x => x.root.includes(27));
 
-    const colors = ['#f44336',
+    const colors = [
+      '#4fb548',
+      '#f05a39',
+      '#c7203e',
+      '#ffc114',
+      '#581644',
+      '#f44336',
       '#2196f3',
       '#4caf50',
       '#ff9800',
       '#ffeb3b',
       '#009688',
+      '#8e1a41',
       '#607d8b'];
     const getcolor = (nonce) => {
       return colors.length !== 0 ? colors.shift() :
@@ -105,7 +112,7 @@ export const actions = {
           geometry: {coordinates: current.features[0].geometry.coordinates, type:current.features[0].geometry.type},
           type:'Feature'
         }
-      }  
+      }
     },{})
 
     commit('SET_GEO_ITEMS', newplaces);
@@ -163,7 +170,7 @@ export const actions = {
     commit('SET_PERSONS_LOADED', false);
     const localItems = await loadAllFromCidocClass('actor', ['types']);
     console.time('afterPerson')
-  
+
     const persons = localItems.reduce((dict,person) => {
         const id = person.features[0]['@id'].split('/').pop();
         const sex = person.features[0].types?.find(y => y.hierarchy === 'Sex')?.label;
