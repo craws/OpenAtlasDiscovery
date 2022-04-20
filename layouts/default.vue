@@ -73,6 +73,8 @@ export default {
     };
   },
 async mounted(){
+  const p = await this.$api.Content.get_api_0_3_content_();
+  this.setSiteContent(p.body);
   await this.loadTypeTree();
 },
   methods: {
@@ -82,6 +84,7 @@ async mounted(){
       'setSiteContent',
     ]),
     ...mapActions('data',['loadTypeTree']),
+    ...mapActions('app',['setSiteContent']),
   },
 };
 </script>
