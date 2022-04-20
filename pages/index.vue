@@ -4,126 +4,121 @@
       <v-progress-circular indeterminate size="64" />
     </v-overlay>
     <v-row no-gutters style="height: 100%">
-      <v-col cols="12" sm="6" md="8">
-        <v-card outlined class="full-height" tile>
-          <qmap :events="getEvents" :filter="filter" :animate="animate" />
-        </v-card>
-      </v-col>
-      <v-col cols="12" sm="6" md="4">
-        <v-card class="full-height pa-2 overflow-auto" tile outlined>
-          <v-card-title>Filter Settings</v-card-title>
-          <v-card-subtitle>Timeline</v-card-subtitle>
-          <v-card-text>
+      <v-col cols="12" >
+        <v-card outlined class="full-height relative" tile>
+          <qmap style="z-index:0" :events="getEvents" :filter="filter" :animate="animate" />
+          <div class="map-controls flex-column   d-flex justify-end">
+            <map-control-expand id="caseStudy" @activated="handleControl" v-model="controlGroup.caseStudy" class="mb-2" label="Case Studies">
+              <template v-slot:icon>mdi-book-multiple</template>
+
+              <filter-case-studies v-model="caseStudies"></filter-case-studies>
+            </map-control-expand>
+            <map-control-expand id="types"  @activated="handleControl" v-model="controlGroup.types" class="mb-2" label="Event Types">
+              <template v-slot:icon>mdi-email-multiple</template>
+
+              <v-autocomplete
+                class="mb-n5"
+                v-model="eventTypes"
+                label="Event Types"
+                :items="getEventTypes"
+                item-text="name"
+                item-value="id"
+                multiple
+                outlined
+                chips
+              />
+            </map-control-expand>
+
+            <map-control-expand id="actors" @activated="handleControl" v-model="controlGroup.actors" class="mb-2" label="Actors">
+              <template v-slot:icon>mdi-account-switch</template>
+              <v-row no-gutters>
+                <v-col cols="3">
+                  Sender
+                </v-col>
+                <v-col cols="5" class="px-2">
+                  <v-autocomplete
+                    v-model="sender.id"
+                    dense
+                    :items="Object.values(getPersons)"
+                    item-text="label"
+                    item-value="id"
+                    :disabled="!!sender.sex"
+                    outlined
+                  />
+                </v-col>
+                <v-col cols="4">
+                  <v-autocomplete
+                    v-model="sender.sex"
+                    dense
+                    label="Sex"
+                    outlined
+                    clearable
+                    :items="['Male', 'Female']"
+                  />
+                </v-col>
+              </v-row>
+              <v-row no-gutters>
+                <v-col cols="3">
+                  Recipient
+                </v-col>
+                <v-col cols="5" class="px-2">
+                  <v-autocomplete
+                    v-model="recipient.id"
+                    dense
+                    :items="Object.values(getPersons)"
+                    item-text="label"
+                    item-value="id"
+                    :disabled="!!recipient.sex"
+                    outlined
+                  />
+                </v-col>
+                <v-col cols="4">
+                  <v-autocomplete
+                    v-model="recipient.sex"
+
+                    dense
+                    label="Sex"
+                    outlined
+                    clearable
+                    :items="['Male', 'Female']"
+                  />
+                </v-col>
+              </v-row>
+              <v-row no-gutters>
+                <v-col cols="3">
+                  Bearer
+                </v-col>
+                <v-col cols="5" class="px-2">
+                  <v-autocomplete
+                    v-model="bearer.id"
+                    dense
+                    :items="Object.values(getPersons)"
+                    item-text="label"
+                    item-value="id"
+                    :disabled="!!bearer.sex"
+                    outlined
+                  />
+                </v-col>
+                <v-col cols="4">
+                  <v-autocomplete
+                    v-model="bearer.sex"
+                    dense
+                    label="Sex"
+                    outlined
+                    clearable
+                    :items="['Male', 'Female']"
+                  />
+                </v-col>
+              </v-row>
+            </map-control-expand>
+
+            <map-control v-model="animate"  label="animate">mdi-transition</map-control>
+
+          </div>
+          <div class="timeline white mx-5 px-5 pt-1 text-center">
             {{ timeLabels[time[0]] }} AD - {{ timeLabels[time[1]] }} AD
-            <v-range-slider v-model="time" :max="5" step="1" ticks="always" tick-size="3" />
-          </v-card-text>
-
-          <v-card-subtitle>CaseStudies</v-card-subtitle>
-          <filter-case-studies v-model="caseStudies"></filter-case-studies>
-          <v-card-text>
-
-          </v-card-text>
-          <v-card-subtitle>Event Type</v-card-subtitle>
-          <v-card-text>
-            <v-row no-gutters>
-              <v-col cols="12">
-                <v-autocomplete
-                  v-model="eventTypes"
-                  label="Event Types"
-                  :items="getEventTypes"
-                  item-text="name"
-                  item-value="id"
-                  multiple
-                  outlined
-                  chips
-                />
-              </v-col>
-            </v-row>
-          </v-card-text>
-          <v-card-text >
-            <v-row no-gutters>
-              <v-col cols="3">
-                Sender
-              </v-col>
-              <v-col cols="5" class="px-2">
-                <v-autocomplete
-                  v-model="sender.id"
-                  dense
-                  :items="Object.values(getPersons)"
-                  item-text="label"
-                  item-value="id"
-                  :disabled="!!sender.sex"
-                  outlined
-                />
-              </v-col>
-              <v-col cols="4">
-                <v-autocomplete
-                  v-model="sender.sex"
-                  dense
-                  label="Sex"
-                  outlined
-                  clearable
-                  :items="['Male', 'Female']"
-                />
-              </v-col>
-            </v-row>
-            <v-row no-gutters>
-              <v-col cols="3">
-                Recipient
-              </v-col>
-              <v-col cols="5" class="px-2">
-                <v-autocomplete
-                  v-model="recipient.id"
-                  dense
-                  :items="Object.values(getPersons)"
-                  item-text="label"
-                  item-value="id"
-                  :disabled="!!recipient.sex"
-                  outlined
-                />
-              </v-col>
-              <v-col cols="4">
-                <v-autocomplete
-                  v-model="recipient.sex"
-
-                  dense
-                  label="Sex"
-                  outlined
-                  clearable
-                  :items="['Male', 'Female']"
-                />
-              </v-col>
-            </v-row>
-            <v-row no-gutters>
-              <v-col cols="3">
-                Bearer
-              </v-col>
-              <v-col cols="5" class="px-2">
-                <v-autocomplete
-                  v-model="bearer.id"
-                  dense
-                  :items="Object.values(getPersons)"
-                  item-text="label"
-                  item-value="id"
-                  :disabled="!!bearer.sex"
-                  outlined
-                />
-              </v-col>
-              <v-col cols="4">
-                <v-autocomplete
-                  v-model="bearer.sex"
-                  dense
-                  label="Sex"
-                  outlined
-                  clearable
-                  :items="['Male', 'Female']"
-                />
-              </v-col>
-            </v-row>
-          </v-card-text>
-          <v-card-text>
-            <v-checkbox v-model="animate" label="animate" />
-          </v-card-text>
+            <v-range-slider color="black" v-model="time" :max="5" step="1" ticks="always" tick-size="3" />
+          </div>
         </v-card>
       </v-col>
     </v-row>
@@ -134,9 +129,13 @@
 import { mapActions, mapGetters } from 'vuex';
 import Logo from '~/components/Logo.vue';
 import qmap from '~/components/map.vue';
+import MapControlExpand from '../components/MapControlExpand';
+import MapControl from '../components/MapControl';
 
 export default {
   components: {
+    MapControl,
+    MapControlExpand,
     Logo,
     qmap,
   },
@@ -169,12 +168,17 @@ export default {
       loading: true,
       reveal: false,
       eventTypes: [],
+      controlGroup:{
+        caseStudy:false,
+        types:false,
+        actors:false
+      }
     };
   },
   async mounted() {
     if (!this.getEventsLoaded) {
     console.time('loadAll')
-    await  this.loadGeoItems(),
+    await  this.loadGeoItems();
     await Promise.all([
       this.loadTypeTree(),
       this.loadEvents(),
@@ -204,8 +208,15 @@ export default {
   },
   methods: {
     ...mapActions('data', ['loadGeoItems', 'loadEvents', 'loadTypeTree', 'loadPersons']),
+    handleControl(activated){
+      Object.keys(this.controlGroup).forEach(key => {
+        if(key !== activated)
+          this.controlGroup[key] = false;
+      });
+    }
 
-  },
+  }
+
 };
 </script>
 <style scoped>
@@ -220,5 +231,17 @@ export default {
   padding: 0;
 }
 
-
+.map-controls{
+  position:absolute;
+  top: 10px;
+  right: 10px;
+}
+.timeline{
+  position:absolute;
+  bottom:20px;
+  left:0;
+  right:0;
+  outline: 2px solid rgba(0,0,0,0.2);
+  border-radius: 4px !important;
+}
 </style>
