@@ -17,6 +17,7 @@ export const state = () => ({
 });
 
 export const getters = {
+  getSiteContent: (s) => s.siteContent,
   getIconBySystemClass: (s) => (c) => s.classes.find((item) => item.systemClass === c).icon,
   getLabelBySystemClass: (s) => ({ c, l }) => s.classes.find((item) => item.systemClass === c)[l],
   getCRMClassBySystemClass: (s) => (c) => s.classes.find((item) => item.systemClass === c).crmClass,
@@ -56,7 +57,7 @@ export const mutations = {
     state.queryDrawer = !state.queryDrawer;
   },
   setSiteContent(state, content) {
-    state.SiteContent = content;
+    state.siteContent = content;
   },
   setGeoItems(state, items) {
     state.geoItems = items;
@@ -66,4 +67,8 @@ export const mutations = {
   },
 };
 
-export const actions = {};
+export const actions = {
+  setSiteContent({commit}, content) {
+    commit('setSiteContent',content);
+  },
+};
