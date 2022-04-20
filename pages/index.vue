@@ -14,7 +14,7 @@
 
     </div>
     </div>
-    <v-container class="text-center">
+    <v-container>
       <event-map id="eventMap" class="mt-15"></event-map>
     </v-container>
   </div>
