@@ -2,7 +2,7 @@
   <v-row no-gutters>
     <v-col v-for="item in caseStudyCheckboxes" :key="item.id" cols="12">
       <div class="d-flex justify-space-between align-center">
-        <v-checkbox v-model="item.selected" :label="item.name" :color="item.color"/>
+        <v-checkbox @click="changedSuperCaseStudy(item)" v-model="item.selected" :label="item.name" :color="item.color"/>
         <v-btn
           icon
           class="expand-button"
@@ -57,6 +57,9 @@ export default {
         selected: true,
         expanded: false,
       }));
+    },
+    changedSuperCaseStudy(cs){
+      cs.subtypes.forEach(sub => sub.selected = cs.selected);
     }
   },
   watch: {
