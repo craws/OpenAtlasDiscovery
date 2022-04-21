@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import { loadAllFromCidocClass } from '~/plugins/api';
 
 export const state = () => ({
   geoItems: {},
@@ -95,7 +96,7 @@ export const actions = {
 
   },
   async loadGeoItems({ commit }) {
-    const places = await loadAllFromCidocClass('place', ['relations','geometry']);
+    const places = await loadAllFromCidocClass('place', ['relations','geometry'],100,['P53']);
 
     console.log('plätzle', places);
     console.time('geo');
@@ -120,7 +121,7 @@ export const actions = {
   async loadEvents({ commit }) {
     commit('SET_EVENTS_LOADED', false);
 
-    const events = await loadAllFromCidocClass('event', ['when', 'relations', 'types']);
+    const events = await loadAllFromCidocClass('event', ['when', 'relations', 'types'],100,['P27','P26','P11']);
     console.time('fix');
     const eventDict = events.reduce((dict, event) => {
       const eventId = event.features[0]['@id'].split('/').pop()
@@ -158,17 +159,19 @@ export const actions = {
         ...dict,
         [person.id] : person
       }),{})
+    console.timeEnd('fix');
+    console.time('save');
 
     commit('SET_EVENTS', eventDict);
     commit('SET_PERSONS', personDict);
     commit('SET_EVENTS_LOADED', true);
-    console.timeEnd('fix');
+    console.timeEnd('save');
 
 
   },
   async loadPersons({ commit }) {
     commit('SET_PERSONS_LOADED', false);
-    const localItems = await loadAllFromCidocClass('actor', ['types']);
+    const localItems = await loadAllFromCidocClass('actor', ['types'],100);
     console.time('afterPerson')
 
     const persons = localItems.reduce((dict,person) => {
@@ -191,36 +194,3 @@ export const actions = {
     //commit('SET_GROUPS', list);
   },
 };
-
-async function loadAllFromCidocClass(viewClass, show) {
-  console.time(`load ${viewClass}`);
-  const limit = 100;
-
-  const p = await Vue.prototype.$api.Entities.get_api_0_3_query_({
-    limit,
-    view_classes: viewClass,
-    show: show,
-  });
-
-  let promises = [];
-  let localItems = [...p.body.results];
-
-  for (let i = 2; i <= p.body.pagination.totalPages; i++) {
-    const promise = {
-      func: Vue.prototype.$api.Entities.get_api_0_3_query_,
-      arg: {
-        limit,
-        view_classes: viewClass,
-        show,
-        page: i
-      }
-    };
-    promises.push(promise);
-  }
-
-  const results = await Promise.all(promises.map((prom) => prom.func(prom.arg)))
-  localItems.push(...results.flatMap(x => x.body.results))
-
-  console.timeEnd(`load ${viewClass}`);
-  return localItems;
-}

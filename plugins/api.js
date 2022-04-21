@@ -16,13 +16,15 @@ const APIClient = {
 };
 Vue.use(APIClient);
 
-export const loadAllFromCidocClass = async(viewClass, show,limit) => {
+export const loadAllFromCidocClass = async(viewClass, show,limit,relationType = []) => {
   console.time(`load ${viewClass}`);
 
   const p = await Vue.prototype.$api.Entities.get_api_0_3_query_({
     limit,
     view_classes: viewClass,
     show: show,
+    relation_type:relationType
+
   });
 
   let promises = [];
@@ -35,7 +37,8 @@ export const loadAllFromCidocClass = async(viewClass, show,limit) => {
         limit,
         view_classes: viewClass,
         show,
-        page: i
+        page: i,
+        relation_type:relationType
       }
     };
     promises.push(promise);
