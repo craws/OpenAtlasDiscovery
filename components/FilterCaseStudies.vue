@@ -2,8 +2,15 @@
   <v-row no-gutters>
     <v-col v-for="item in caseStudyCheckboxes" :key="item.id" cols="12">
       <div class="d-flex justify-space-between align-center">
-        <v-checkbox @click="changedSuperCaseStudy(item)" v-model="item.selected" :label="item.name" :color="item.color"/>
-        <v-btn
+        <v-checkbox @click="changedSuperCaseStudy(item)" v-model="item.selected" :color="item.color">
+          <template v-slot:label>
+            <div class="d-flex flex-column">
+            {{item.name}}<nuxt-link class="text-caption text-no-wrap" :to="`/casestudies#case-study-${item.id}`">learn more</nuxt-link>
+            </div>
+          </template>
+        </v-checkbox>
+
+          <v-btn
           icon
           class="expand-button"
           :class="{ clicked: item.expanded }"

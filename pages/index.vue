@@ -7,7 +7,7 @@
       <div class="d-flex flex-column">
         <v-btn elevation="0" color="#f05a39" fab @click="scrollTopMap" class="bubble-btn "  medium>Map</v-btn>
         <v-btn elevation="0" color="#ffc114" fab to="/network" class="bubble-btn " x-large>Actor Network</v-btn>
-        <v-btn elevation="0" color="#8e1a41" fab   large class="bubble-btn">Case Studies</v-btn>
+        <v-btn elevation="0" color="#8e1a41" fab to="/casestudies"   large class="bubble-btn">Case Studies</v-btn>
       </div>
     </div>
       <p class="text-body-1 intro text-center" v-html="getSiteContent.intro"></p>
