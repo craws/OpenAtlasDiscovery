@@ -40,9 +40,10 @@ export default {
   css: [
     '~/css/main.css',
     '@mdi/font/css/materialdesignicons.css',
-    '@fontsource/roboto/latin.css',
+    '@fontsource/poppins/latin.css',
     'vue-json-viewer/style.css',
   ],
+
   /*
   ** Plugins to load before mounting the App
   ** https://nuxtjs.org/guide/plugins
@@ -103,7 +104,12 @@ export default {
         },
       },
     },
-    defaultAssets: false,
+    treeShake: true,
+    defaultAssets: {
+      font: {
+        family: 'Poppins'
+      }
+    },
   },
   /*
   ** Build configuration

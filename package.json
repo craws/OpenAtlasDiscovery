@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@elfalem/leaflet-curve": "^0.9.1",
+    "@fontsource/poppins": "^4.5.5",
     "@fontsource/roboto": "^4.5.5",
     "@mdi/font": "^6.6.96",
     "@nuxt/content": "^1.15.1",
