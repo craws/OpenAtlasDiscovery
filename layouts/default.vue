@@ -1,45 +1,6 @@
 <template>
   <v-app light>
-    <v-navigation-drawer
-      v-model="$store.state.app.queryDrawer"
-      class="ontop"
-      :disable-resize-watcher="true"
-      clipped
-      app
-      color="grey lighten-4"
-    >
-      <v-list dense class="grey lighten-4">
-        <template v-for="(item, i) in items">
-          <v-row v-if="item.heading" :key="i" align="center">
-            <v-col cols="6">
-              <v-subheader v-if="item.heading">
-                {{ item.heading }}
-              </v-subheader>
-            </v-col>
-            <v-col cols="6" class="text-right" />
-          </v-row>
-          <v-divider v-else-if="item.divider" :key="i" dark class="my-4" />
-          <v-list-item
-            v-else
-            :key="i"
-            link
-            :to="item.target"
-            @click="$store.commit('app/closeQueryDrawer')"
-          >
-            <v-list-item-action>
-              <v-icon>{{ item.icon }}</v-icon>
-            </v-list-item-action>
-            <v-list-item-content>
-              <v-list-item-title class="grey--text">
-                {{ item.text }}
-              </v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-        </template>
-      </v-list>
-    </v-navigation-drawer>
     <v-app-bar app clipped-left class="ontop">
-      <v-app-bar-nav-icon @click="$store.commit('app/toggleQueryDrawer')" />
       <nuxt-link to="/" @click="$store.commit('app/closeQueryDrawer')">
         <div class="logocaption d-none d-sm-flex">
           <img class="barlogo ml-1 mr-1" alt="logo" src="/connecLogo.jpg">
@@ -47,7 +8,38 @@
       </nuxt-link>
       <querysearch />
       <v-spacer />
-      <nuxt-link to="/network">Persons</nuxt-link>
+      <v-menu offset-y open-on-hover>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            color="primary"
+            dark
+            v-bind="attrs"
+            v-on="on"
+            text
+          >
+            Explore all entries
+          </v-btn>
+        </template>
+        <v-list dense class="grey lighten-4">
+          <template v-for="(item, i) in items">
+            <v-list-item
+              :exact="true"
+              :key="i"
+              link
+              :to="item.target"
+            >
+              <v-list-item-action>
+                <v-icon>{{ item.icon }}</v-icon>
+              </v-list-item-action>
+              <v-list-item-content>
+                <v-list-item-title class="grey--text">
+                  {{ item.text }}
+                </v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </template>
+        </v-list>
+      </v-menu>
     </v-app-bar>
     <v-main>
       <nuxt />
@@ -66,9 +58,7 @@ export default {
   data() {
     return {
       drawer: false,
-      items: [
-        { heading: 'Sample Queries' },
-      ].concat(this.$store.state.app.menuitems),
+      items: this.$store.state.app.menuitems,
       title: '',
     };
   },
