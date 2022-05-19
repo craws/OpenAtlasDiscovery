@@ -31,36 +31,25 @@
                 <div class="text-h5">{{ item.features[0].properties.title }}</div>
               </v-row>
               <!-- begin, end and sex -->
-              <v-row v-if="hasTime(item.features[0].systemClass)" class="pl-2">
-                <v-col xs="4">
-                  <v-row align="center">
-                    <v-icon class="pr-2">mdi-logout</v-icon>
+              <v-row class="pl-2">
+                <v-col xs="4" v-if="!!begin">
+                  <v-row class="d-flex flex-column align-start">
                     <div class="text-overline">Begin / From</div>
                     <div class="text-body-2 pl-2">
-                      {{
-                        item.features[0].when.timespans[0].start.earliest ?
-                          item.features[0].when.timespans[0].start.earliest :
-                          item.features[0].when.timespans[0].start.latest
-                      }}
+                      {{begin}}
                     </div>
                   </v-row>
                 </v-col>
-                <v-col xs="4">
-                  <v-row align="center">
-                    <v-icon class="pr-2">mdi-login</v-icon>
+                <v-col xs="4" v-if="!!end">
+                  <v-row align="center" class="d-flex flex-column">
                     <div class="text-overline">End / To</div>
                     <div class="text-body-2 pl-2">
-                      {{
-                        item.features[0].when.timespans[0].end.latest ?
-                          item.features[0].when.timespans[0].end.latest :
-                          item.features[0].when.timespans[0].end.earliest
-                      }}
+                      {{end}}
                     </div>
                   </v-row>
                 </v-col>
-                <v-col v-if="hasSex(item.features[0].systemClass)" xs="4">
-                  <v-row align="center">
-                    <v-icon class="pr-2">mdi-sex</v-icon>
+                <v-col v-if="hasSex(item.features[0].systemClass)" xs="4"  c>
+                  <v-row align="center" lass="d-flex flex-column">
                     <div class="text-overline">Sex</div>
                     <div class="text-body-2 pl-2">{{ genderFromClass }}</div>
                   </v-row>
@@ -244,6 +233,16 @@ export default {
         }
         return 'n/a';
       },
+      begin(){
+        return this.item.features[0]?.when?.timespans?.[0]?.start?.earliest ?
+          this.item.features[0]?.when?.timespans?.[0]?.start?.earliest :
+          this.item.features[0]?.when?.timespans?.[0]?.start?.latest
+      },
+    end(){
+      return this.item.features[0]?.when?.timespans?.[0]?.end?.earliest ?
+        this.item.features[0]?.when?.timespans?.[0]?.end?.earliest :
+        this.item.features[0]?.when?.timespans?.[0]?.end?.latest
+    },
       destinationEvents() {
         return this.related.flatMap((x) => x?.features[0]?.relations
           ?.filter((y) => y.relationType === 'crm:P26i was destination of' && y.relationSystemClass === 'move'));
