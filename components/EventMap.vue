@@ -168,8 +168,8 @@ export default {
         id: undefined,
         sex: undefined,
       },
-      timeLabels: [350, 400, 450, 500, 600, 650],
-      time: [0, 5],
+      timeLabels: [350, 400, 450, 500, 550, 600, 650],
+      time: [0, 6],
       items: [],
       filterCaseStudies: [],
       content: {
