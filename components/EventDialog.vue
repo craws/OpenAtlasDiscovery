@@ -16,9 +16,9 @@
 
       <v-card-text v-if="loaded" style="overflow:hidden" class="pt-4">
 
-        <v-row no-gutters>
+        <v-row no-gutters class="mb-4">
           <v-col cols="12" sm="4" class="d-flex flex-column">
-            <span class="text-caption mb-n2">Begin</span>
+            <span class="text-caption mb-n1">Begin</span>
             <span class="text-body-1">
               <span v-if="!!event.when.timespans[0].start">{{ event.when.timespans[0].start.earliest
               }}
@@ -27,7 +27,7 @@
             </span>
           </v-col>
           <v-col cols="12" sm="4" offset-sm="4" class="d-flex flex-column">
-            <span class="text-caption mb-n2">End</span>
+            <span class="text-caption mb-n1">End</span>
             <span class="text-body-1">
               <span v-if="!!event.when.timespans[0].end">{{ event.when.timespans[0].end.earliest
               }}
@@ -38,9 +38,9 @@
 
 
         </v-row>
-        <v-row no-gutters>
+        <v-row no-gutters class="mb-4">
           <v-col cols="12" sm="4" class="d-flex flex-column">
-            <span class="text-caption mb-n2">Origin</span>
+            <span class="text-caption mb-n1">Origin</span>
             <span class="text-body-1">
               <nuxt-link v-if="!!movedFrom" :to="`/single/${movedFrom.relationTo.split('/').pop()}`">{{ movedFrom.label
               }}
@@ -49,66 +49,73 @@
             </span>
           </v-col>
           <v-col cols="12" sm="4" offset-sm="4" class="d-flex flex-column">
-            <span class="text-caption mb-n2">Destination</span>
+            <span class="text-caption mb-n1">Destination</span>
             <span class="text-body-1">
               <nuxt-link v-if="!!movedTo" :to="`/single/${movedTo.relationTo.split('/').pop()}`">{{ movedTo.label }}
               </nuxt-link>
               <span v-else> unknown</span>
             </span>
           </v-col>
-          <v-divider class="my-4" />
 
-          <v-col cols="12" sm="4" class="d-flex flex-column">
-            <span class="text-caption mb-n2">Sender</span>
+        </v-row>
+
+        <div  v-if="!!eventType" class="d-flex flex-column">
+          <span class="text-caption mb-n1">Type</span>
+          <span class="text-body-1">
+              <span >{{ eventType }}
+              </span>
+            </span>
+        </div>
+        <v-subheader class="pa-0 pt-2 font-weight-bold" style="height:35px">Involved Actors</v-subheader>
+        <v-row no-gutters>
+          <v-col v-if="!!sender" cols="12" sm="6" class="d-flex flex-column">
+            <span class="text-caption mb-n1">Sender</span>
             <span class="text-body-1">
-              <nuxt-link v-if="!!sender" :to="`/single/${sender.relationTo.split('/').pop()}`">{{ sender.label }}
+              <nuxt-link :to="`/single/${sender.relationTo.split('/').pop()}`">{{ sender.label }}
               </nuxt-link>
-              <span v-else> unknown</span>
             </span>
           </v-col>
 
-          <v-col cols="12" sm="4" class="d-flex flex-column">
-            <span class="text-caption mb-n2">Bearer</span>
+          <v-col v-if="!!bearer" cols="12" sm="6" class="d-flex flex-column">
+            <span class="text-caption mb-n1">Bearer</span>
             <span class="text-body-1">
-              <nuxt-link v-if="!!bearer" :to="`/single/${bearer.relationTo.split('/').pop()}`">{{ bearer.label }}
+              <nuxt-link  :to="`/single/${bearer.relationTo.split('/').pop()}`">{{ bearer.label }}
               </nuxt-link>
-              <span v-else> unknown</span>
             </span>
           </v-col>
 
-          <v-col cols="12" sm="4" class="d-flex flex-column">
-            <span class="text-caption mb-n2">Recipient</span>
+          <v-col v-if="!!recipient" cols="12" sm="6" class="d-flex flex-column">
+            <span class="text-caption mb-n1">Recipient</span>
             <span class="text-body-1">
-              <nuxt-link v-if="!!recipient" :to="`/single/${recipient.relationTo.split('/').pop()}`">{{ recipient.label
+              <nuxt-link  :to="`/single/${recipient.relationTo.split('/').pop()}`">{{ recipient.label
               }}
               </nuxt-link>
-              <span v-else> unknown</span>
             </span>
           </v-col>
 
-          <v-col cols="12" sm="4" class="d-flex flex-column">
-            <span class="text-caption mb-n2">Traveller</span>
+          <v-col v-if="!!traveller" cols="12" sm="6" class="d-flex flex-column">
+            <span class="text-caption mb-n1">Traveller</span>
             <span class="text-body-1">
-              <nuxt-link v-if="!!traveller" :to="`/single/${traveller.relationTo.split('/').pop()}`">{{ traveller.label
+              <nuxt-link  :to="`/single/${traveller.relationTo.split('/').pop()}`">{{ traveller.label
               }}
               </nuxt-link>
-              <span v-else> unknown</span>
             </span>
           </v-col>
 
-          <v-col cols="12" v-for="involvement in otherInvolvements" :key="involvement.relationTo" class="d-flex flex-column">
-            <span class="text-caption mb-n2">{{involvement.type}}</span>
+          <v-col cols="12" sm="6" v-for="involvement in otherInvolvements" :key="involvement.relationTo" class="d-flex flex-column">
+            <span class="text-caption mb-n1">{{involvement.type}}</span>
             <span class="text-body-1">
               <nuxt-link :to="`/single/${involvement.relationTo.split('/').pop()}`">{{ involvement.label
               }}
               </nuxt-link>
             </span>
           </v-col>
-          {{otherInvolvements}}
         </v-row>
-        <v-row v-if="!!source && source.descriptions.length !== 0 && source.descriptions[0].value !== ''">
+
+        <v-row v-if="!!source && source.descriptions.length !== 0 && !!source.descriptions[0].value">
           <v-col cols="12">
-            <p class="text-subtitle-1">Source</p>
+            <v-subheader class="pa-0 pt-2 font-weight-bold" style="height:35px">Source</v-subheader>
+
             <p class="text-body-1 source-text">{{ source.descriptions[0].value }}</p>
 
           </v-col>
@@ -145,8 +152,10 @@ export default {
     };
   },
   computed: {
+    eventType() {
+      return this.eventDetail?.types.find((x) => x.hierarchy.startsWith("Event"))?.label;
+    },
     movedFrom() {
-
       return this.locationFrom?.relations.find((x) => x.relationType === "crm:P53i is former or current location of");
     },
     movedTo() {
@@ -167,6 +176,7 @@ export default {
     otherInvolvements() {
       return this.eventDetail?.relations.filter((x) => x.relationType === 'crm:P11 had participant' &&
         x.type !== 'Bearer' &&
+        x.type !== 'Sender' &&
         x.type !== 'Recipient' &&
         x.type !== 'Traveller'
       );
