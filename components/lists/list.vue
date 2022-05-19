@@ -50,8 +50,8 @@
       </nuxt-link>
     </template>
     <template v-slot:item.features[0].description[0].value="{ item }">
-      <div v-if="item.features[0].description" class="tablecolumndesc">
-        {{ item.features[0].description[0].value }}
+      <div v-if="item.features[0].descriptions" class="tablecolumndesc">
+        {{ item.features[0].descriptions[0].value }}
       </div>
       <div v-else>
         n/a
@@ -81,6 +81,7 @@ export default {
     } = this.options;
     const query = {
       view_classes: this.$route.query?.['view_classes'],
+      search: this.$route.query?.['search'],
       limit: itemsPerPage,
       page,
       filter: this.filter,
