@@ -19,13 +19,13 @@
                 </nuxt-link>
 
 
-                <div style="--i:4; --circle-col:#f05a39;" @click="scrollTopMap"
+                <nuxt-link style="--i:4; --circle-col:#f05a39;" to="/map"
                      class="bubble-btn d-flex">
                   <div class="d-flex align-center bubble-btn-content text-no-wrap">
                     <div class="circle d-inline-block mr-2"></div>
                     <span>Map</span>
                   </div>
-                </div>
+                </nuxt-link>
 
                 <nuxt-link style="--i:5; --circle-col:#ffc114;" to="/network"
                      class="bubble-btn d-flex">

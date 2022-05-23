@@ -21,6 +21,7 @@
       <v-col cols="12" sm="4" class="text-right">
         <p class="ma-1 pa-0"><nuxt-link to="/">Home page</nuxt-link></p>
         <p class="ma-1 pa-0"><nuxt-link to="/network">Actor Network</nuxt-link></p>
+        <p class="ma-1 pa-0"><nuxt-link to="/map">Map</nuxt-link></p>
         <p class="ma-1 pa-0"><nuxt-link to="/casestudies">Case Studies</nuxt-link></p>
         <p class="ma-1 pa-0"><nuxt-link to="/methodology">Methodology</nuxt-link></p>
         <p class="ma-1 pa-0"><nuxt-link to="/userguide">User Guide</nuxt-link></p>
