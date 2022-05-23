@@ -95,7 +95,7 @@
                 <events-dialog
                   v-if="!!destinationEvents && destinationEvents.length !== 0 && ['place','object_location'].includes(item.features[0].systemClass)"
                   :items="destinationEvents"
-                  :label="`Destination Of`" title="destination of Events"
+                  :label="`Destination Of`" title="Destination of Events"
                 ></events-dialog>
                 <events-dialog
                   v-if="!!originEvents && originEvents.length !== 0 &&['place','object_location'].includes(item.features[0].systemClass)"
