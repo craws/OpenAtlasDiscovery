@@ -1,11 +1,11 @@
 <template>
-  <div class="bgmap" style="position:relative">
+  <div class="bgmap" :style="`position:relative; --map-height:${styleHeight}`">
     <v-overlay :value="!getEventsLoaded" absolute z-index="9999">
       <v-progress-circular indeterminate size="64"/>
     </v-overlay>
     <v-row no-gutters style="height: 100%">
       <v-col cols="12">
-        <v-card outlined class="full-height relative" tile>
+        <v-card outlined class="mapheight relative" tile>
           <qmap style="z-index:0" :events="events" :persons="persons" :filter="filter" :animate="animate"/>
           <div class="map-controls flex-column   d-flex justify-end">
             <map-control-expand id="caseStudy" @activated="handleControl" v-model="controlGroup.caseStudy" class="mb-2"
@@ -40,85 +40,85 @@
             >
               <template v-slot:icon>mdi-account-switch</template>
               <div v-if="getPersonsLoaded">
-              <v-row no-gutters>
-                <v-col cols="6" class="px-2">
-                  <v-autocomplete
-                    v-model="sender.id"
-                    label="Sender"
-                    dense
-                    :items="Object.values(getPersons)"
-                    item-text="label"
-                    item-value="id"
-                    :disabled="!!sender.sex"
-                    outlined
-                    clearable
-                  />
-                </v-col>
-                <v-col cols="6">
-                  <v-autocomplete
-                    v-model="sender.sex"
-                    dense
-                    label="Sex"
-                    outlined
-                    clearable
-                    :items="['Male', 'Female']"
-                  />
-                </v-col>
-              </v-row>
-              <v-row no-gutters>
-                <v-col cols="6" class="px-2">
-                  <v-autocomplete
-                    v-model="recipient.id"
-                    dense
-                    label="Recipient"
-                    :items="Object.values(getPersons)"
-                    item-text="label"
-                    item-value="id"
-                    :disabled="!!recipient.sex"
-                    outlined
-                    clearable
-                  />
-                </v-col>
-                <v-col cols="6">
-                  <v-autocomplete
-                    v-model="recipient.sex"
+                <v-row no-gutters>
+                  <v-col cols="6" class="px-2">
+                    <v-autocomplete
+                      v-model="sender.id"
+                      label="Sender"
+                      dense
+                      :items="Object.values(getPersons)"
+                      item-text="label"
+                      item-value="id"
+                      :disabled="!!sender.sex"
+                      outlined
+                      clearable
+                    />
+                  </v-col>
+                  <v-col cols="6">
+                    <v-autocomplete
+                      v-model="sender.sex"
+                      dense
+                      label="Sex"
+                      outlined
+                      clearable
+                      :items="['Male', 'Female']"
+                    />
+                  </v-col>
+                </v-row>
+                <v-row no-gutters>
+                  <v-col cols="6" class="px-2">
+                    <v-autocomplete
+                      v-model="recipient.id"
+                      dense
+                      label="Recipient"
+                      :items="Object.values(getPersons)"
+                      item-text="label"
+                      item-value="id"
+                      :disabled="!!recipient.sex"
+                      outlined
+                      clearable
+                    />
+                  </v-col>
+                  <v-col cols="6">
+                    <v-autocomplete
+                      v-model="recipient.sex"
 
-                    dense
-                    label="Sex"
-                    outlined
-                    clearable
-                    :items="['Male', 'Female']"
-                  />
-                </v-col>
-              </v-row>
-              <v-row no-gutters>
-                <v-col cols="6" class="px-2">
-                  <v-autocomplete
-                    v-model="bearer.id"
-                    dense
-                    :items="Object.values(getPersons)"
-                    item-text="label"
-                    item-value="id"
-                    :disabled="!!bearer.sex"
-                    outlined
-                    label="Bearer"
-                    clearable
-                  />
-                </v-col>
-                <v-col cols="6">
-                  <v-autocomplete
-                    v-model="bearer.sex"
-                    dense
-                    label="Sex"
-                    outlined
-                    clearable
-                    :items="['Male', 'Female']"
-                  />
-                </v-col>
-              </v-row>
+                      dense
+                      label="Sex"
+                      outlined
+                      clearable
+                      :items="['Male', 'Female']"
+                    />
+                  </v-col>
+                </v-row>
+                <v-row no-gutters>
+                  <v-col cols="6" class="px-2">
+                    <v-autocomplete
+                      v-model="bearer.id"
+                      dense
+                      :items="Object.values(getPersons)"
+                      item-text="label"
+                      item-value="id"
+                      :disabled="!!bearer.sex"
+                      outlined
+                      label="Bearer"
+                      clearable
+                    />
+                  </v-col>
+                  <v-col cols="6">
+                    <v-autocomplete
+                      v-model="bearer.sex"
+                      dense
+                      label="Sex"
+                      outlined
+                      clearable
+                      :items="['Male', 'Female']"
+                    />
+                  </v-col>
+                </v-row>
               </div>
               <v-row v-else>
-              <v-progress-circular class="ma-auto" indeterminate size="64"/>
+                <v-progress-circular class="ma-auto" indeterminate size="64"/>
               </v-row>
             </map-control-expand>
 
@@ -146,6 +146,7 @@ import { loadAllFromCidocClass } from '../plugins/api';
 
 export default {
   name: 'EventMap',
+  props: ['selectedCaseStudies' ,'height'],
   components: {
     MapControl,
     MapControlExpand,
@@ -212,8 +213,10 @@ export default {
     },
     eventTypesOrdered() {
       const firstItems = [639, 939, 8185];
-      console.log(this.getEventTypes.filter(x => firstItems.includes(x.name)), 'eventTypes');
       return [...this.getEventTypes].sort((x, y) => firstItems.includes(x.id) ? -1 : firstItems.includes(y.id) ? 1 : 0);
+    },
+    styleHeight(){
+      return this.height || 'calc(100vh - 64px)'
     }
   },
   methods: {
@@ -331,17 +334,25 @@ export default {
       }
     }
 
+  },
+  watch: {
+    selectedCaseStudies: {
+      handler() {
+        this.caseStudies = this.selectedCaseStudies;
+      },
+      immediate: true,
+    }
   }
 
 };
 </script>
 <style scoped>
-.full-height {
-  height: calc(100vh - 64px);
+.mapheight {
+  height:  var(--map-height);
 }
 
 .bgmap {
-  height: calc(100vh - 64px);
+  height: var(--map-height);
   max-width: 100% !important;
   top: 0;
   padding: 0;

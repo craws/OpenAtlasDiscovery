@@ -5,11 +5,10 @@
         <v-checkbox @click="changedSuperCaseStudy(item)" v-model="item.selected" :color="item.color">
           <template v-slot:label>
             <div class="d-flex flex-column">
-            {{item.name}}<nuxt-link class="text-caption text-no-wrap" :to="`/casestudies#case-study-${item.id}`">learn more</nuxt-link>
+            {{item.name}}<nuxt-link class="text-caption text-no-wrap" :to="`/casestudy/${item.id}`">learn more</nuxt-link>
             </div>
           </template>
         </v-checkbox>
-
           <v-btn
           icon
           class="expand-button"
@@ -41,6 +40,7 @@ import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'FilterCaseStudies',
+  props:['value'],
   data() {
     return {
       caseStudyCheckboxes: [],
@@ -55,15 +55,21 @@ export default {
   methods: {
     ...mapActions('data', ['loadTypeTree']),
     initCaseStudies() {
-      this.caseStudyCheckboxes = this.getCaseStudies.map((x) => ({
+        if(this.getCaseStudies?.length === 0) return;
+
+        this.caseStudyCheckboxes = this.getCaseStudies.map((x) => ({
         ...x,
         subtypes: x.subtypes.map((y) => ({
           ...y,
-          selected: true,
+          selected: !this.value || this.value.length === 0 || this.value == x.id,
         })),
-        selected: true,
+        selected:!this.value || this.value.length === 0 || this.value == x.id,
         expanded: false,
       }));
+      const value = this.caseStudyCheckboxes
+        .flatMap((x) => [x.selected && x.id, ...x.subtypes.filter((y) => y.selected)
+          .map((y) => y.id)]);
+      this.$emit('input', value);
     },
     changedSuperCaseStudy(cs){
       cs.subtypes.forEach(sub => sub.selected = cs.selected);
@@ -82,7 +88,6 @@ export default {
         this.$emit('input', value);
       },
       deep: true,
-      immediate: true
     }
   }
 };

@@ -92,6 +92,7 @@ export default {
         .addTo(this.map);
 
       this.fillMap();
+
     });
   },
   beforeDestroy() {
@@ -108,11 +109,11 @@ export default {
   watch: {
     animate() {
       this.fillMap();
-      this.applyFilter();
     },
     events: {
       handler() {
         this.fillMap();
+
       },
 
       deep: true,
@@ -245,7 +246,6 @@ export default {
               .pop();
             const getLatLng = (place) => {
               if (place.geometry.type === 'Point') return [...toPlace.geometry.coordinates].reverse();
-              console.log(place);
               const {
                 lat,
                 lng
@@ -284,6 +284,8 @@ export default {
       places = [...new Set(places)];
       this.map?.removeLayer(this.pointLayer);
       this.addPlacesToMap(places);
+      this.applyFilter();
+
     },
     calculateMidLatLng(latlng1, latlng2) {
       const offsetX = latlng2[1] - latlng1[1],

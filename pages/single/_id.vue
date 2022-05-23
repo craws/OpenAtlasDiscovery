@@ -4,7 +4,7 @@
       <v-row no-gutters class="pa-1" style="height: calc(100vh - 64px); max-width: 100%">
         <v-col cols="12" sm="5" style="max-height: 100%">
           <v-card class="pa-4 overflow-auto" outlined tile max-width="100%" max-height="100%">
-            <span class="text-overline"><v-icon v-if="!!caseStudy" small>mdi-book-multiple</v-icon> {{caseStudy}}</span>
+            <nuxt-link v-if="!!caseStudy" :to="`/casestudy/${caseStudy.identifier.split('/').pop()}`" class="text-overline text--darken-2 grey--text "><v-icon  small>mdi-book-multiple</v-icon> {{caseStudy.label}}</nuxt-link>
             <v-card-text>
               <!-- icon and title -->
               <v-row no-gutters align="center">
@@ -356,7 +356,7 @@ export default {
       return this.item.features[0]?.relations.filter(x => x.relationType.startsWith('crm:P11i'));
     },
     caseStudy(){
-      return this.item.features[0]?.types.find(x => x.identifier.endsWith('1420'))?.label || '';
+      return this.item.features[0]?.types.find(x => x.identifier.endsWith('1420'));
     }
 
   },
