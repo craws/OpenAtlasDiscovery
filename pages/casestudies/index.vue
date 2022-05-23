@@ -4,7 +4,7 @@
   <p  class="text-h4 mb-15">Case Studies</p>
   <div class="casestudy-content" v-for="cs in getCaseStudies"  :key="cs.id" >
     <a class="anchor" :id="`case-study-${cs.id}`"></a>
-    <p class="text-h5">{{cs.name}}</p>
+    <p class="text-h5"><nuxt-link :to="`/casestudy/${cs.id}`">{{cs.name}}</nuxt-link></p>
     <p class="text-body-1">
       {{cs.description}}    </p>
   </div></v-content>
