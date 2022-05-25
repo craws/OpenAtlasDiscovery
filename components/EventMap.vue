@@ -19,20 +19,8 @@
                                 label="Event Types"
             >
               <template v-slot:icon>mdi-email-multiple</template>
+              <filter-types v-model="eventTypes"></filter-types>
 
-              <v-autocomplete
-                class="mb-n5"
-                v-model="eventTypes"
-                label="Event Types"
-                :items="eventTypesOrdered"
-                item-text="name"
-                item-value="id"
-                multiple
-                outlined
-                clearable
-                deletable-chips
-                small-chips
-              />
             </map-control-expand>
 
             <map-control-expand id="actors" @activated="handleControl" v-model="controlGroup.actors" class="mb-2"
@@ -146,11 +134,13 @@ import qmap from '~/components/map.vue';
 import MapControlExpand from '../components/MapControlExpand';
 import MapControl from '../components/MapControl';
 import { loadAllFromCidocClass } from '../plugins/api';
+import FilterTypes from './FilterTypes';
 
 export default {
   name: 'EventMap',
   props: ['selectedCaseStudies', 'height'],
   components: {
+    FilterTypes,
     MapControl,
     MapControlExpand,
     Logo,
@@ -213,10 +203,6 @@ export default {
         bearer: this.bearer,
         recipient: this.recipient,
       };
-    },
-    eventTypesOrdered() {
-      const firstItems = [639, 939, 8185];
-      return [...this.getEventTypes].sort((x, y) => firstItems.includes(x.id) ? -1 : firstItems.includes(y.id) ? 1 : 0);
     },
     styleHeight() {
       return this.height || 'calc(100vh - 64px)';
