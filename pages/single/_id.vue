@@ -34,7 +34,7 @@
               </v-row>
               <!-- begin, end and sex -->
               <v-row no-gutters>
-                <v-col cols="4" v-if="!!begin && begin != 'None'">
+                <v-col cols="4" v-if="!!begin && begin !== 'None'">
                   <v-row no-gutters class="d-flex flex-column align-start">
                     <div class="text-overline">Begin / From</div>
                     <div class="text-body-2 pl-2">
@@ -42,8 +42,8 @@
                     </div>
                   </v-row>
                 </v-col>
-                <v-spacer v-if="!!begin && begin != 'None'"></v-spacer>
-                <v-col xs="4" v-if="!!end && end != 'None'">
+                <v-spacer v-if="!!begin && begin !== 'None'"></v-spacer>
+                <v-col xs="4" v-if="!!end && end !== 'None'">
                   <v-row no-gutters align="center" class="d-flex flex-column">
                     <div class="text-overline">End / To</div>
                     <div class="text-body-2 pl-2">
@@ -51,7 +51,7 @@
                     </div>
                   </v-row>
                 </v-col>
-                <v-spacer v-if="!!end && end != 'None'"></v-spacer>
+                <v-spacer v-if="!!end && end !== 'None'"></v-spacer>
 
                 <v-col v-if="hasSex(item.features[0].systemClass)" xs="4">
                   <v-row no-gutters align="center" class="d-flex flex-column align-start">
@@ -99,13 +99,14 @@
                 ></events-dialog>
                 <events-dialog
                   v-if="!!originEvents && originEvents.length !== 0 &&['place','object_location'].includes(item.features[0].systemClass)"
-                  :items="participatedIn"
+                  :items="originEvents"
                   label="origin of"
                   title="Origin of Events"
                 ></events-dialog>
                 <referred-to-dialog v-if="!!referredToBy && referredToBy.length !== 0" :items="referredToBy"
                                     label="Show Referred By" title="Referred to by"
                 ></referred-to-dialog>
+
 
 
               </div>
