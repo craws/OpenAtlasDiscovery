@@ -88,8 +88,8 @@
               </v-row>
               <!-- event dialogs -->
               <!--referred to by -->
-              <div class="d-flex py-5">
-                <events-dialog class="mr-2" v-if="!!participatedIn && participatedIn.length !== 0" :items="participatedIn"
+              <div class="d-flex py-5 flex-wrap">
+                <events-dialog v-if="!!participatedIn && participatedIn.length !== 0" :items="participatedIn"
                                label="Events" title="Events"
                 ></events-dialog>
                 <events-dialog
@@ -103,7 +103,7 @@
                   label="origin of"
                   title="Origin of Events"
                 ></events-dialog>
-                <referred-to-dialog v-if="!!referredToBy && referredToBy.length !== 0" :items="referredToBy"
+                <referred-to-dialog  v-if="!!referredToBy && referredToBy.length !== 0" :items="referredToBy"
                                     label="Show Referred By" title="Referred to by"
                 ></referred-to-dialog>
 

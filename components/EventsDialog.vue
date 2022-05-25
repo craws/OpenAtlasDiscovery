@@ -2,7 +2,7 @@
   <v-dialog v-model="dialog" width="600" scrollable id="eventDialog">
     <template v-slot:activator="{ on, attrs }">
 
-        <v-btn outlined v-bind="attrs" v-on="on" class="mr-2">
+        <v-btn outlined v-bind="attrs" v-on="on" class="mr-2 mb-2">
           {{ label }}
         </v-btn>
     </template>
