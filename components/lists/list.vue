@@ -137,3 +137,24 @@ export default {
   },
 };
 </script>
+
+<style>
+.v-data-table__mobile-row__cell{
+  width:50vw!important;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  hyphens: auto;
+  white-space: normal;
+
+}
+
+.v-data-table__mobile-row__cell .tablecolumndesc{
+min-width: auto!important;
+
+}
+.v-data-table__mobile-row{
+  align-items: start!important;
+}
+
+
+</style>

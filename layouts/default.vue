@@ -8,7 +8,7 @@
       </nuxt-link>
       <querysearch />
       <v-spacer />
-      <v-menu offset-y open-on-hover>
+      <v-menu offset-y open-on-click open-on-hover>
         <template v-slot:activator="{ on, attrs }">
           <v-btn
             color="primary"
@@ -17,7 +17,7 @@
             v-on="on"
             text
           >
-            Explore all entries
+            <v-icon class="hidden-sm-and-up">mdi-menu</v-icon><span class="hidden-xs-only">Explore all entries</span>
           </v-btn>
         </template>
         <v-list dense class="grey lighten-4">

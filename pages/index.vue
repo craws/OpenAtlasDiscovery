@@ -2,15 +2,13 @@
   <div>
     <div class="full-height d-flex justify-center align-center">
       <div>
-        <div class="d-flex justify-center align-center  hero mb-10">
-          <v-row>
-            <v-col cols="12" sm="11">
-              <v-img max-width="600px" max-height="400px" contain src="connecLogo.jpg"/>
-            </v-col>
-            <v-col cols="12" sm="1" class="d-flex align-center">
-              <div class="navigation-btns" style="position:relative;">
+        <div class="d-flex justify-center align-center flex-wrap mb-10" :class="{'hero':!$vuetify.breakpoint.smAndDown}">
 
-                <nuxt-link style="--i:3; --circle-col:#4fb548;" to="/userguide"
+              <v-img max-width="600px" max-height="400px" contain src="connecLogo.jpg"/>
+
+            <div class="d-flex align-center justify-center">
+              <div class="navigation-btns" style="position:relative;" :class="{'rotate':!$vuetify.breakpoint.smAndDown}">
+                <nuxt-link  style="--i:3; --circle-col:#4fb548;" to="/userguide"
                      class="bubble-btn d-flex">
                   <div class="d-flex align-center bubble-btn-content text-no-wrap">
                     <div class="circle d-inline-block mr-2"></div>
@@ -51,8 +49,7 @@
                   </div>
                 </nuxt-link>
               </div>
-            </v-col>
-          </v-row>
+            </div>
         </div>
         <p class="text-body-1 intro text-center" v-html="getSiteContent.intro"></p>
 
@@ -90,8 +87,7 @@ export default {
 
 <style>
 .hero {
-  transform: translateX(-60px)
-
+ transform: translateX(-60px)
 }
 
 .full-height {
@@ -106,6 +102,9 @@ export default {
 .bubble-btn {
   text-style:none;
   cursor:pointer;
+}
+
+.rotate .bubble-btn {
   width: 200px;
   position: absolute !important;
   top: 0;
@@ -116,16 +115,24 @@ export default {
 
 .bubble-btn:hover .circle{
   transform:scale(1.2);
-
 }
 
-.bubble-btn .bubble-btn-content {
+.bubble-btn:hover span{
+  transform:translateX(-3px);
+}
+
+.rotate .bubble-btn .bubble-btn-content {
   transform: rotate(calc(180deg / 5 * var(--i) * -1));
 }
 
 .bubble-btn .bubble-btn-content span{
   color:black;
-  --sizeFactor:  max(var(--i) - 5 , -1 * (var(--i) - 5));
+  transition: all ease-in-out 100ms;
+
+}
+
+.rotate .bubble-btn .bubble-btn-content span{
+  --sizeFactor:  max(var(--i) - 5 , (-1) * (var(--i) - 5));
   position:absolute;
   display: inline-flex;
   align-items: center;
@@ -133,16 +140,24 @@ export default {
   height:70px;
 }
 
+
 .bubble-btn .circle {
-  --sizeFactor:  max(var(--i) - 5 , -1 * (var(--i) - 5));
+
   transition: all ease-in-out 100ms;
-  height: calc(60px - var(--sizeFactor) * 10px);
-  width: calc(60px - var(--sizeFactor) * 10px);
+  height: 40px;
+  width: 40px;
   background-color: var(--circle-col);
   border-radius: 50%;
+  margin-block: 5px;
 }
 
-.navigation-btns {
+.rotate .bubble-btn .circle {
+  --sizeFactor:  max(var(--i) - 5 , (-1) * (var(--i) - 5));
+  height: calc(60px - var(--sizeFactor) * 10px);
+  width: calc(60px - var(--sizeFactor) * 10px);
+
+}
+.rotate.navigation-btns {
   transform: translateX(-200px);
 }
 </style>
