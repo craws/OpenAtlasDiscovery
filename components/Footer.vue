@@ -66,25 +66,25 @@ export default {
         'RHUL': {
           'name': 'Royal Holloway University of London',
           'url': 'https://www.royalholloway.ac.uk/',
-          'logo': 'rhul.png'
+          'logo': '/rhul.png'
         },
         'OEAW': {
           'name': 'Austrian Academy of Sciences',
           'url': 'https://www.oeaw.ac.at/',
-          'logo': 'oeaw.png'
+          'logo': '/oeaw.png'
         },
         'ACDH': {
           'name': 'Austrian Centre for Digital Humanities and Cultural Heritage',
           'url': 'https://www.oeaw.ac.at/acdh/',
-          'logo': 'acdh.png'},
+          'logo': '/acdh.png'},
         'ERC': {
           'name': 'European Research Council',
           'url': 'https://erc.europa.eu/',
-          'logo': 'erc.png'},
+          'logo': '/erc.png'},
         'OA': {
           'name': 'OpenAtlas',
           'url': 'https://openatlas.eu/',
-          'logo': 'openatlas.png'},
+          'logo': '/openatlas.png'},
       }
     };
   },
