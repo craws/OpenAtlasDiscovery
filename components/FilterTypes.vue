@@ -1,7 +1,7 @@
 <template>
     <v-autocomplete
       class="mb-n5"
-      v-model="eventTypes"
+      :value="value"
       label="Event Types"
       :items="visibleTypes"
       item-text="name"
@@ -11,6 +11,7 @@
       clearable
       deletable-chips
       small-chips
+      @input="update($event)"
     />
 </template>
 
@@ -27,8 +28,6 @@ export default {
   },
   data() {
     return {
-      eventTypes: [],
-
     };
   },
   computed: {
@@ -42,18 +41,13 @@ export default {
 
     }
   },
-  watch: {
-    props: {
-      handler() {
-        this.eventTypes = JSON.parse(JSON.stringify(this.value));
-      }
-      ,
-      deep: true,
-      immediate: true,
-    },
-    eventTypes(){
-      this.$emit('input', JSON.parse(JSON.stringify(this.eventTypes.flat())));
+  methods:{
+    update(e){
+      console.log(e)
+      this.$emit('input', JSON.parse(JSON.stringify(e)));
     }
+  },
+  watch: {
   }
 }
 ;
