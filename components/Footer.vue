@@ -82,7 +82,7 @@ export default {
           'url': 'https://erc.europa.eu/',
           'logo': 'erc.png'},
         'OA': {
-          'name': 'Open Atlas',
+          'name': 'OpenAtlas',
           'url': 'https://openatlas.eu/',
           'logo': 'openatlas.png'},
       }
