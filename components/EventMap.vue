@@ -27,84 +27,7 @@
                                 label="Actors"
             >
               <template v-slot:icon>mdi-account-switch</template>
-              <div v-if="getPersonsLoaded">
-                <v-row no-gutters>
-                  <v-col cols="6" class="px-2">
-                    <v-autocomplete
-                      v-model="sender.id"
-                      label="Sender"
-                      dense
-                      :items="Object.values(getPersons)"
-                      item-text="label"
-                      item-value="id"
-                      :disabled="!!sender.sex"
-                      outlined
-                      clearable
-                    />
-                  </v-col>
-                  <v-col cols="6">
-                    <v-autocomplete
-                      v-model="sender.sex"
-                      dense
-                      label="Sex"
-                      outlined
-                      clearable
-                      :items="['Male', 'Female']"
-                    />
-                  </v-col>
-                </v-row>
-                <v-row no-gutters>
-                  <v-col cols="6" class="px-2">
-                    <v-autocomplete
-                      v-model="recipient.id"
-                      dense
-                      label="Recipient"
-                      :items="Object.values(getPersons)"
-                      item-text="label"
-                      item-value="id"
-                      :disabled="!!recipient.sex"
-                      outlined
-                      clearable
-                    />
-                  </v-col>
-                  <v-col cols="6">
-                    <v-autocomplete
-                      v-model="recipient.sex"
-
-                      dense
-                      label="Sex"
-                      outlined
-                      clearable
-                      :items="['Male', 'Female']"
-                    />
-                  </v-col>
-                </v-row>
-                <v-row no-gutters>
-                  <v-col cols="6" class="px-2">
-                    <v-autocomplete
-                      v-model="bearer.id"
-                      dense
-                      :items="Object.values(getPersons)"
-                      item-text="label"
-                      item-value="id"
-                      :disabled="!!bearer.sex"
-                      outlined
-                      label="Bearer"
-                      clearable
-                    />
-                  </v-col>
-                  <v-col cols="6">
-                    <v-autocomplete
-                      v-model="bearer.sex"
-                      dense
-                      label="Sex"
-                      outlined
-                      clearable
-                      :items="['Male', 'Female']"
-                    />
-                  </v-col>
-                </v-row>
-              </div>
+              <filter-actors v-if="getPersonsLoaded" v-model="actorFilter"></filter-actors>
               <v-row v-else>
                 <v-progress-circular class="ma-auto" indeterminate size="64"/>
               </v-row>
@@ -115,13 +38,13 @@
           </div>
           <div class="timeline white mx-5 px-5 pt-1 text-center">
             {{ timeLabels[time[0]] }} AD - {{ timeLabels[time[1]] }} AD
-            <v-range-slider color="black" v-model="time" :max="5" step="1" ticks="always" tick-size="3"/>
+            <v-range-slider color="black" v-model="time" :max="6" step="1" ticks="always" tick-size="3"/>
           </div>
         </v-card>
       </v-col>
     </v-row>
     <span class="license-tag">Licensed under a <a target="_blank"
-                                                href="https://creativecommons.org/licenses/by/4.0/"
+                                                  href="https://creativecommons.org/licenses/by/4.0/"
     >Creative Commons Attribution 4.0 International License</a></span>
   </div>
 </template>
@@ -135,11 +58,13 @@ import MapControlExpand from '../components/MapControlExpand';
 import MapControl from '../components/MapControl';
 import { loadAllFromCidocClass } from '../plugins/api';
 import FilterTypes from './FilterTypes';
+import FilterActors from './FilterActors';
 
 export default {
   name: 'EventMap',
   props: ['selectedCaseStudies', 'height'],
   components: {
+    FilterActors,
     FilterTypes,
     MapControl,
     MapControlExpand,
@@ -150,6 +75,13 @@ export default {
     return {
       animate: false,
       caseStudies: [],
+      actorFilter:{
+        sender:    {id:undefined,sex:undefined},
+        bearer:    {id:undefined,sex:undefined},
+        recipient: {id:undefined,sex:undefined},
+        traveller: {id:undefined,sex:undefined},
+        others:    {id:undefined,sex:undefined}
+      },
       sender: {
         id: undefined,
         sex: undefined,
@@ -196,12 +128,14 @@ export default {
     filter() {
       return {
         caseStudies: this.caseStudies,
-        from: `0${this.timeLabels[this.time[0]]}-01-01`,
-        to: `0${this.timeLabels[this.time[1]]}-01-01`,
-        eventTypes: this.eventTypes,
-        sender: this.sender,
-        bearer: this.bearer,
-        recipient: this.recipient,
+        from: this.time[0] === 0 ? undefined : `0${this.timeLabels[this.time[0]]}-01-01`,
+        to: this.time[1] === this.timeLabels.length-1 ? undefined : `0${this.timeLabels[this.time[1]]}-01-01`,
+        eventTypes: this.eventTypes.flat(),
+        sender: this.actorFilter.sender,
+        bearer:  this.actorFilter.bearer,
+        recipient:  this.actorFilter.recipient,
+        traveller:  this.actorFilter.traveller,
+        others:  this.actorFilter.others,
       };
     },
     styleHeight() {
@@ -295,14 +229,15 @@ export default {
           const label = person.features[0].properties.title;
           const participatedIn = person.features[0].relations?.filter(x => x.relationType === 'crm:P11i participated in');
           participatedIn?.forEach(x => {
+            const typeName = ['Sender','Bearer','Recipient','Traveller'].includes(x.type) ? x.type : 'Others'
             const eventId = x.relationTo.split('/')
               .pop();
             copyOfEvents[eventId] = {
               ...copyOfEvents[eventId],
-              [x.type]: {
+              [typeName]: [...(copyOfEvents[eventId][typeName]||[]), {
                 id,
                 sex
-              }
+              }]
             };
           });
 
@@ -336,10 +271,10 @@ export default {
 };
 </script>
 <style>
-.license-tag{
-  position:absolute;
-  bottom:1px;
-  left:1px;
+.license-tag {
+  position: absolute;
+  bottom: 1px;
+  left: 1px;
   font-size: 11px;
   padding: 0 5px;
   background: rgba(255, 255, 255, 0.7);

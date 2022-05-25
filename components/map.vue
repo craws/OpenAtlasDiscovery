@@ -60,6 +60,14 @@ export default {
         recipient: {
           sex: undefined,
           id: undefined
+        },
+        traveller: {
+          sex: undefined,
+          id: undefined
+        },
+        others: {
+          sex: undefined,
+          id: undefined
         }
       }),
     }
@@ -166,19 +174,35 @@ export default {
               .pop() === x.toString()));
 
 
-            const senderId = this.events[e.id]?.['Sender']?.id;
-            const bearerId = this.events[e.id]?.['Bearer']?.id;
-            const recipientId = this.events[e.id]?.['Recipient']?.id;
+            const participants = [
+              {
+                name: 'sender',
+                eventsName: 'Sender'
+              },
+              {
+                name: 'bearer',
+                eventsName: 'Bearer'
+              },
+              {
+                name: 'recipient',
+                eventsName: 'Recipient'
+              },
+              {
+                name: 'traveller',
+                eventsName: 'Traveller'
+              },
+              {
+                name: 'others',
+                eventsName: 'Others'
+              }];
 
-            //sex
-            show = show && (!this.filter.sender.sex || this.persons[senderId]?.sex === this.filter.sender.sex);
-            show = show && (!this.filter.bearer.sex || this.persons[bearerId]?.sex === this.filter.bearer.sex);
-            show = show && (!this.filter.recipient.sex || this.persons[recipientId]?.sex === this.filter.recipient.sex);
-            //actor
-            show = show && (!!this.filter.sender.sex || !this.filter.sender.id || senderId === this.filter.sender.id);
-            show = show && (!!this.filter.bearer.sex || !this.filter.bearer.id || bearerId === this.filter.bearer.id);
-            show = show && (!!this.filter.recipient.sex || !this.filter.recipient.id || recipientId === this.filter.recipient.id);
+            participants.forEach(p => {
+              const pIds = this.events[e.id]?.[p.eventsName]?.map(x => x.id?.toString());
 
+              show = show && (!this.filter[p.name].sex || pIds?.some(x => this.persons[x]?.sex === this.filter[p.name].sex));
+              show = show && (!!this.filter[p.name].sex || !this.filter[p.name].id || pIds?.some(x => x === this.filter[p.name].id));
+
+            });
             if (show) {
               this.map?.addLayer(this.lineLayers[e.id]);
               places = [...places, e.toPlace, e.fromPlace];
