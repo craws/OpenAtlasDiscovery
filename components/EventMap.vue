@@ -1,5 +1,5 @@
 <template>
-  <div class="bgmap" :style="`position:relative; --map-height:${styleHeight}`">
+  <div class="bgmap mb-1" :style="`position:relative; --map-height:${styleHeight}`">
     <v-overlay :value="!getEventsLoaded" absolute z-index="9999">
       <v-progress-circular indeterminate size="64"/>
     </v-overlay>
@@ -132,6 +132,9 @@
         </v-card>
       </v-col>
     </v-row>
+    <span class="license-tag">Licensed under a <a target="_blank"
+                                                href="https://creativecommons.org/licenses/by/4.0/"
+    >Creative Commons Attribution 4.0 International License</a></span>
   </div>
 </template>
 
@@ -146,7 +149,7 @@ import { loadAllFromCidocClass } from '../plugins/api';
 
 export default {
   name: 'EventMap',
-  props: ['selectedCaseStudies' ,'height'],
+  props: ['selectedCaseStudies', 'height'],
   components: {
     MapControl,
     MapControlExpand,
@@ -215,8 +218,8 @@ export default {
       const firstItems = [639, 939, 8185];
       return [...this.getEventTypes].sort((x, y) => firstItems.includes(x.id) ? -1 : firstItems.includes(y.id) ? 1 : 0);
     },
-    styleHeight(){
-      return this.height || 'calc(100vh - 64px)'
+    styleHeight() {
+      return this.height || 'calc(100vh - 64px)';
     }
   },
   methods: {
@@ -346,9 +349,19 @@ export default {
 
 };
 </script>
+<style>
+.license-tag{
+  position:absolute;
+  bottom:1px;
+  left:1px;
+  font-size: 11px;
+  padding: 0 5px;
+  background: rgba(255, 255, 255, 0.7);
+}
+</style>
 <style scoped>
 .mapheight {
-  height:  var(--map-height);
+  height: var(--map-height);
 }
 
 .bgmap {
