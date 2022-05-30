@@ -6,7 +6,7 @@
     <v-row no-gutters style="height: 100%">
       <v-col cols="12" sm="6" md="8">
         <v-card outlined class="full-height" tile>
-          <network-graph-d3 :nodes="nodes" :edges="edges"></network-graph-d3>
+          <actor-network :nodes="nodes" :edges="edges"></actor-network>
         </v-card>
       </v-col>
       <v-col cols="12" sm="6" md="4">
@@ -55,9 +55,11 @@ export default {
           .pop(), 10);
         const group = this.getCaseStudies.find(x => x.id === caseStudie || x.subs.includes(caseStudie))?.id;
         return {
-          ...x,
-          label: x?.properties?.title,
-          group: group?.toString()
+          id:x.id,
+          name: x?.properties?.title,
+          group: group?.toString(),
+          color:'#34B522',
+          x:0,y:0,fx:0,fy:0
         };
       });
     },
