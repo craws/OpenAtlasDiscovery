@@ -13,13 +13,13 @@
             >
               <template v-slot:icon>mdi-book-multiple</template>
 
-              <filter-case-studies v-model="caseStudies"></filter-case-studies>
+              <filter-case-studies v-model="options.caseStudies"></filter-case-studies>
             </map-control-expand>
             <map-control-expand id="types" @activated="handleControl" v-model="controlGroup.types" class="mb-2"
                                 label="Event Types"
             >
               <template v-slot:icon>mdi-email-multiple</template>
-              <filter-types v-model="eventTypes"></filter-types>
+              <filter-types v-model="options.eventTypes"></filter-types>
 
             </map-control-expand>
 
@@ -27,7 +27,7 @@
                                 label="Actors"
             >
               <template v-slot:icon>mdi-account-switch</template>
-              <filter-actors v-if="getPersonsLoaded" v-model="actorFilter"></filter-actors>
+              <filter-actors v-if="getPersonsLoaded" v-model="options.actorFilter"></filter-actors>
               <v-row v-else>
                 <v-progress-circular class="ma-auto" indeterminate size="64"/>
               </v-row>
@@ -62,7 +62,20 @@ import FilterActors from './FilterActors';
 
 export default {
   name: 'EventMap',
-  props: ['selectedCaseStudies', 'height'],
+  props: {
+    'selectedCaseStudies': [],
+    'height': undefined,
+    options: {
+      type: Object,
+      default: () => ({
+
+        caseStudies: [],
+
+      })
+    }
+
+  },
+
   components: {
     FilterActors,
     FilterTypes,
@@ -74,14 +87,7 @@ export default {
   data() {
     return {
       animate: false,
-      caseStudies: [],
-      actorFilter:{
-        sender:    {id:undefined,sex:undefined},
-        bearer:    {id:undefined,sex:undefined},
-        recipient: {id:undefined,sex:undefined},
-        traveller: {id:undefined,sex:undefined},
-        others:    {id:undefined,sex:undefined}
-      },
+
       sender: {
         id: undefined,
         sex: undefined,
@@ -106,7 +112,6 @@ export default {
       },
       loading: true,
       reveal: false,
-      eventTypes: [],
       controlGroup: {
         caseStudy: false,
         types: false,
@@ -127,19 +132,50 @@ export default {
     ...mapGetters('data', ['getEvents', 'getCaseStudies', 'getEventTypes', 'getPersons', 'getEventsLoaded', 'getPersonsLoaded']),
     filter() {
       return {
-        caseStudies: this.caseStudies,
+        caseStudies: this.caseStudies || [],
         from: this.time[0] === 0 ? undefined : `0${this.timeLabels[this.time[0]]}-01-01`,
-        to: this.time[1] === this.timeLabels.length-1 ? undefined : `0${this.timeLabels[this.time[1]]}-01-01`,
+        to: this.time[1] === this.timeLabels.length - 1 ? undefined : `0${this.timeLabels[this.time[1]]}-01-01`,
         eventTypes: this.eventTypes.flat(),
         sender: this.actorFilter.sender,
-        bearer:  this.actorFilter.bearer,
-        recipient:  this.actorFilter.recipient,
-        traveller:  this.actorFilter.traveller,
-        others:  this.actorFilter.others,
+        bearer: this.actorFilter.bearer,
+        recipient: this.actorFilter.recipient,
+        traveller: this.actorFilter.traveller,
+        others: this.actorFilter.others,
       };
+    },
+    caseStudies() {
+      return this.options.caseStudies || [];
+    },
+    eventTypes() {
+      return this.options.eventTypes || [];
     },
     styleHeight() {
       return this.height || 'calc(100vh - 64px)';
+    },
+    actorFilter() {
+      const defaultValue = {
+        sender: {
+          id: undefined,
+          sex: undefined
+        },
+        bearer: {
+          id: undefined,
+          sex: undefined
+        },
+        recipient: {
+          id: undefined,
+          sex: undefined
+        },
+        traveller: {
+          id: undefined,
+          sex: undefined
+        },
+        others: {
+          id: undefined,
+          sex: undefined
+        }
+      };
+      return this.options.actorFilter || defaultValue;
     }
   },
   methods: {
@@ -229,12 +265,12 @@ export default {
           const label = person.features[0].properties.title;
           const participatedIn = person.features[0].relations?.filter(x => x.relationType === 'crm:P11i participated in');
           participatedIn?.forEach(x => {
-            const typeName = ['Sender','Bearer','Recipient','Traveller'].includes(x.type) ? x.type : 'Others'
+            const typeName = ['Sender', 'Bearer', 'Recipient', 'Traveller'].includes(x.type) ? x.type : 'Others';
             const eventId = x.relationTo.split('/')
               .pop();
             copyOfEvents[eventId] = {
               ...copyOfEvents[eventId],
-              [typeName]: [...(copyOfEvents[eventId][typeName]||[]), {
+              [typeName]: [...(copyOfEvents[eventId][typeName] || []), {
                 id,
                 sex
               }]
@@ -262,10 +298,11 @@ export default {
   watch: {
     selectedCaseStudies: {
       handler() {
-        this.caseStudies = this.selectedCaseStudies;
+
+        this.options.caseStudies = this.selectedCaseStudies;
       },
       immediate: true,
-    }
+    },
   }
 
 };

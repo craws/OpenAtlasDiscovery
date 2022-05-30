@@ -2,18 +2,14 @@
   <div v-if="!loading">
     <v-container class="pb-15">
 
-      <p class="text-h4 text-center">{{item.features[0].properties.title}}</p>
-      <event-map height="600px" :selectedCaseStudies="$route.params.id" id="eventMap" class="mt-15"></event-map>
+      <p class="text-h4 text-center">{{ item.features[0].properties.title }}</p>
+      <event-map :options="options" height="600px" :selectedCaseStudies="$route.params.id" id="eventMap" class="mt-15"
+      ></event-map>
       <v-row no-gutters class="mt-5">
-        <v-col cols="12" sm="8" class="pr-5">{{item.features[0].descriptions[0].value}}</v-col>
-        <v-col colse="12" sm="4" class="d-flex align-end">
-          <div>
-            <v-text-field solo-inverted flat color="primary" label="YOUR NAME"></v-text-field>
-            <v-text-field solo-inverted flat color="primary" label="YOUR EMAIL"></v-text-field>
-            <v-text-field solo-inverted flat color="primary" label="SUBJECT"></v-text-field>
-            <v-textarea   solo-inverted flat color="primary"  label="MESSAGE" ></v-textarea>
-            <v-btn class="grey lighten-2 el-0">Send</v-btn>
-          </div>
+        <v-col cols="12" sm="8" class="pr-5">{{ item.features[0].descriptions[0].value }}</v-col>
+        <v-col cols="12" sm="4" class="">
+          <filter-types v-model="options.eventTypes"></filter-types>
+          <filter-actors v-model="options.actorFilter"></filter-actors>
         </v-col>
       </v-row>
     </v-container>
@@ -33,11 +29,37 @@ export default {
 
     this.loading = false;
   },
-  data(){
-    return{
-      loading:true,
-      item:undefined,
-    }
+  data() {
+    return {
+      loading: true,
+      item: undefined,
+      options: {
+        eventTypes: [],
+        actorFilter: {
+          sender: {
+            id: undefined,
+            sex: undefined
+          },
+          bearer: {
+            id: undefined,
+            sex: undefined
+          },
+          recipient: {
+            id: undefined,
+            sex: undefined
+          },
+          traveller: {
+            id: undefined,
+            sex: undefined
+          },
+          others: {
+            id: undefined,
+            sex: undefined
+          }
+        }
+      },
+
+    };
   },
   watch: {
     '$route.params': {

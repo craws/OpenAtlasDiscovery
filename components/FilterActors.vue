@@ -3,6 +3,7 @@
     <v-row no-gutters v-for="(actorType,name) in value" :key="name">
       <v-col cols="6" class="px-2">
         <v-autocomplete
+          :value="getPersons[value[name].id]"
           :label="name"
           dense
           :items="Object.values(getPersons)"

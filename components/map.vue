@@ -161,7 +161,7 @@ export default {
               ?.identifier
               .split('/')
               .pop();
-            show = show && this.filter.caseStudies.includes(parseInt(typeId, 10));
+            show = show && this.filter.caseStudies?.includes(parseInt(typeId, 10));
 
             //time
             show = show && (!this.filter.from || new Date(e.when.timespans[0].start.earliest) >= new Date(this.filter.from))
@@ -172,7 +172,6 @@ export default {
               ?.identifier
               .split('/')
               .pop() === x.toString()));
-
 
             const participants = [
               {

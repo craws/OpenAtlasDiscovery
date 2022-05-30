@@ -5,15 +5,17 @@
         <v-checkbox @click="changedSuperCaseStudy(item)" v-model="item.selected" :color="item.color">
           <template v-slot:label>
             <div class="d-flex flex-column">
-            {{item.name}}<nuxt-link class="text-caption text-no-wrap" :to="`/casestudy/${item.id}`">learn more</nuxt-link>
+              {{ item.name }}
+              <nuxt-link class="text-caption text-no-wrap" :to="`/casestudy/${item.id}`">learn more</nuxt-link>
             </div>
           </template>
         </v-checkbox>
-          <v-btn
+        <v-btn
           icon
           class="expand-button"
           :class="{ clicked: item.expanded }"
           @click="item.expanded = !item.expanded"
+          v-if="!!item.subtypes && item.subtypes.length !== 0"
         >
           <v-icon>mdi-chevron-right</v-icon>
         </v-btn>
@@ -40,7 +42,7 @@ import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'FilterCaseStudies',
-  props:['value'],
+  props: ['value'],
   data() {
     return {
       caseStudyCheckboxes: [],
@@ -55,15 +57,15 @@ export default {
   methods: {
     ...mapActions('data', ['loadTypeTree']),
     initCaseStudies() {
-        if(this.getCaseStudies?.length === 0) return;
+      if (this.getCaseStudies?.length === 0) return;
 
-        this.caseStudyCheckboxes = this.getCaseStudies.map((x) => ({
+      this.caseStudyCheckboxes = this.getCaseStudies.map((x) => ({
         ...x,
         subtypes: x.subtypes.map((y) => ({
           ...y,
           selected: !this.value || this.value.length === 0 || this.value == x.id,
         })),
-        selected:!this.value || this.value.length === 0 || this.value == x.id,
+        selected: !this.value || this.value.length === 0 || this.value == x.id,
         expanded: false,
       }));
       const value = this.caseStudyCheckboxes
@@ -71,7 +73,7 @@ export default {
           .map((y) => y.id)]);
       this.$emit('input', value);
     },
-    changedSuperCaseStudy(cs){
+    changedSuperCaseStudy(cs) {
       cs.subtypes.forEach(sub => sub.selected = cs.selected);
     }
   },
@@ -88,6 +90,15 @@ export default {
         this.$emit('input', value);
       },
       deep: true,
+    },
+    value() {
+      console.log(this.caseStudyCheckboxes, this.value);
+      this.caseStudyCheckboxes.forEach(x => {
+        x.selected = this.value?.includes(x.id);
+        x.subtypes.forEach(y => {
+          y.selected = this.value?.includes(y.id);
+        });
+      });
     }
   }
 };
