@@ -1,8 +1,8 @@
 <template>
   <div v-if="!loading">
-    <v-container class="pb-15">
+    <v-container class="pb-15 pt-10">
 
-      <p class="text-h4 text-center">{{ item.features[0].properties.title }}</p>
+      <p class="text-h3 text-center">{{ item.features[0].properties.title }}</p>
       <event-map :options="options" height="600px" :selectedCaseStudies="$route.params.id" id="eventMap" class="mt-15"
       ></event-map>
       <v-row no-gutters class="mt-5">
