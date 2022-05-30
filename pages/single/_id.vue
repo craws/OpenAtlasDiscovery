@@ -231,10 +231,10 @@ export default {
     });
     // eslint-disable-next-line prefer-destructuring
     this.item = p.body;
-    if (this.item.features[0].systemClass === 'object_location') {
+    if (this.item.features[0]?.systemClass === 'object_location') {
       this.related = [this.item];
     } else {
-      this.related = await this.fetchRelated(this.item.features[0].relations, 'object_location');
+      this.related = await this.fetchRelated(this.item.features[0]?.relations, 'object_location');
     }
 
     this.loading = false;
@@ -291,7 +291,7 @@ export default {
     ...mapGetters('data', ['getEvents']),
     relationTypes() {
       // eslint-disable-next-line max-len
-      if (Array.isArray(this.item.features[0].relations)) return [...new Set(this.item.features[0].relations.map((item) => item.relationType))];
+      if (Array.isArray(this.item.features[0]?.relations)) return [...new Set(this.item.features[0]?.relations?.map((item) => item.relationType))];
       return [];
     },
     events() {
@@ -302,9 +302,9 @@ export default {
         }, {});
     },
     genderFromClass() {
-      if (Array.isArray(this.item.features[0].relations)) {
-        if (this.item.features[0].relations.filter((r) => r.label === 'Male').length > 0) return 'Male';
-        if (this.item.features[0].relations.filter((r) => r.label === 'Female').length > 0) return 'Female';
+      if (Array.isArray(this.item.features[0]?.relations)) {
+        if (this.item.features[0]?.relations?.filter((r) => r.label === 'Male').length > 0) return 'Male';
+        if (this.item.features[0]?.relations?.filter((r) => r.label === 'Female').length > 0) return 'Female';
       }
       return 'n/a';
     },
@@ -329,12 +329,12 @@ export default {
     citation() {
       const id = this.item.features[0]['@id'].split('/')
         .pop();
-      const author = this.item.features[0].types?.find(x => x.identifier.endsWith('9424'))?.label || '';
-      const caseStudy = this.item.features[0].types?.find(x => x.identifier.endsWith('13087'))?.label || '';
-      return `${author}, ${this.item.features[0].properties.title} - ${caseStudy}, The Database, ${id} - ${location.href} ${new Date().toLocaleDateString()}`;
+      const author = this.item.features[0]?.types?.find(x => x.identifier.endsWith('9424'))?.label || '';
+      const caseStudy = this.item.features[0]?.types?.find(x => x.identifier.endsWith('13087'))?.label || '';
+      return `${author}, ${this.item.features[0]?.properties.title} - ${caseStudy}, The Database, ${id} - ${location.href} ${new Date().toLocaleDateString()}`;
     },
     relations() {
-      return this.item.features[0]?.relations.reduce((dict, x) => {
+      return this.item.features[0]?.relations?.reduce((dict, x) => {
         const id = x.relationTo.split('/')
           .pop();
         const relation = x.relationType.split(' ')
@@ -351,13 +351,13 @@ export default {
 
     },
     referredToBy() {
-      return this.item.features[0]?.relations.filter(x => x.relationType.startsWith('crm:P67i'));
+      return this.item.features[0]?.relations?.filter(x => x.relationType.startsWith('crm:P67i'));
     },
     participatedIn() {
-      return this.item.features[0]?.relations.filter(x => x.relationType.startsWith('crm:P11i'));
+      return this.item.features[0]?.relations?.filter(x => x.relationType.startsWith('crm:P11i'));
     },
     caseStudy(){
-      return this.item.features[0]?.types.find(x => x.identifier.endsWith('1420'));
+      return this.item.features[0]?.types?.find(x => x.identifier.endsWith('1420'));
     }
 
   },
