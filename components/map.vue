@@ -92,7 +92,7 @@ export default {
   mounted() {
     this.$nextTick(() => {
       this.map = L.map(this.$refs['mapElement'])
-        .setView([45, 11], 5);
+        .setView([35, 11], 4);
       L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
         attribution:
           '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
@@ -219,8 +219,8 @@ export default {
       };
       const popup = (f, l) => {
         let myPopup = L.DomUtil.create('div', 'infoWindow');
-        myPopup.innerHTML = `<p>${f.properties.name}</p><input id="detailButton" type="button" value="Details">`;
-        myPopup.lastChild.addEventListener('click', () => routeToPage(f.properties.id), false);
+        myPopup.innerHTML = `<p class="ma-0 pa-0 mb-2">${f.properties.objectName}</p><input id="detailButton" type="button" value="Details">`;
+        myPopup.lastChild.addEventListener('click', () => routeToPage(f.properties.objectId), false);
         l.bindPopup(myPopup);
       };
       const places = placeIds.map(x => this.getGeoItems[x])

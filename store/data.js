@@ -96,26 +96,11 @@ export const actions = {
 
   },
   async loadGeoItems({ commit }) {
-    const places = await loadAllFromCidocClass('place', ['relations','geometry'],100,['P53']);
 
-    console.log('plätzle', places);
-    console.time('geo');
-    const newplaces = places.reduce((dict, current) => {
-      const id = parseInt(current.features[0]['@id'].split('/').pop());
-      const locationId = parseInt(current.features[0].relations?.find(x => x.relationSystemClass === "object_location")?.relationTo.split('/').pop(), 10);
-      if(!current.features[0].geometry?.coordinates) return dict;
-      return {
-        ...dict,
-        [locationId]: {
-          properties:{id,
-            name: current.features[0].properties.title,
-            },
-          geometry: {coordinates: current.features[0].geometry.coordinates, type:current.features[0].geometry.type},
-          type:'Feature'
-        }
-      }
+    const places = await Vue.prototype.$api.Content.get_api_0_3_geometric_entities_();
+    const newplaces = places.body.features.reduce((dict,current) => {
+      return{...dict, [current.properties.locationId]:current}
     },{})
-
     commit('SET_GEO_ITEMS', newplaces);
   },
   async loadEvents({ commit }) {
