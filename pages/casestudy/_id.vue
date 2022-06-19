@@ -3,14 +3,18 @@
     <v-container class="pb-15 pt-10">
 
       <p class="text-h3 text-center">{{ item.features[0].properties.title }}</p>
-      <event-map :options="options" height="600px" :selectedCaseStudies="$route.params.id" id="eventMap" class="mt-15"
-      ></event-map>
-      <v-row no-gutters class="mt-5">
-        <v-col cols="12" sm="8" class="pr-5">{{ item.features[0].descriptions[0].value }}</v-col>
-        <v-col cols="12" sm="4" class="">
+      <v-row no-gutters  class="mt-15">
+        <v-col cols="12" md="8">
+      <event-map :options="options" height="600px" :selectedCaseStudies="$route.params.id" id="eventMap"
+      ></event-map></v-col>
+        <v-col cols="12" sm="4" class="pl-1 hidden-sm-and-down">
           <filter-types v-model="options.eventTypes"></filter-types>
           <filter-actors v-model="options.actorFilter"></filter-actors>
         </v-col>
+      </v-row>
+
+        <v-col cols="12" md="8" class="pr-5">{{ item.features[0].descriptions[0].value }}</v-col>
+
       </v-row>
     </v-container>
   </div>
