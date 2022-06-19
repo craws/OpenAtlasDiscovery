@@ -29,7 +29,7 @@
                      class="bubble-btn d-flex">
                   <div class="d-flex align-center bubble-btn-content text-no-wrap">
                     <div class="circle d-inline-block mr-2"></div>
-                    <span>Actor Network</span>
+                    <span>Actor Connections</span>
                   </div>
                 </nuxt-link>
 

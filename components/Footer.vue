@@ -23,7 +23,7 @@
           <nuxt-link to="/">Home page</nuxt-link>
         </p>
         <p class="ma-1 pa-0">
-          <nuxt-link to="/network">Actor Network</nuxt-link>
+          <nuxt-link to="/network">Actor Connections</nuxt-link>
         </p>
         <p class="ma-1 pa-0">
           <nuxt-link to="/map">Map</nuxt-link>
