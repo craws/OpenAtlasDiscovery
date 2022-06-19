@@ -2,6 +2,7 @@ import menuitems from '../assets/menuqueries.json';
 import classes from '../assets/classes.json';
 import tableheaders from '../assets/tableheaders.json';
 import templateprops from '../assets/templateprops.json';
+import config from '../assets/config.json';
 
 /* eslint-disable no-param-reassign,no-shadow */
 export const state = () => ({
@@ -10,12 +11,14 @@ export const state = () => ({
   classes,
   tableheaders,
   templateprops,
+  config,
   eventDates: [],
   geoItems: [],
   tempItems: [],
 });
 
 export const getters = {
+  getDefaultAuthor: (s) => s.config?.defaultAuthor || '',
   getSiteContent: (s) => s.siteContent,
   getIconBySystemClass: (s) => (c) => s.classes.find((item) => item.systemClass === c)?.icon,
   getLabelBySystemClass: (s) => ({ c, l }) => s.classes.find((item) => item.systemClass === c)?.[l],
