@@ -135,6 +135,16 @@
                 :hover="true"
                 v-model="panel"
               >
+                <v-expansion-panel  v-if="!!ghostLetters && ghostLetters.length !== 0">
+                  <v-expansion-panel-header> refers to ghost events</v-expansion-panel-header>
+                  <v-expansion-panel-content>
+                    <div v-for="(g,index) in ghostLetters" :key="`ghost events - ${g.id} - ${index}`">
+                      <p class="ml-2 my-1">
+                        <nuxt-link :to="`/single/${g.features[0]['@id'].split().pop()}`">{{ g.features[0].properties.title }}</nuxt-link>
+                      </p>
+                    </div>
+                  </v-expansion-panel-content>
+                </v-expansion-panel>
                 <v-expansion-panel  v-for="relation in relations" :key="relation.id">
                   <v-expansion-panel-header>{{ relation[0].relation }}</v-expansion-panel-header>
                   <v-expansion-panel-content>
@@ -187,6 +197,7 @@ import qmap from '~/components/map.vue';
 import treegraph from '~/components/treegraph.vue';
 import ReferredToDialog from '../../components/ReferredToDialog';
 import EventsDialog from '../../components/EventsDialog';
+import relations from '../../mixins/relations';
 
 export default {
   components: {
@@ -212,6 +223,7 @@ export default {
 
     this.loading = false;
   },
+  mixins:[relations],
   data() {
     return {
       item: {},
@@ -222,6 +234,7 @@ export default {
       destinationOf: [],
       originOf: [],
       panel:[],
+      ghostLetters:[],
     };
   },
   methods: {
@@ -269,6 +282,7 @@ export default {
       if (Array.isArray(this.item.features[0]?.relations)) return [...new Set(this.item.features[0]?.relations?.map((item) => item.relationType))];
       return [];
     },
+
     events() {
       return Object.keys(this.getEvents)
         .reduce((filtered, key, sd) => {
@@ -335,7 +349,6 @@ export default {
     caseStudies() {
       return this.item.features[0]?.types?.filter(x => x.hierarchy === "Case study");
     },
-
   },
   watch: {
     '$route.params': {
@@ -350,6 +363,12 @@ export default {
         this.panel = Object.values(this.relations).flatMap((x,index) => x.length <= 5 ? [index] : [] );
       },
       deep: true,
+    },
+    item:{
+      async handler(){
+          this.ghostLetters = await this.getGhostLetters(this.item);
+      },
+      deep:true,
     }
   },
   created() {
