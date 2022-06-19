@@ -129,18 +129,23 @@
                 </v-col>
               </v-row>
               <!-- relations --->
-              <v-row no-gutters>
-                <v-col cols="12" v-for="relation in relations" :key="relation.id">
-                  <div>
-                    <p class="text-overline mb-1">{{ relation[0].relation }}</p>
-                    <div v-for="r in relation" :key="r.id">
+              <v-expansion-panels
+                multiple
+                flat
+                :hover="true"
+                v-model="panel"
+              >
+                <v-expansion-panel  v-for="relation in relations" :key="relation.id">
+                  <v-expansion-panel-header>{{ relation[0].relation }}</v-expansion-panel-header>
+                  <v-expansion-panel-content>
+                    <div v-for="(r,index) in relation" :key="`${relation[0].relation} - ${r.id} - ${index}`">
                       <p class="ml-2 my-1"><span>{{ r.type }}</span>
                         <nuxt-link :to="`/single/${r.id}`">{{ r.label }}</nuxt-link>
                       </p>
                     </div>
-                  </div>
-                </v-col>
-              </v-row>
+                  </v-expansion-panel-content>
+                </v-expansion-panel>
+              </v-expansion-panels>
 
 
               <!-- citation -->
@@ -216,6 +221,7 @@ export default {
       isClamped: true,
       destinationOf: [],
       originOf: [],
+      panel:[],
     };
   },
   methods: {
@@ -304,7 +310,7 @@ export default {
       return `${author || this.getDefaultAuthor}, ${this.item.features[0]?.properties.title} - ${caseStudy}, CONNEC, ID: ${id} - ${location.href} ${new Date().toLocaleDateString()}`;
     },
     relations() {
-      return this.item.features[0]?.relations?.reduce((dict, x) => {
+      return this.item.features?.[0]?.relations?.reduce((dict, x) => {
         const id = x.relationTo.split('/')
           .pop();
         const relation = x.relationType.split(' ')
@@ -338,6 +344,12 @@ export default {
       },
       immediate: true,
       deep: true,
+    },
+    relations:{
+      handler(){
+        this.panel = Object.values(this.relations).flatMap((x,index) => x.length <= 5 ? [index] : [] );
+      },
+      deep: true,
     }
   },
   created() {
@@ -351,5 +363,13 @@ export default {
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+.v-expansion-panel-header:hover{
+  background-color:rgba(0,0,0,0.05);
+  -webkit-transition: background-color 100ms ease-in-out;
+  -ms-transition: background-color 100ms ease-in-out;
+  transition: background-color 100ms ease-in-out;
+
 }
 </style>
