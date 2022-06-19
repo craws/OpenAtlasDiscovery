@@ -251,6 +251,7 @@ export default {
     ...mapGetters('app', [
       'getIconBySystemClass',
       'getLabelBySystemClass',
+      'getDefaultAuthor',
       'getCRMClassBySystemClass',
       'getSortColumnByPath',
       'hasTime',
@@ -297,10 +298,10 @@ export default {
     citation() {
       const id = this.item.features[0]['@id'].split('/')
         .pop();
-      const defaultAuthor = "Victoria Leonard, Alice Hicklin & Becca Grose";
+
       const author = this.item.features[0]?.types?.find(x => x.identifier.endsWith('9424'))?.label || '';
       const caseStudy = this.item.features[0]?.types?.find(x => x.identifier.endsWith('13087'))?.label || '';
-      return `${author || defaultAuthor}, ${this.item.features[0]?.properties.title} - ${caseStudy}, CONNEC, ID: ${id} - ${location.href} ${new Date().toLocaleDateString()}`;
+      return `${author || this.getDefaultAuthor}, ${this.item.features[0]?.properties.title} - ${caseStudy}, CONNEC, ID: ${id} - ${location.href} ${new Date().toLocaleDateString()}`;
     },
     relations() {
       return this.item.features[0]?.relations?.reduce((dict, x) => {
