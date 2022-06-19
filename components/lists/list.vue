@@ -89,12 +89,23 @@ export default {
       sort: sortDesc[0] ? 'desc' : 'asc',
     };
     // eslint-disable-next-line no-underscore-dangle
-    const p = await this.$api.Entities.get_api_0_3_query_(query);
-    // eslint-disable-next-line prefer-destructuring
-    this.items = p.body.results;
-    this.itemIndex = p.body.pagination.index;
-    this.totalItems = p.body.pagination.entities;
-    this.loading = false;
+    try {
+      const p = await this.$api.Entities.get_api_0_3_query_(query);
+      this.items = p.body.results;
+      this.itemIndex = p.body.pagination.index;
+      this.totalItems = p.body.pagination.entities;
+    }
+    catch(e){
+      console.log('nix da')
+      this.items =[];
+      this.itemIndex = 0;
+      this.totalItems = 0;
+    }
+    finally {
+      this.loading = false;
+    }
+
+
   },
   data() {
     return {
