@@ -10,19 +10,67 @@
     >
 
     </v-select>
-    <v-text-field
-      v-model="filterstring"
-      outlined
-      dense
-      class="nav-search-input"
-      hide-details
-      append-icon="mdi-magnify"
-      @click:append="updateQuery(filterstring)"
-      @keydown.enter="updateQuery(filterstring)"
-      :placeholder="`Search for ${selectedClass.text}`"
-    >
+    <v-menu offset-y attach="#menu-ancher" :close-on-content-click="false">
+      <template v-slot:activator="{ on, attrs }">
 
-    </v-text-field>
+
+        <div class="d-flex"  id="menu-ancher">
+        <v-text-field
+
+          v-model="filterstring"
+          outlined
+          dense
+          class="nav-search-input"
+          hide-details
+          @keydown.enter="updateQuery(filterstring)"
+          :placeholder="`Search for ${selectedClass.text}`"
+
+        >
+          <template slot="append">
+
+            <v-icon
+
+              v-on="on"
+              v-bind="attrs"
+              class="mr-2 search-icon"
+            >mdi-tune
+            </v-icon>
+            <v-hover
+              v-slot="{ hover }"
+            >
+            <v-icon
+              :color="hover ? 'primary' : ''"
+              @click="updateQuery(filterstring)"
+            >mdi-magnify
+            </v-icon>
+            </v-hover>
+          </template>
+        </v-text-field>
+        </div>
+      </template>
+      <v-list>
+        <v-subheader>Search Settings</v-subheader>
+        <v-list-item>
+          <v-list-item-title>
+            <v-checkbox
+              label="search for name"
+              v-model="searchName"
+              :disabled="!searchDescription"
+            ></v-checkbox>
+          </v-list-item-title>
+        </v-list-item>
+        <v-list-item>
+          <v-list-item-title>
+            <v-checkbox
+              label="search for description"
+              v-model="searchDescription"
+              :disabled="!searchName"
+
+            ></v-checkbox>
+          </v-list-item-title>
+        </v-list-item>
+      </v-list>
+    </v-menu>
   </div>
 </template>
 
@@ -35,12 +83,13 @@ export default {
       filterstring: '',
       items: this.$store.state.app.menuitems,
       selectedClass: this.$store.state.app.menuitems[0],
+      searchName:true,
+      searchDescription:false,
     };
   },
   watch: {
     '$route.params': {
       handler(s) {
-        this.updateString(s.q);
       },
       immediate: true,
       deep: true,
@@ -48,22 +97,22 @@ export default {
   },
   methods: {
     updateString(query) {
-      if (!query) {
-        this.filterstring = '';
-      } else {
         this.filterstring = query;
-      }
     },
     updateQuery(a) {
       let name = 'list-q';
       if (this.$route.name === 'list-q' || this.$route.name === 'map-q') name = this.$route.name;
+      const searchName = `{"entityName":[{"operator":"like","logicalOperator":"or","values":["${this.filterstring}"]}]}`
+      const searchDescription = `{"entityDescription":[{"operator":"like","logicalOperator":"or","values":["${this.filterstring}"]}]}`
+
+
       this.$router.push({
         name,
         query: {
           view_classes: this.selectedClass.target.query.view_classes,
-          search: [`{"entityName":[{"operator":"like","logicalOperator":"or","values":["${this.filterstring}"]}]}`]
-          //  search for description
-          //            `{"entityDescription":[{"operator":"like","logicalOperator":"or","values":["${this.filterstring}"]}]}`]
+          search: [
+            ...(this.searchName ? [searchName] : []),
+            ...(this.searchDescription ? [searchDescription] : [])]
         },
       });
     },
@@ -81,4 +130,6 @@ export default {
   border-top-left-radius: 0 !important;
   border-bottom-left-radius: 0 !important;
 }
+
+
 </style>
