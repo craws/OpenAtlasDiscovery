@@ -6,7 +6,7 @@
     <v-row no-gutters style="height: 100%">
       <v-col cols="12">
         <v-card outlined class="mapheight relative" tile>
-          <qmap style="z-index:0" :events="events" :persons="persons" :filter="filter" :animate="animate"/>
+          <qmap style="z-index:0" :events="events" :persons="persons" :filter="filter" :animate="animate" :currentActor="options.currentActor"/>
           <div class="map-controls flex-column   d-flex justify-end">
             <map-control-expand id="caseStudy" @activated="handleControl" v-model="controlGroup.caseStudy" class="mb-2"
                                 label="Case Studies"
@@ -298,7 +298,6 @@ export default {
   watch: {
     selectedCaseStudies: {
       handler() {
-
         this.options.caseStudies = this.selectedCaseStudies;
       },
       immediate: true,

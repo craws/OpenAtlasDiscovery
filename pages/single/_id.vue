@@ -177,7 +177,7 @@
 
               <v-tab>JSON</v-tab>
               <v-tab-item>
-                <qmap :events="events" style="height: calc(100vh - 154px); z-index:0" :animate="true" />
+                  <event-map id="eventMap" :options="mapOptions"></event-map>
               </v-tab-item>
               <v-tab-item>
                 <json-viewer style="height: calc(100vh - 154px); overflow-y: auto;" :value="item" :expand-depth="5"
@@ -216,6 +216,11 @@ export default {
     });
     // eslint-disable-next-line prefer-destructuring
     this.item = p.body;
+    switch(this.item.features[0]?.systemClass){
+      case 'person':
+        this.mapOptions = { ...this.mapOptions,currentActor: this.$route.params.id}
+        break;
+    }
     if (this.item.features[0]?.systemClass === 'object_location') {
       this.related = [this.item];
     } else {
@@ -236,6 +241,7 @@ export default {
       originOf: [],
       panel:[],
       ghostLetters:[],
+      mapOptions:{caseStudies:[]}
     };
   },
   methods: {
@@ -278,6 +284,7 @@ export default {
       'hasSex',
     ]),
     ...mapGetters('data', ['getEvents']),
+   
     subtitle(){
       return this.item.features[0]?.types?.find(x => x.hierarchy.startsWith('Source'))?.label
     },

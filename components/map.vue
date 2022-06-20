@@ -42,6 +42,7 @@ export default {
       default: () => {
       },
     },
+    currentActor: undefined,
     filter: {
       type: Object,
       default: () => ({
@@ -140,7 +141,7 @@ export default {
       },
       deep: true,
       immediate: true
-    }
+    },
   },
   methods: {
     applyFilter() {
@@ -195,13 +196,18 @@ export default {
                 eventsName: 'Others'
               }];
 
+
+            let currentActor = false;
             participants.forEach(p => {
               const pIds = this.events[e.id]?.[p.eventsName]?.map(x => x.id?.toString());
 
               show = show && (!this.filter[p.name].sex || pIds?.some(x => this.persons[x]?.sex === this.filter[p.name].sex));
               show = show && (!!this.filter[p.name].sex || !this.filter[p.name].id || pIds?.some(x => x === this.filter[p.name].id));
 
+              currentActor = currentActor || pIds?.some(x => x == this.currentActor?.toString())
             });
+            show = show && currentActor;           
+
             if (show) {
               this.map?.addLayer(this.lineLayers[e.id]);
               places = [...places, e.toPlace, e.fromPlace];
