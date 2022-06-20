@@ -97,9 +97,6 @@
                   v-if="!!destinationEvents && destinationEvents.length !== 0 && ['place', 'object_location'].includes(item.features[0].systemClass)"
                   :items="destinationEvents" :label="`Destination Of`" title="Destination of Events"></events-dialog>
 
-                <referred-to-dialog v-if="!!referredToBy && referredToBy.length !== 0" :items="referredToBy"
-                  label="Show Referred By" title="Referred to by"></referred-to-dialog>
-
 
 
               </div>
@@ -148,12 +145,13 @@
                     </div>
                   </v-expansion-panel-content>
                 </v-expansion-panel>
-                <v-expansion-panel  v-for="relation in relations" :key="relation.id">
-                  <v-expansion-panel-header>{{ relation[0].relation }}</v-expansion-panel-header>
+                <v-expansion-panel  v-for="(relation,key) in relations" :key="relation.id">
+                  <v-expansion-panel-header>{{ key}}</v-expansion-panel-header>
                   <v-expansion-panel-content>
                     <div v-for="(r,index) in relation" :key="`${relation[0].relation} - ${r.id} - ${index}`">
                       <p class="ml-2 my-1"><span>{{ r.type }}</span>
-                        <nuxt-link :to="`/single/${r.id}`">{{ r.label }}</nuxt-link>
+                        <nuxt-link v-if="!r.externalLink" :to="`/single/${r.id}`">{{ r.label }}</nuxt-link> 
+                        <a v-else target="_blank" :href="r.externalLink" >{{ r.label }} - ID : {{r.relationDescription}}</a> 
                       </p>
                     </div>
                   </v-expansion-panel-content>
@@ -330,17 +328,23 @@ export default {
       return `${author}, ${this.item.features[0]?.properties.title} - ${caseStudy}, CONNEC, ID: ${id} - ${location.href} ${new Date().toLocaleDateString()}`;
     },
     relations() {
+
       return this.item.features?.[0]?.relations?.reduce((dict, x) => {
         const id = x.relationTo.split('/')
           .pop();
         const relation = x.relationType.split(' ')
           .slice(1)
           .join(' ');
-        if (relation === 'has type' || relation === 'is referred to by' || relation === 'participated in') return dict;
-        dict[relation] = [...(dict[relation] || []), {
+        if (relation === 'has type'  || relation === 'participated in') return dict;
+
+        let key = relation;
+        if(relation === 'is referred to by' && x?.relationSystemClass === 'reference_system') key = 'mentioned elsewhere'
+        if(relation === 'is referred to by' && x?.relationSystemClass === 'bibliography') key = 'references' 
+        dict[key] = [...(dict[key] || []), {
           ...x,
           id,
-          relation
+          relation,
+          externalLink: this.item.features?.[0]?.links?.find(l => l?.referenceSystem === x?.label)?.identifier
         }];
         return dict;
       }, {});
