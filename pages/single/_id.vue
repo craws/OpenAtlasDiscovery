@@ -29,7 +29,10 @@
                     }}
                   </span>
                 </v-tooltip>
-                <div class="text-h5">{{ item.features[0].properties.title }}</div>
+                <div class="d-flex flex-column">
+                  <span class="text-h5 mb-n1">{{ item.features[0].properties.title }}</span>
+                  <span v-if="!!subtitle" class="text-overline pl-1">{{subtitle}}</span>
+                </div>
               </v-row>
               <!-- begin, end and sex -->
               <v-row no-gutters>
@@ -140,7 +143,7 @@
                   <v-expansion-panel-content>
                     <div v-for="(g,index) in ghostLetters" :key="`ghost events - ${g.id} - ${index}`">
                       <p class="ml-2 my-1">
-                        <nuxt-link :to="`/single/${g.features[0]['@id'].split().pop()}`">{{ g.features[0].properties.title }}</nuxt-link>
+                        <nuxt-link :to="`/single/${g.features[0]['@id'].split('/').pop()}`">{{ g.features[0].properties.title }}</nuxt-link>
                       </p>
                     </div>
                   </v-expansion-panel-content>
@@ -277,6 +280,9 @@ export default {
       'hasSex',
     ]),
     ...mapGetters('data', ['getEvents']),
+    subtitle(){
+      return this.item.features[0]?.types?.find(x => x.hierarchy.startsWith('Source'))?.label
+    },
     relationTypes() {
       // eslint-disable-next-line max-len
       if (Array.isArray(this.item.features[0]?.relations)) return [...new Set(this.item.features[0]?.relations?.map((item) => item.relationType))];
@@ -319,9 +325,9 @@ export default {
       const id = this.item.features[0]['@id'].split('/')
         .pop();
 
-      const author = this.item.features[0]?.types?.find(x => x.identifier.endsWith('9424'))?.label || '';
-      const caseStudy = this.item.features[0]?.types?.find(x => x.identifier.endsWith('13087'))?.label || '';
-      return `${author || this.getDefaultAuthor}, ${this.item.features[0]?.properties.title} - ${caseStudy}, CONNEC, ID: ${id} - ${location.href} ${new Date().toLocaleDateString()}`;
+      const author = this.item.features[0]?.types?.find(x => x.hierarchy === 'Entry author')?.label || this.getDefaultAuthor || '';
+      const caseStudy = this.caseStudies?.map(x => x.label).join(',') || '';
+      return `${author}, ${this.item.features[0]?.properties.title} - ${caseStudy}, CONNEC, ID: ${id} - ${location.href} ${new Date().toLocaleDateString()}`;
     },
     relations() {
       return this.item.features?.[0]?.relations?.reduce((dict, x) => {
@@ -361,6 +367,13 @@ export default {
     relations:{
       handler(){
         this.panel = Object.values(this.relations).flatMap((x,index) => x.length <= 5 ? [index] : [] );
+      },
+      deep: true,
+    },
+    ghostLetters:{
+      handler(){
+        if (this.ghostLetters?.length !== 0 && this.ghostLetters?.length <= 5)
+          this.panel.push(Object.values(this.relations).length)
       },
       deep: true,
     },
