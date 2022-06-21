@@ -189,7 +189,7 @@
 
               <v-tab>JSON</v-tab>
               <v-tab-item>
-                <event-map id="eventMap" :options="mapOptions"></event-map>
+                <event-map height="calc(100vh - 154px)" id="eventMap" :options="mapOptions"></event-map>
               </v-tab-item>
               <v-tab-item>
                 <json-viewer style="height: calc(100vh - 154px); overflow-y: auto;" :value="item" :expand-depth="5"
