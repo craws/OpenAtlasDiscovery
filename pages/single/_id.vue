@@ -4,9 +4,12 @@
       <v-row no-gutters class="pa-1" style="height: calc(100vh - 64px); max-width: 100%">
         <v-col cols="12" sm="5" style="max-height: 100%">
           <v-card class="pa-4 overflow-auto" outlined tile max-width="100%" max-height="100%">
-            <nuxt-link v-if="!!caseStudies" v-for="caseStudy in caseStudies" :key="caseStudy.identifier" :to="`/casestudy/${caseStudy.identifier.split('/').pop()}`"
-              class="text-overline text--darken-2 grey--text d-block ">
-              <v-icon small>mdi-book-multiple</v-icon> {{ caseStudy.label }}
+            <nuxt-link v-if="!!caseStudies" v-for="caseStudy in caseStudies" :key="caseStudy.identifier"
+                       :to="`/casestudy/${caseStudy.identifier.split('/').pop()}`"
+                       class="text-overline text--darken-2 grey--text d-block "
+            >
+              <v-icon small>mdi-book-multiple</v-icon>
+              {{ caseStudy.label }}
             </nuxt-link>
             <v-card-text>
               <!-- icon and title -->
@@ -15,23 +18,23 @@
                   <template v-slot:activator="{ on, attrs }">
                     <v-icon color="primary" dark v-bind="attrs" style="font-size:75px" v-on="on">{{
                         getIconBySystemClass(item.features[0].systemClass)
-                    }}
+                      }}
                     </v-icon>
                   </template>
                   <span>
                     {{ getCRMClassBySystemClass(item.features[0].systemClass) }}
                     -
                     {{
-                        getLabelBySystemClass({
-                          c: item.features[0].systemClass,
-                          l: 'en'
-                        })
+                      getLabelBySystemClass({
+                        c: item.features[0].systemClass,
+                        l: 'en'
+                      })
                     }}
                   </span>
                 </v-tooltip>
                 <div class="d-flex flex-column">
                   <span class="text-h5 mb-n1">{{ item.features[0].properties.title }}</span>
-                  <span v-if="!!subtitle" class="text-overline pl-1">{{subtitle}}</span>
+                  <span v-if="!!subtitle" class="text-overline pl-1">{{ subtitle }}</span>
                 </div>
               </v-row>
               <!-- begin, end and sex -->
@@ -76,11 +79,14 @@
               </v-row>
               <!-- description -->
               <v-row no-gutters>
-                <div v-if="!!item.features[0].descriptions && !!item.features[0].descriptions[0] && !!item.features[0].descriptions[0].value" class="text-body-2 pt-2" @click="isClamped = !isClamped"
-                  ref="descriptionField">
+                <div
+                  v-if="!!item.features[0].descriptions && !!item.features[0].descriptions[0] && !!item.features[0].descriptions[0].value"
+                  class="text-body-2 pt-2" @click="isClamped = !isClamped"
+                  ref="descriptionField"
+                >
                   <p :class="{ lineclamp: isClamped }">{{
                       item.features[0].descriptions[0].value
-                  }}</p>
+                    }}</p>
                   <p v-if="isClamped" style="cursor:pointer">read more</p>
                 </div>
 
@@ -89,14 +95,16 @@
               <!--referred to by -->
               <div class="d-flex py-5 flex-wrap">
                 <events-dialog v-if="!!participatedIn && participatedIn.length !== 0" :items="participatedIn"
-                  label="Events" title="Events"></events-dialog>
+                               label="Events" title="Events"
+                ></events-dialog>
                 <events-dialog
                   v-if="!!originEvents && originEvents.length !== 0 && ['place', 'object_location'].includes(item.features[0].systemClass)"
-                  :items="originEvents" label="origin of" title="Origin of Events"></events-dialog>
+                  :items="originEvents" label="origin of" title="Origin of Events"
+                ></events-dialog>
                 <events-dialog
                   v-if="!!destinationEvents && destinationEvents.length !== 0 && ['place', 'object_location'].includes(item.features[0].systemClass)"
-                  :items="destinationEvents" :label="`Destination Of`" title="Destination of Events"></events-dialog>
-
+                  :items="destinationEvents" :label="`Destination Of`" title="Destination of Events"
+                ></events-dialog>
 
 
               </div>
@@ -109,7 +117,7 @@
                       </template>
                       <v-virtual-scroll :items="destinationEvents" :bench="4" height="250px" item-height="50px">
                         <template v-slot:default="{ item }">
-                          <event-dialog :event="item" />
+                          <event-dialog :event="item"/>
                         </template>
                       </v-virtual-scroll>
                     </v-list-group>
@@ -121,7 +129,7 @@
                       </template>
                       <v-virtual-scroll :items="originEvents" :bench="4" height="250px" item-height="60px">
                         <template v-slot:default="{ item }">
-                          <event-dialog :event="item" />
+                          <event-dialog :event="item"/>
                         </template>
                       </v-virtual-scroll>
                     </v-list-group>
@@ -135,23 +143,26 @@
                 :hover="true"
                 v-model="panel"
               >
-                <v-expansion-panel  v-if="!!ghostLetters && ghostLetters.length !== 0">
+                <v-expansion-panel v-if="!!ghostLetters && ghostLetters.length !== 0">
                   <v-expansion-panel-header> refers to ghost events</v-expansion-panel-header>
                   <v-expansion-panel-content>
                     <div v-for="(g,index) in ghostLetters" :key="`ghost events - ${g.id} - ${index}`">
                       <p class="ml-2 my-1">
-                        <nuxt-link :to="`/single/${g.features[0]['@id'].split('/').pop()}`">{{ g.features[0].properties.title }}</nuxt-link>
+                        <nuxt-link :to="`/single/${g.features[0]['@id'].split('/').pop()}`">
+                          {{ g.features[0].properties.title }}
+                        </nuxt-link>
                       </p>
                     </div>
                   </v-expansion-panel-content>
                 </v-expansion-panel>
-                <v-expansion-panel  v-for="(relation,key) in relations" :key="relation.id">
-                  <v-expansion-panel-header>{{ key}}</v-expansion-panel-header>
+                <v-expansion-panel v-for="(relation,key) in relations" :key="relation.id">
+                  <v-expansion-panel-header>{{ key }}</v-expansion-panel-header>
                   <v-expansion-panel-content>
                     <div v-for="(r,index) in relation" :key="`${relation[0].relation} - ${r.id} - ${index}`">
                       <p class="ml-2 my-1"><span>{{ r.type }}</span>
-                        <nuxt-link v-if="!r.externalLink" :to="`/single/${r.id}`">{{ r.label }}</nuxt-link> 
-                        <a v-else target="_blank" :href="r.externalLink" >{{ r.label }} - ID : {{r.relationDescription}}</a> 
+                        <nuxt-link v-if="!r.externalLink" :to="`/single/${r.id}`">{{ r.label }}</nuxt-link>
+                        <a v-else target="_blank" :href="r.externalLink">{{ r.label }} - ID :
+                          {{ r.relationDescription }}</a>
                       </p>
                     </div>
                   </v-expansion-panel-content>
@@ -163,8 +174,9 @@
               <v-sheet outlined class="pa-1 mx-n1 mt-5">
                 <v-icon large>mdi-format-quote-close</v-icon>
                 <p class="text-caption">Licensed under a <a target="_blank"
-                    href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International
-                    License</a></p>
+                                                            href="https://creativecommons.org/licenses/by/4.0/"
+                >Creative Commons Attribution 4.0 International
+                  License</a></p>
                 <p class="text-caption">{{ citation }}</p>
               </v-sheet>
             </v-card-text>
@@ -177,11 +189,12 @@
 
               <v-tab>JSON</v-tab>
               <v-tab-item>
-                  <event-map id="eventMap" :options="mapOptions"></event-map>
+                <event-map id="eventMap" :options="mapOptions"></event-map>
               </v-tab-item>
               <v-tab-item>
                 <json-viewer style="height: calc(100vh - 154px); overflow-y: auto;" :value="item" :expand-depth="5"
-                  copyable sort />
+                             copyable sort
+                />
               </v-tab-item>
             </v-tabs>
           </v-card>
@@ -216,9 +229,37 @@ export default {
     });
     // eslint-disable-next-line prefer-destructuring
     this.item = p.body;
-    switch(this.item.features[0]?.systemClass){
-      case 'person':
-        this.mapOptions = { ...this.mapOptions,currentActor: this.$route.params.id}
+    switch (this.getCRMClassBySystemClass(this.item.features[0].systemClass)) {
+      case 'E21':
+      case 'E74':
+        this.mapOptions = {
+          ...this.mapOptions,
+          currentActor: this.$route.params.id
+        };
+        break;
+      case 'E18':
+        this.mapOptions = {
+          ...this.mapOptions,
+          currentPlace: parseInt(this.item?.features[0].relations.find(r => r.relationSystemClass === 'object_location')
+            ?.relationTo
+            .split('/')
+            .pop(), 10)
+        };
+        break;
+      case 'E53':
+        this.mapOptions = {
+          ...this.mapOptions,
+          currentPlace: parseInt(this.$route.params.id, 10)
+        };
+        break;
+      case 'E7':
+      case 'E8':
+      case 'E9':
+      case 'E12':
+        this.mapOptions = {
+          ...this.mapOptions,
+          currentEvent: this.$route.params.id
+        };
         break;
     }
     if (this.item.features[0]?.systemClass === 'object_location') {
@@ -229,7 +270,7 @@ export default {
 
     this.loading = false;
   },
-  mixins:[relations],
+  mixins: [relations],
   data() {
     return {
       item: {},
@@ -239,9 +280,9 @@ export default {
       isClamped: true,
       destinationOf: [],
       originOf: [],
-      panel:[],
-      ghostLetters:[],
-      mapOptions:{caseStudies:[]}
+      panel: [],
+      ghostLetters: [],
+      mapOptions: { caseStudies: [] }
     };
   },
   methods: {
@@ -284,9 +325,9 @@ export default {
       'hasSex',
     ]),
     ...mapGetters('data', ['getEvents']),
-   
-    subtitle(){
-      return this.item.features[0]?.types?.find(x => x.hierarchy.startsWith('Source'))?.label
+
+    subtitle() {
+      return this.item.features[0]?.types?.find(x => x.hierarchy.startsWith('Source'))?.label;
     },
     relationTypes() {
       // eslint-disable-next-line max-len
@@ -309,29 +350,38 @@ export default {
       return 'n/a';
     },
     begin() {
-      return this.item.features[0]?.when?.timespans?.[0]?.start?.earliest ?
-        this.item.features[0]?.when?.timespans?.[0]?.start?.earliest :
-        this.item.features[0]?.when?.timespans?.[0]?.start?.latest;
+      return (this.item.features[0]?.when?.timespans?.[0]?.start?.earliest ||
+        this.item.features[0]?.when?.timespans?.[0]?.start?.latest)?.split('T')?.[0];
+      ;
     },
     end() {
-      return this.item.features[0]?.when?.timespans?.[0]?.end?.earliest ?
-        this.item.features[0]?.when?.timespans?.[0]?.end?.earliest :
-        this.item.features[0]?.when?.timespans?.[0]?.end?.latest;
+      return (this.item.features[0]?.when?.timespans?.[0]?.end?.earliest ||
+        this.item.features[0]?.when?.timespans?.[0]?.end?.latest)?.split('T')?.[0];
+      ;
     },
     destinationEvents() {
       return this.related.flatMap((x) => x?.features[0]?.relations
-        ?.filter((y) => y.relationType === 'crm:P26i was destination of'));
+        ?.filter((y) => y.relationType === 'crm:P26i was destination of'))
+        .map(x => ({ ...x,
+          id: x.relationTo.split('/')
+            .pop(),
+        }));
     },
     originEvents() {
       return this.related.flatMap((x) => x?.features[0]?.relations
-        ?.filter((y) => y.relationType === 'crm:P27i was origin of'));
+        ?.filter((y) => y.relationType === 'crm:P27i was origin of'))
+        .map(x => ({ ...x,
+          id: x.relationTo.split('/')
+            .pop(),
+        }));
     },
     citation() {
       const id = this.item.features[0]['@id'].split('/')
         .pop();
 
       const author = this.item.features[0]?.types?.find(x => x.hierarchy === 'Entry author')?.label || this.getDefaultAuthor || '';
-      const caseStudy = this.caseStudies?.map(x => x.label).join(',') || '';
+      const caseStudy = this.caseStudies?.map(x => x.label)
+        .join(',') || '';
       return `${author}, ${this.item.features[0]?.properties.title} - ${caseStudy}, CONNEC, ID: ${id} - ${location.href} ${new Date().toLocaleDateString()}`;
     },
     relations() {
@@ -342,11 +392,11 @@ export default {
         const relation = x.relationType.split(' ')
           .slice(1)
           .join(' ');
-        if (relation === 'has type'  || relation === 'participated in') return dict;
+        if (relation === 'has type' || relation === 'participated in') return dict;
 
         let key = relation;
-        if(relation === 'is referred to by' && x?.relationSystemClass === 'reference_system') key = 'mentioned elsewhere'
-        if(relation === 'is referred to by' && x?.relationSystemClass === 'bibliography') key = 'references' 
+        if (relation === 'is referred to by' && x?.relationSystemClass === 'reference_system') key = 'mentioned elsewhere';
+        if (relation === 'is referred to by' && x?.relationSystemClass === 'bibliography') key = 'references';
         dict[key] = [...(dict[key] || []), {
           ...x,
           id,
@@ -361,10 +411,14 @@ export default {
       return this.item.features[0]?.relations?.filter(x => x.relationType.startsWith('crm:P67i'));
     },
     participatedIn() {
-      return this.item.features[0]?.relations?.filter(x => x.relationType.startsWith('crm:P11i'));
+      return this.item.features[0]?.relations?.filter(x => x.relationType.startsWith('crm:P11i'))
+        .map(x => ({ ...x,
+          id: x.relationTo.split('/')
+            .pop(),
+        }));
     },
     caseStudies() {
-      return this.item.features[0]?.types?.filter(x => x.hierarchy === "Case study");
+      return this.item.features[0]?.types?.filter(x => x.hierarchy === 'Case study');
     },
   },
   watch: {
@@ -375,24 +429,26 @@ export default {
       immediate: true,
       deep: true,
     },
-    relations:{
-      handler(){
-        this.panel = Object.values(this.relations).flatMap((x,index) => x.length <= 5 ? [index] : [] );
+    relations: {
+      handler() {
+        this.panel = Object.values(this.relations)
+          .flatMap((x, index) => x.length <= 5 ? [index] : []);
       },
       deep: true,
     },
-    ghostLetters:{
-      handler(){
-        if (this.ghostLetters?.length !== 0 && this.ghostLetters?.length <= 5)
-          this.panel.push(Object.values(this.relations).length)
+    ghostLetters: {
+      handler() {
+        if (this.ghostLetters?.length !== 0 && this.ghostLetters?.length <= 5) {
+          this.panel.push(Object.values(this.relations).length);
+        }
       },
       deep: true,
     },
-    item:{
-      async handler(){
-          this.ghostLetters = await this.getGhostLetters(this.item);
+    item: {
+      async handler() {
+        this.ghostLetters = await this.getGhostLetters(this.item);
       },
-      deep:true,
+      deep: true,
     }
   },
   created() {
@@ -408,8 +464,8 @@ export default {
   overflow: hidden;
 }
 
-.v-expansion-panel-header:hover{
-  background-color:rgba(0,0,0,0.05);
+.v-expansion-panel-header:hover {
+  background-color: rgba(0, 0, 0, 0.05);
   -webkit-transition: background-color 100ms ease-in-out;
   -ms-transition: background-color 100ms ease-in-out;
   transition: background-color 100ms ease-in-out;

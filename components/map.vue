@@ -1,6 +1,9 @@
 <template>
   <client-only>
-    <div id="mapcontainer" ref="mapElement"></div>
+    <div id="mapcontainer" ref="mapElement">
+      <events-dialog :hideButton="true" :items="dialog.items" :title="dialog.title" :open="dialog.open" ></events-dialog>
+
+    </div>
   </client-only>
 </template>
 
@@ -9,8 +12,10 @@ import 'leaflet/dist/leaflet.css';
 import { mapGetters } from 'vuex';
 import L from 'leaflet';
 import '@elfalem/leaflet-curve';
+import EventsDialog from './EventsDialog';
 
 export default {
+  components: { EventsDialog },
   props: {
     animate: {
       type: Boolean,
@@ -43,6 +48,8 @@ export default {
       },
     },
     currentActor: undefined,
+    currentPlace: undefined,
+    currentEvent: undefined,
     filter: {
       type: Object,
       default: () => ({
@@ -87,6 +94,12 @@ export default {
       pointLayer: null,
       lineLayer: [],
       lineLayers: {},
+      visibleEvents: [],
+      dialog:{
+        open:false,
+        items:[],
+        title:''
+      },
 
     };
   },
@@ -146,6 +159,7 @@ export default {
   methods: {
     applyFilter() {
       let places = [];
+      let visibleEvents = []
 
       Object.values(this.lineLayers)
         .forEach((layer) => {
@@ -197,7 +211,7 @@ export default {
               }];
 
 
-            let currentActor = false;
+            let currentActor = !!this.currentActor ? false : true;
             participants.forEach(p => {
               const pIds = this.events[e.id]?.[p.eventsName]?.map(x => x.id?.toString());
 
@@ -206,14 +220,19 @@ export default {
 
               currentActor = currentActor || pIds?.some(x => x == this.currentActor?.toString())
             });
-            show = show && currentActor;           
+            show = show && currentActor;
 
-            if (show) {
+          show = show && (!this.currentPlace || e?.toPlace === this.currentPlace || e?.fromPlace === this.currentPlace )
+          show = show && (!this.currentEvent || e?.id === this.currentEvent)
+
+          if (show) {
               this.map?.addLayer(this.lineLayers[e.id]);
               places = [...places, e.toPlace, e.fromPlace];
+              visibleEvents.push(e)
             }
           }
         );
+      this.visibleEvents = visibleEvents;
       places = [...new Set(places)];
       this.map?.removeLayer(this.pointLayer);
       this.addPlacesToMap(places);
@@ -304,7 +323,12 @@ export default {
                 animate: this.animate && animate
 
               });
+            const lineClick = (e) => {
+              this.openEventsPopup(element);
+            }
+            curvedPath.on("click", lineClick);
             this.map?.addLayer(curvedPath);
+
 
             this.lineLayers[element.id] = curvedPath;
 
@@ -334,6 +358,14 @@ export default {
         midPointLatLng: [midpointY, midpointX],
         animationDuration: Math.sqrt(Math.abs(Math.log(r))) * 2000
       };
+
+    },
+    openEventsPopup(element){
+
+      this.dialog.items = this.visibleEvents.filter(x => x.fromPlace === element.fromPlace && x.toPlace === element.toPlace)
+      .map(x => ({id:x.id, label: x.properties?.title}));
+      this.dialog.title = `From ${this.getGeoItems[element.fromPlace]?.properties.objectName} to ${this.getGeoItems[element.toPlace]?.properties.objectName}`
+      this.dialog.open = !this.dialog.open;
 
     }
   }

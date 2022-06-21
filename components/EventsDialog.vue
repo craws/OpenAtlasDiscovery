@@ -1,6 +1,6 @@
 <template>
   <v-dialog v-model="dialog" width="600" scrollable id="eventDialog">
-    <template v-slot:activator="{ on, attrs }">
+    <template v-if="!hideButton" v-slot:activator="{ on, attrs }">
 
         <v-btn outlined v-bind="attrs" v-on="on" class="mr-2 mb-2">
           {{ label }}
@@ -13,15 +13,24 @@
         <span v-if="!event">{{ title }}</span>
         <div v-else class="d-flex align-start">
           <v-icon large @click="event=undefined">mdi-chevron-left</v-icon>
-          <nuxt-link :to="`/single/${event.relationTo.split('/').pop()}`">{{ event.label }}</nuxt-link>
+          <nuxt-link :to="`/single/${event.id}`">{{ event.label }}</nuxt-link>
         </div>
       </v-card-title>
       <v-card-text class="white">
+
         <v-list v-if="!event">
+          <v-text-field
+            class="mt-2 mb-2"
+            v-model="search"
+            outlined
+            dense
+            hide-details
+            placeholder="Search"
+          ></v-text-field>
           <v-virtual-scroll
-            :items="items"
+            :items="filteredItems"
             :bench="4"
-            height="450px"
+            height="380px"
             item-height="50px"
           >
             <template v-slot:default="{ item }">
@@ -30,19 +39,17 @@
               </v-list-item>
             </template>
           </v-virtual-scroll>
-
         </v-list>
         <div
           v-else
         >
           <div v-if="loaded" class="pt-4">
-
             <v-row no-gutters class="mb-4">
               <v-col cols="12" sm="4" class="d-flex flex-column">
                 <span class="text-caption mb-n1">Begin</span>
                 <span class="text-body-1">
-              <span v-if="!!event.when.timespans[0].start">{{
-                  event.when.timespans[0].start.earliest
+              <span v-if="!!start">{{
+                  start
                 }}
               </span>
               <span v-else> unknown</span>
@@ -51,8 +58,8 @@
               <v-col cols="12" sm="4" offset-sm="4" class="d-flex flex-column">
                 <span class="text-caption mb-n1">End</span>
                 <span class="text-body-1">
-              <span v-if="!!event.when.timespans[0].end">{{
-                  event.when.timespans[0].end.earliest
+              <span v-if="end">{{
+                  end
                 }}
               </span>
               <span v-else> unknown</span>
@@ -171,9 +178,11 @@
 </template>
 
 <script>
+import search from 'cytoscape/src/core/search';
+
 export default {
   name: 'EventsDialog',
-  props: ['items', 'label', 'title'],
+  props: ['items', 'label', 'title','open','hideButton'],
   data() {
     return {
       dialog: false,
@@ -185,9 +194,20 @@ export default {
       artifact: undefined,
       source: undefined,
       isClamped: true,
+      search:'',
     };
   },
   computed: {
+    filteredItems(){
+      return this.items?.filter(x => x.label?.toLowerCase().includes(this.search.toLowerCase()));
+    },
+    start(){
+      return (this.eventDetail?.when.timespans[0].start.earliest || this.eventDetail?.when.timespans[0].start.latest)?.split('T')?.[0];
+    },
+    end(){
+      return (this.eventDetail?.when.timespans[0].end.earliest || this.eventDetail?.when.timespans[0].end.latest)?.split('T')?.[0];
+    },
+
     eventType() {
       return this.eventDetail?.types.find((x) => x.hierarchy.startsWith('Event'))?.label;
     },
@@ -224,8 +244,7 @@ export default {
         document.getElementById('eventDialog').scrollTop = 0;
         this.isClamped = true;
         const p = await this.$api.Entities.get_api_0_3_entity__id__({
-          id_: this.event?.relationTo.split('/')
-            .pop(),
+          id_: this.event?.id,
         });
         [this.eventDetail] = p.body.features;
       }
@@ -266,6 +285,12 @@ export default {
         [this.source] = s.body.features;
       }
       this.loaded = true;
+    },
+    open(){
+      this.search = "";
+      this.event=undefined;
+      this.eventDetail=undefined;
+      this.dialog = true;
     }
   },
 };
