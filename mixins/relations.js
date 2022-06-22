@@ -20,9 +20,18 @@ export default {
 
         }
       }
-      console.log('ghost lettis',ghostLetters)
+      console.log('ghost lettis', ghostLetters);
       return ghostLetters;
     },
+    async getGhostReferenceLetters(rootSource) {
+      const artifact = rootSource?.features?.[0]?.relations.find(x => x.relationType === 'crm:P128i is carried by' && x.relationSystemClass === 'artifact') || [];
+      const artifactDetail = await this.fetchById(artifact.relationTo.split('/')
+        .pop());
+      const referredLetters = artifactDetail?.features?.[0]?.relations.filter(x => x?.relationType === 'crm:P67i is referred to by' && x?.relationSystemClass === 'source');
+      return referredLetters;
+
+    },
+
     async fetchById(id) {
       // eslint-disable-next-line no-underscore-dangle
       const p = await this.$api.Entities.get_api_0_3_entity__id__({

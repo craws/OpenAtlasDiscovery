@@ -143,6 +143,20 @@
                 :hover="true"
                 v-model="panel"
               >
+                <v-expansion-panel v-if="!!ghostLettersReferences && ghostLettersReferences.length !== 0">
+                  <v-expansion-panel-header>ghost letter is referenced in</v-expansion-panel-header>
+                  <v-expansion-panel-content>
+                    <div v-for="(g,index) in ghostLettersReferences"
+                         :key="`ghost events reference - ${g.relationTo} - ${index}`"
+                    >
+                      <p class="ml-2 my-1">
+                        <nuxt-link :to="`/single/${g.relationTo.split('/').pop()}`">
+                          {{ g.label }}
+                        </nuxt-link>
+                      </p>
+                    </div>
+                  </v-expansion-panel-content>
+                </v-expansion-panel>
                 <v-expansion-panel v-if="!!ghostLetters && ghostLetters.length !== 0">
                   <v-expansion-panel-header> refers to ghost events</v-expansion-panel-header>
                   <v-expansion-panel-content>
@@ -282,6 +296,7 @@ export default {
       originOf: [],
       panel: [],
       ghostLetters: [],
+      ghostLettersReferences: [],
       mapOptions: { caseStudies: [] }
     };
   },
@@ -334,7 +349,6 @@ export default {
       if (Array.isArray(this.item.features[0]?.relations)) return [...new Set(this.item.features[0]?.relations?.map((item) => item.relationType))];
       return [];
     },
-
     events() {
       return Object.keys(this.getEvents)
         .reduce((filtered, key, sd) => {
@@ -362,7 +376,8 @@ export default {
     destinationEvents() {
       return this.related.flatMap((x) => x?.features[0]?.relations
         ?.filter((y) => y.relationType === 'crm:P26i was destination of'))
-        .map(x => ({ ...x,
+        .map(x => ({
+          ...x,
           id: x.relationTo.split('/')
             .pop(),
         }));
@@ -370,7 +385,8 @@ export default {
     originEvents() {
       return this.related.flatMap((x) => x?.features[0]?.relations
         ?.filter((y) => y.relationType === 'crm:P27i was origin of'))
-        .map(x => ({ ...x,
+        .map(x => ({
+          ...x,
           id: x.relationTo.split('/')
             .pop(),
         }));
@@ -412,7 +428,8 @@ export default {
     },
     participatedIn() {
       return this.item.features[0]?.relations?.filter(x => x.relationType.startsWith('crm:P11i'))
-        .map(x => ({ ...x,
+        .map(x => ({
+          ...x,
           id: x.relationTo.split('/')
             .pop(),
         }));
@@ -436,17 +453,23 @@ export default {
       },
       deep: true,
     },
-    ghostLetters: {
-      handler() {
-        if (this.ghostLetters?.length !== 0 && this.ghostLetters?.length <= 5) {
-          this.panel.push(Object.values(this.relations).length);
-        }
-      },
-      deep: true,
-    },
     item: {
       async handler() {
-        this.ghostLetters = await this.getGhostLetters(this.item);
+        if (this.item?.features[0]?.types?.some(x => x.identifier.split('/')
+          .pop() === '1833')) {
+          this.ghostLettersReferences = await this.getGhostReferenceLetters(this.item);
+          //expand
+          if (this.ghostLettersReferences?.length !== 0 && this.ghostLettersReferences?.length <= 5) {
+            this.panel.push(Object.values(this.relations).length);
+          }
+        } else {
+          this.ghostLetters = await this.getGhostLetters(this.item);
+          //expand
+
+          if (this.ghostLetters?.length !== 0 && this.ghostLetters?.length <= 5) {
+            this.panel.push(Object.values(this.relations).length);
+          }
+        }
       },
       deep: true,
     }
