@@ -84,7 +84,7 @@ export const actions = {
         `#${+Math.floor(parseFloat(`0.${nonce}`) * 16777215)
           .toString(16)}`;
     };
-    const caseStudies = g.body.typeTree[137].subs.filter(x => x !== 13465)
+    const caseStudies = g.body.typeTree?.[137]?.subs.filter(x => x !== 13465)
       .map(cs => ({
         ...g.body.typeTree[cs],
         subtypes: g.body.typeTree[cs].subs.map(sub => g.body.typeTree[sub]),

@@ -59,7 +59,7 @@ export default {
     initCaseStudies() {
       if (this.getCaseStudies?.length === 0) return;
 
-      this.caseStudyCheckboxes = this.getCaseStudies.map((x) => ({
+      this.caseStudyCheckboxes = this.getCaseStudies?.map((x) => ({
         ...x,
         subtypes: x.subtypes.map((y) => ({
           ...y,
@@ -69,7 +69,7 @@ export default {
         expanded: false,
       }));
       const value = this.caseStudyCheckboxes
-        .flatMap((x) => [x.selected && x.id, ...x.subtypes.filter((y) => y.selected)
+        ?.flatMap((x) => [x.selected && x.id, ...x.subtypes.filter((y) => y.selected)
           .map((y) => y.id)]);
       this.$emit('input', value);
     },
@@ -85,15 +85,14 @@ export default {
     caseStudyCheckboxes: {
       handler() {
         const value = this.caseStudyCheckboxes
-          .flatMap((x) => [x.selected && x.id, ...x.subtypes.filter((y) => y.selected)
+          ?.flatMap((x) => [x.selected && x.id, ...x.subtypes.filter((y) => y.selected)
             .map((y) => y.id)]);
         this.$emit('input', value);
       },
       deep: true,
     },
     value() {
-      console.log(this.caseStudyCheckboxes, this.value);
-      this.caseStudyCheckboxes.forEach(x => {
+      this.caseStudyCheckboxes?.forEach(x => {
         x.selected = this.value?.includes(x.id);
         x.subtypes.forEach(y => {
           y.selected = this.value?.includes(y.id);
