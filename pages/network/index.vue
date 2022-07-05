@@ -3,12 +3,13 @@
     <v-row no-gutters style="height: 100%">
       <v-col cols="12" sm="6" md="8">
         <v-card outlined class="full-height" tile>
-          <actor-network></actor-network>
+          <actor-network height="calc(100vh - 64px)" :filterCaseStudies="filterCaseStudies" :relationTypes="relationTypes"></actor-network>
         </v-card>
       </v-col>
       <v-col cols="12" sm="6" md="4">
         <v-card class="full-height pa-2 overflow-auto" tile outlined>
           <filter-case-studies v-model="filterCaseStudies"></filter-case-studies>
+          <filter-relations v-model="relationTypes"></filter-relations>
         </v-card>
       </v-col>
     </v-row>
@@ -24,14 +25,15 @@ export default {
   name: 'index',
   data() {
     return {
-      filterCaseStudies: [633, 6934, 8184, 938, false, 12953, false, 13088, 13087, false, 13246, false],
+      filterCaseStudies: [],
+      relationTypes:[]
     };
   },
   computed: {
     ...mapGetters('data', ['getCaseStudies']),
   },
   methods: {
-    
+
   },
 
   components: { NetworkGraphD3 }

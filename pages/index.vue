@@ -2,6 +2,7 @@
   <div>
     <div class="full-height d-flex justify-center align-center">
       <div>
+
         <div class="d-flex justify-center align-center flex-wrap mb-10" :class="{'hero':!$vuetify.breakpoint.smAndDown}">
 
               <v-img max-width="600px" max-height="400px" contain src="connecLogo.jpg"/>
@@ -55,7 +56,9 @@
 
       </div>
     </div>
+
     <v-container>
+
       <event-map id="eventMap" class="mt-15"></event-map>
     </v-container>
   </div>
@@ -67,6 +70,7 @@ import EventMap from '../components/EventMap';
 
 export default {
   components: { EventMap },
+
   computed: {
     ...mapGetters('app', [
       'getSiteContent'

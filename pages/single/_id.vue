@@ -198,12 +198,16 @@
         </v-col>
         <v-col cols="12" sm>
           <v-card class="pa-4" outlined tile>
-            <v-tabs right>
+            <v-tabs right v-model="tab">
               <v-tab>Map</v-tab>
+              <v-tab>Actor Connections</v-tab>
 
               <v-tab>JSON</v-tab>
               <v-tab-item>
                 <event-map height="calc(100vh - 154px)" id="eventMap" :options="mapOptions"></event-map>
+              </v-tab-item>
+              <v-tab-item>
+                <actor-network height="calc(100vh - 158px)" :currentActor="$route.params.id"></actor-network>
               </v-tab-item>
               <v-tab-item>
                 <json-viewer style="height: calc(100vh - 154px); overflow-y: auto;" :value="item" :expand-depth="5"
@@ -287,6 +291,7 @@ export default {
   mixins: [relations],
   data() {
     return {
+      tab:undefined,
       item: {},
       related: [],
       expanded: [],
@@ -299,6 +304,11 @@ export default {
       ghostLettersReferences: [],
       mapOptions: { caseStudies: [] }
     };
+  },
+  mounted() {
+    console.log(this.$route,'heho')
+    if (this.$route.hash === "#actor-network")
+      this.tab = 1
   },
   methods: {
     async fetchRelated(relations, type) {
