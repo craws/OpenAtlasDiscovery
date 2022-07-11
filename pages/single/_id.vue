@@ -207,7 +207,10 @@
                 <event-map height="calc(100vh - 154px)" id="eventMap" :options="mapOptions"></event-map>
               </v-tab-item>
               <v-tab-item>
-                <actor-network height="calc(100vh - 158px)" :currentActor="$route.params.id"></actor-network>
+                <div class="network-container relative">
+                <actor-network height="calc(100vh - 158px)" :relationTypes="actorRelationTypes" :currentActor="$route.params.id"></actor-network>
+                  <filter-relations class="filter-relations" v-model="actorRelationTypes"></filter-relations>
+                </div>
               </v-tab-item>
               <v-tab-item>
                 <json-viewer style="height: calc(100vh - 154px); overflow-y: auto;" :value="item" :expand-depth="5"
@@ -302,7 +305,8 @@ export default {
       panel: [],
       ghostLetters: [],
       ghostLettersReferences: [],
-      mapOptions: { caseStudies: [] }
+      mapOptions: { caseStudies: [] },
+      actorRelationTypes:[],
     };
   },
   mounted() {
@@ -503,5 +507,13 @@ export default {
   -ms-transition: background-color 100ms ease-in-out;
   transition: background-color 100ms ease-in-out;
 
+}
+.network-container{
+}
+.filter-relations{
+  position:absolute;
+  bottom:0;
+  right:0;
+  left:0;
 }
 </style>

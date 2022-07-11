@@ -2,7 +2,7 @@
   <div>
     <v-autocomplete
       v-if="getPersonsLoaded"
-      class="mb-n5"
+      class="mb-n5 white"
       :value="value"
       label="Relation Types"
       :items="relations"
@@ -14,6 +14,7 @@
       deletable-chips
       small-chips
       @input="update($event)"
+
     />
   </div>
 </template>
@@ -39,7 +40,7 @@ export default {
     ...mapGetters('data', ['getEventTypes']),
     ...mapGetters('data', ['getEventTypes']),
     relations() {
-      return this.getPersons.flatMap(x => x.relations?.filter(r => r.relationSystemClass === "person" || r.relationSystemClass === "group").map(r => r.type))
+      return Object.values(this.getPersons).flatMap(x => x.relations?.filter(r => r.relationSystemClass === "person" || r.relationSystemClass === "group").map(r => r.type))
 
     }
   },
