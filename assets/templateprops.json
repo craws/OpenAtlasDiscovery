@@ -1,4 +1,5 @@
 {
   "hasSex": ["person"],
+  "hasActorNetwork": ["person","group"],
   "hasTime": ["place","person","group","artifact"]
 }

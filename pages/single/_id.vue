@@ -57,7 +57,6 @@
                   </v-row>
                 </v-col>
                 <v-spacer v-if="!!end && end !== 'None'"></v-spacer>
-
                 <v-col v-if="hasSex(item.features[0].systemClass)" xs="4">
                   <v-row no-gutters align="center" class="d-flex flex-column align-start">
                     <div class="text-overline">Sex</div>
@@ -200,13 +199,13 @@
           <v-card class="pa-4" outlined tile>
             <v-tabs right v-model="tab">
               <v-tab>Map</v-tab>
-              <v-tab>Actor Connections</v-tab>
+              <v-tab v-if="hasActorNetwork(item.features[0].systemClass)">Actor Connections</v-tab>
 
               <v-tab>JSON</v-tab>
               <v-tab-item>
                 <event-map height="calc(100vh - 154px)" id="eventMap" :options="mapOptions"></event-map>
               </v-tab-item>
-              <v-tab-item>
+              <v-tab-item v-if="hasActorNetwork(item.features[0].systemClass)"">
                 <div class="network-container relative">
                 <actor-network translateX="600" translateY="350" height="calc(100vh - 158px)" :relationTypes="actorRelationTypes" :currentActor="$route.params.id"></actor-network>
                   <filter-relations class="filter-relations" v-model="actorRelationTypes"></filter-relations>
@@ -352,6 +351,7 @@ export default {
       'getSortColumnByPath',
       'hasTime',
       'hasSex',
+      'hasActorNetwork',
     ]),
     ...mapGetters('data', ['getEvents']),
 

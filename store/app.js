@@ -32,6 +32,7 @@ export const getters = {
   },
   hasTime: (s) => (c) => s.templateprops.hasTime.includes(c),
   hasSex: (s) => (c) => s.templateprops.hasSex.includes(c),
+  hasActorNetwork: (s) => (c) => s.templateprops.hasActorNetwork.includes(c),
   getGeoItems: (s) => s.geoItems,
   getTempItems: (s) => s.tempItems,
   getGeoItemsAsFeatureCollection: (s) => s.geoItems.features.map((f) => ({
