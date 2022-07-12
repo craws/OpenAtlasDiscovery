@@ -208,7 +208,7 @@
               </v-tab-item>
               <v-tab-item>
                 <div class="network-container relative">
-                <actor-network height="calc(100vh - 158px)" :relationTypes="actorRelationTypes" :currentActor="$route.params.id"></actor-network>
+                <actor-network translateX="600" translateY="350" height="calc(100vh - 158px)" :relationTypes="actorRelationTypes" :currentActor="$route.params.id"></actor-network>
                   <filter-relations class="filter-relations" v-model="actorRelationTypes"></filter-relations>
                 </div>
               </v-tab-item>

@@ -10,7 +10,7 @@ export class NetworkSimulator {
   onCircleClick;
   simulation;
 
-  constructor(charge, distance, width, height, onCircleClick) {
+  constructor(charge, distance, width, height, onCircleClick, scale = 1, translateX = 0, translateY = 0) {
 
     this.charge = charge;
     this.distance = distance;
@@ -20,23 +20,31 @@ export class NetworkSimulator {
 
     let svg = d3.select('#actor-network');
     let g = svg.append('g')
-      .attr('class', 'everything');
+      .attr('class', 'everything')
+    //.attr('transform',"translate(575,392)");
+
+    const transform = d3.zoomIdentity.translate(translateX, translateY).scale(scale);
+    const zoom = d3.zoom()
+      .scaleExtent([0.05, 1])
+      .on("zoom", (event) => g.attr('transform', event.transform));
+    svg.call(zoom)
+      .call(zoom.transform, transform)
 
 
     // ARROW
     const marker = svg.append('defs').append('marker')
-      .attr('id','arrowhead')
-      .attr('viewBox','-0 -5 10 10')
-      .attr('refX',13)
-      .attr('refY',0)
-      .attr('orient','auto')
-      .attr('markerWidth',13)
-      .attr('markerHeight',13)
-      .attr('xoverflow','visible')
+      .attr('id', 'arrowhead')
+      .attr('viewBox', '-0 -5 10 10')
+      .attr('refX', 13)
+      .attr('refY', 0)
+      .attr('orient', 'auto')
+      .attr('markerWidth', 13)
+      .attr('markerHeight', 13)
+      .attr('xoverflow', 'visible')
       .append('svg:path')
       .attr('d', 'M 0,-5 L 10 ,0 L 0,5')
       .attr('fill', '#ccc')
-      .style('stroke','none');
+      .style('stroke', 'none');
 
   }
 
@@ -58,21 +66,26 @@ export class NetworkSimulator {
     that.stopSimulation();
 
     let svg = d3.select('#actor-network');
-    //  .attr('width', width)
-    //  .attr('height', height);
 
-    const randomNumber = Math.floor(Math.random() * 100);
-    console.log('makenetwork', svg);
+
+    const height =parseFloat(svg.style('height').split('px')[0]);
+    const width =parseFloat(svg.style('width').split('px')[0]);
     that.simulation = d3.forceSimulation(that.nodesData);
     // Add forces, we're going to add a charge to each node, also going to add a centering force
     const forceNode = d3.forceManyBody();
     const forceLink = d3.forceLink(that.linksData)
       .id(({ id: i }) => i)
       .distance(that.distance);
+    console.log("DOOO",svg, height,width)
+
     that.simulation
-      .force('link', forceLink)
+
       .force('charge', forceNode)
       .force('center', d3.forceCenter())
+      .force('x', d3.forceX(width/2).strength(0.005))  // Needed to keep nodes together
+      .force('y', d3.forceY(height/2).strength(0.005))
+      .force('link', forceLink)
+
       .on('tick', tickActions);  // Add tick actions    .on('tick', tickActions);  // Add tick actions
 
     let g = svg.select('.everything'); // Add encompassing group for the zoom
@@ -86,10 +99,10 @@ export class NetworkSimulator {
       .data(that.linksData)
       .enter()
       .append('line')
-      .style("stroke","#ccc")
-      .attr('marker-end','url(#arrowhead)')
+      .style("stroke", "#ccc")
+      .attr('marker-end', 'url(#arrowhead)')
 
-    ;
+      ;
 
     //LINK LABELS
 
@@ -132,9 +145,9 @@ export class NetworkSimulator {
 
     drag_handler(node);
     node.on('click', clicked);
-    let zoom_handler = d3.zoom()
-      .on('zoom', zoomActions); // Add zoom capabilities
-    zoom_handler(svg);
+    //let zoom_handler = d3.zoom()
+    //  .on('zoom', zoomActions); // Add zoom capabilities
+    //zoom_handler(svg);
 
     /** Functions **/
 
@@ -156,6 +169,7 @@ export class NetworkSimulator {
     }
 
     function drag_end(event, d) {
+      console.log(event, d)
       if (!event.active) that.simulation.alphaTarget(0);
       d.fx = null;
       d.fy = null;
@@ -171,9 +185,7 @@ export class NetworkSimulator {
       that.onCircleClick(d.id);
     }
 
-    function zoomActions(event) {
-      g.attr('transform', event.transform);
-    }
+
 
     function tickActions() {
       that.simulation.nodes(that.nodesData);

@@ -17,6 +17,18 @@ import { mapActions, mapGetters, mapMutations } from 'vuex';
 export default {
   name: 'ActorNetwork',
   props: {
+    translateX: {
+      type: String,
+      default: () => '0'
+    },
+    translateY: {
+      type: String,
+      default: () => '0'
+    },
+    scale: {
+      type: String,
+      default: () => '1'
+    },
     height: {
       type: String,
       default: () => '500px'
@@ -56,7 +68,7 @@ export default {
         });
       };
       console.log('create Simuator');
-      this.simulator = new NetworkSimulator(0.4, 500, '100%', this.height, onCircleClick);
+      this.simulator = new NetworkSimulator(0.4, 500, '100%', this.height, onCircleClick, this.scale, this.translateX,this.translateY);
       this.simulator?.createGraph(this.networkData || {
         nodes: [],
         links: []
@@ -92,10 +104,10 @@ export default {
             y: 0,
             fx: 0,
             fy: 0,
-            data:person,
+            data: person,
           };
 
-          if(this.currentActor && id === this.currentActor)
+          if (this.currentActor && id === this.currentActor)
             filteredPersons[id] = nodeData;
 
           if (this.currentActor && id !== this.currentActor && !person?.relations?.some(r => r.relationTo.split('/')
@@ -138,7 +150,7 @@ export default {
             links.push({
               source: id,
               target: to,
-              type:relation.type,
+              type: relation.type,
               caseStudies
             })
           });
@@ -148,7 +160,7 @@ export default {
 
 
       return {
-        nodes : Object.values(filteredPersons),
+        nodes: Object.values(filteredPersons),
         links
       };
     },
@@ -191,7 +203,7 @@ export default {
     this.simulator?.stopSimulation();
   }
 }
-;
+  ;
 </script>
 
 <style>
