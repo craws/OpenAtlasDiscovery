@@ -1,6 +1,9 @@
 <template>
   <client-only>
     <div>
+       <v-overlay :value="!getPersonsLoaded" absolute z-index="9999" color="transparent">
+      <v-progress-circular indeterminate size="64" color="primary"/>
+    </v-overlay>
       <svg id="actor-network" width="100%" :style="`--map-height:${height}`">
         <g class="links"></g>
         <g class="nodes"></g>
