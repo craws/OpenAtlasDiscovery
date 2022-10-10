@@ -76,10 +76,10 @@ export default {
       itemsPerPage,
     } = this.options;
     // eslint-disable-next-line no-underscore-dangle
-    const p = await this.$api.Entities.get_api_0_2_query_({
+    const p = await this.$api.Entities.get_api_0_3_query_({
       limit: itemsPerPage,
       first: this.itemIndex[page - 1] ? this.itemIndex[page - 1].startId : null,
-      filter: this.filter,
+      search: this.filter,
       column: sortBy ? this.getSortColumnByPath(sortBy[0]) : null,
       sort: sortDesc[0] ? 'desc' : 'asc',
     });

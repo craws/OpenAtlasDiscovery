@@ -16,7 +16,7 @@
     },
     {
       "text": "Description",
-      "value": "features[0].description[0].value",
+      "value": "features[0].descriptions[0].value",
       "column": "description",
       "width": "300px"
     },

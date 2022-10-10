@@ -33,13 +33,13 @@ export default {
     };
   },
   async mounted() {
-    const p = await this.$api.Entities.get_api_0_2_code__code_({
+    const p = await this.$api.Entities.get_api_0_3_view_class__view_class_({
       limit: 100,
       show: ['geometry'],
-      code: 'place',
+      view_class: 'place',
     });
     this.items = p.body.results;
-    const content = await this.$api.Content.get_api_0_2_content_({});
+    const content = await this.$api.Content.get_api_0_3_content_({});
     this.body = content.body.intro;
     this.loading = false;
   },

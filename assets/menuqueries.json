@@ -5,7 +5,7 @@
     "target": {
       "name": "list-q",
       "params": {
-        "q": "{ \"codes\": \"actor\" }"
+        "q": "{ \"view_classes\": \"actor\" }"
       }
     }
   },
@@ -15,7 +15,7 @@
     "target": {
       "name": "list-q",
       "params": {
-        "q": "{ \"codes\": \"source\" }"
+        "q": "{ \"view_classes\": \"source\" }"
       }
     }
   },
@@ -25,7 +25,7 @@
     "target": {
       "name": "list-q",
       "params": {
-        "q": "{ \"codes\": \"event\" }"
+        "q": "{ \"view_classes\": \"event\" }"
       }
     }
   },
@@ -35,7 +35,7 @@
     "target": {
       "name": "map-q",
       "params": {
-        "q": "{ \"codes\": \"place\" }"
+        "q": "{ \"view_classes\": \"place\" }"
       }
     }
   },
@@ -45,7 +45,7 @@
     "target": {
       "name": "map-q",
       "params": {
-        "q": "{ \"codes\": \"artifact\" }"
+        "q": "{ \"view_classes\": \"artifact\" }"
       }
     }
   }

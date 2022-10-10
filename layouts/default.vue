@@ -1,12 +1,13 @@
 <template>
   <v-app light>
     <v-navigation-drawer
-      v-model="$store.state.app.queryDrawer"
+      :value="$store.state.app.queryDrawer"
       class="ontop"
       :disable-resize-watcher="true"
       clipped
       app
       color="grey lighten-4"
+      :style="{ top: $vuetify.application.top + 'px', zIndex: 4 }"
     >
       <v-list
         dense
@@ -85,7 +86,7 @@ export default {
     };
   },
   async mounted() {
-    const content = await this.$api.Content.get_api_0_2_content_({});
+    const content = await this.$api.Content.get_api_0_3_content_({});
     this.$store.commit('app/setSiteName', content.body.siteName);
     this.title = content.body.siteName;
   },
