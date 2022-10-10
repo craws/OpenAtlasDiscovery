@@ -30,7 +30,7 @@
     "swagger-client": "^3.13.5",
     "typeface-roboto": "^1.1.13",
     "vue-json-viewer": "^2.2.19",
-    "vuetify": "^2.5.5"
+    "vuetify": "^2.6.10"
   },
   "devDependencies": {
     "@nuxt/typescript-build": "^1.0.3",
