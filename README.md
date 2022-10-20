@@ -10,16 +10,6 @@ Because of changing technologies work on
 a new system has begun,
 see: [OpenAtlas Discovery](https://github.com/craws/OpenAtlas-Discovery)
 
-# Licensing
-All code unless otherwise noted is licensed under the terms of the MIT License
-(MIT). Please refer to the file COPYING in the root directory of this
-repository.
-
-All documentation and images unless otherwise noted are licensed under the
-terms of Creative Commons Attribution-ShareAlike 4.0 International License.
-To view a copy of this license, visit
-[http://creativecommons.org/licenses/by-sa/4.0/](http://creativecommons.org/licenses/by-sa/4.0/)
-
 # Technology
 The web application is built using the [nuxtjs](https://nuxtjs.org/) framework
 based on [Vuejs](https://vuejs.org/)
@@ -84,3 +74,13 @@ Apache configuration:
   RewriteRule . /index.html [L]
 </IfModule>
 ```
+
+# Licensing
+All code unless otherwise noted is licensed under the terms of the MIT License
+(MIT). Please refer to the file License.txt in the root directory of this
+repository.
+
+All documentation and images unless otherwise noted are licensed under the
+terms of Creative Commons Attribution-ShareAlike 4.0 International License.
+To view a copy of this license, visit
+[http://creativecommons.org/licenses/by-sa/4.0/](http://creativecommons.org/licenses/by-sa/4.0/)
