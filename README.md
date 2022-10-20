@@ -2,14 +2,15 @@
 
 # About
 
-OpenAtlasDiscovery is a presentation webapp for
+OpenAtlasDiscovery is a presentation web application for
 [OpenAtlas](https://openatlas.eu) projects.
 
-At the moment we are in the concept phase and this is just a basic start point
-for further development.
+**Update October 2022**:<br/>
+Because of changing technologies work on
+a new system has begun,
+see: [OpenAtlas Discovery](https://github.com/craws/OpenAtlas-Discovery)
 
 # Licensing
-
 All code unless otherwise noted is licensed under the terms of the MIT License
 (MIT). Please refer to the file COPYING in the root directory of this
 repository.
@@ -20,12 +21,10 @@ To view a copy of this license, visit
 [http://creativecommons.org/licenses/by-sa/4.0/](http://creativecommons.org/licenses/by-sa/4.0/)
 
 # Technology
-
 The web application is built using the [nuxtjs](https://nuxtjs.org/) framework
 based on [Vuejs](https://vuejs.org/)
 
 # Setup
-
 Whilst the application ultimately runs in the browser and can be served from
 any web server developing and deploying it requires
 [NodeJS](https://nodejs.org/en/about/releases/)
@@ -38,8 +37,7 @@ $ npm install
 ```
 
 # Configuration
-
-Furthermore a running OpenAtlas instance with an activated
+Furthermore, a running OpenAtlas instance with an activated
 [API Module](https://demo.openatlas.eu/static/manual/tools/api.html)
 is required.
 The instance served needs to be configured (servers/url) in the
@@ -50,14 +48,12 @@ assets\swagger.json
 ``` 
 
 ## For Development
-
 Serve with hot reload at localhost:3000
 ```
 $ npm run dev
 ```
 
 ## For Deployment
-
 Generate the project files to /dist
 ```
 $ npm run export
