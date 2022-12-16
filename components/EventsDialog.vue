@@ -159,7 +159,7 @@
                   <p :class="{ lineclamp: isClamped }" class="mb-0">{{
                       source.descriptions[0].value
                     }}</p>
-                  <p v-if="isClamped" style="cursor:pointer" class="mt-0">read more</p>
+                  <a v-if="isClamped" style="cursor:pointer;" class="mt-0">read more</a>
                 </div>
 
               </v-col>
