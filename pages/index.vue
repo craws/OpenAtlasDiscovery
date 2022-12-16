@@ -132,7 +132,7 @@ export default {
 .bubble-btn .bubble-btn-content span{
   color:black;
   transition: all ease-in-out 100ms;
-
+  font-size: calc(1rem + 2pt);
 }
 
 .rotate .bubble-btn .bubble-btn-content span{
@@ -164,5 +164,6 @@ export default {
 .rotate.navigation-btns {
   transform: translateX(-200px);
 }
+
 </style>
 
