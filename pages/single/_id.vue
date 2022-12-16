@@ -203,11 +203,11 @@
         <v-col cols="12" sm>
           <v-card class="pa-4" outlined tile>
             <v-tabs right v-model="tab">
-              <v-tab>Map</v-tab>
+              <v-tab v-if="['person','group','place','production','move','activity','acquisition','event','object_location'].includes(item.features[0].systemClass)">Map</v-tab>
               <v-tab v-if="hasActorNetwork(item.features[0].systemClass)">Actor Connections</v-tab>
 
               <v-tab>JSON</v-tab>
-              <v-tab-item>
+              <v-tab-item v-if="['person','group','place','production','move','activity','acquisition','event','object_location'].includes(item.features[0].systemClass)">
                 <event-map height="calc(100vh - 154px)" id="eventMap" :options="mapOptions"></event-map>
               </v-tab-item>
               <v-tab-item v-if="hasActorNetwork(item.features[0].systemClass)"">
