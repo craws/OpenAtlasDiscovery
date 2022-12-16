@@ -152,10 +152,15 @@
               <v-col cols="12">
                 <v-subheader class="pa-0 pt-2 font-weight-bold" style="height:35px">Source</v-subheader>
 
-                <p class="text-body-1"
-                   :class="{ lineclamp: isClamped }"
-                   @click="isClamped = !isClamped"
-                >{{ source.descriptions[0].value }}</p>
+                <div
+                  class="text-body-1 pt-2" @click="isClamped = !isClamped"
+                  ref="descriptionField"
+                >
+                  <p :class="{ lineclamp: isClamped }" class="mb-0">{{
+                      source.descriptions[0].value
+                    }}</p>
+                  <p v-if="isClamped" style="cursor:pointer" class="mt-0">read more</p>
+                </div>
 
               </v-col>
             </v-row>
@@ -240,6 +245,7 @@ export default {
   },
   watch: {
     async event() {
+      this.isClamped=true
       if (this.event && !this.loaded) {
         document.getElementById('eventDialog').scrollTop = 0;
         this.isClamped = true;
