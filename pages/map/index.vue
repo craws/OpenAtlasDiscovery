@@ -5,10 +5,11 @@
   </v-col>
   <v-col cols="12" sm="3">
     <v-card flat class="px-4">
-      <v-btn @click="reset()">reset</v-btn>
     <filter-case-studies :reset="resetProperties.caseStudies" v-model="options.caseStudies"></filter-case-studies>
       <filter-types  v-model="options.eventTypes"></filter-types>
       <filter-actors :reset="resetProperties.actors" v-model="options.actorFilter"></filter-actors>
+      <v-btn outlined style="width:100%" class="mb-2" @click="reset()">reset filters</v-btn>
+
     </v-card>
   </v-col>
 
