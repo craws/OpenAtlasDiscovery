@@ -183,7 +183,7 @@ export default {
               && (!this.filter.to || new Date(e.when.timespans[0].end.earliest) <= new Date(this.filter.to));
 
             //event types
-            show = show && (this.filter.eventTypes.length === 0 || this.filter.eventTypes.some(x => e.types.find(x => x.hierarchy === 'Event')
+            show = show && (this.filter.eventTypes.length === 0 || this.filter.eventTypes.some(x => e.types.find(x => x.hierarchy.startsWith('Event'))
               ?.identifier
               .split('/')
               .pop() === x.toString()));
