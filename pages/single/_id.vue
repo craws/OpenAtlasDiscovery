@@ -361,7 +361,7 @@ export default {
     ...mapGetters('data', ['getEvents']),
 
     subtitle() {
-      return this.item.features[0]?.types?.find(x => x.hierarchy.startsWith('Source'))?.label;
+      return this.item.features[0]?.types?.find(x => x.hierarchy.startsWith('Source'))?.label || this.item.features[0]?.systemClass;
     },
     relationTypes() {
       // eslint-disable-next-line max-len
