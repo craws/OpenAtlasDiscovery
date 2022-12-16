@@ -1,6 +1,16 @@
 [
   {
     "icon": "mdi-account-group",
+    "text": "All",
+    "target": {
+      "name": "list-q",
+      "query": {
+        "view_classes": "all"
+      }
+    }
+  },
+  {
+    "icon": "mdi-account-group",
     "text": "Actors",
     "target": {
       "name": "list-q",
