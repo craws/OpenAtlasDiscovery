@@ -42,7 +42,7 @@ import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'FilterCaseStudies',
-  props: ['value'],
+  props: ['value','reset'],
   data() {
     return {
       caseStudyCheckboxes: [],
@@ -57,6 +57,7 @@ export default {
   methods: {
     ...mapActions('data', ['loadTypeTree']),
     initCaseStudies() {
+      if (!this.getCaseStudies)
       if (this.getCaseStudies?.length === 0) return;
 
       this.caseStudyCheckboxes = this.getCaseStudies?.map((x) => ({
@@ -71,6 +72,7 @@ export default {
       const value = this.caseStudyCheckboxes
         ?.flatMap((x) => [x.selected && x.id, ...x.subtypes.filter((y) => y.selected)
           .map((y) => y.id)]);
+
       this.$emit('input', value);
     },
     changedSuperCaseStudy(cs) {
@@ -91,6 +93,15 @@ export default {
       },
       deep: true,
     },
+    reset:{
+      handler(){
+      this.caseStudyCheckboxes?.forEach(x => {
+        x.selected=true;
+        x.subtypes.forEach(y => {
+          y.selected = true;
+        });
+      });
+    }},
     value() {
       this.caseStudyCheckboxes?.forEach(x => {
         x.selected = this.value?.includes(x.id);
