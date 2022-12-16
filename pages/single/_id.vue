@@ -96,6 +96,8 @@
                 <events-dialog v-if="!!participatedIn && participatedIn.length !== 0" :items="participatedIn"
                                label="Events" title="Events"
                 ></events-dialog>
+                <span v-if="!!participatedIn && participatedIn.length !== 0" :items="participatedIn">Click here for a list of events in which this actor participated.
+                  <br/>For more information about how the database is structured, see our user guide <nuxt-link to="/userguide">here</nuxt-link>.</span>
                 <events-dialog
                   v-if="!!originEvents && originEvents.length !== 0 && ['place', 'object_location'].includes(item.features[0].systemClass)"
                   :items="originEvents" label="origin of" title="Origin of Events"
@@ -104,6 +106,9 @@
                   v-if="!!destinationEvents && destinationEvents.length !== 0 && ['place', 'object_location'].includes(item.features[0].systemClass)"
                   :items="destinationEvents" :label="`Destination Of`" title="Destination of Events"
                 ></events-dialog>
+                <span v-if="((!!originEvents && originEvents.length !== 0) || (!!destinationEvents && destinationEvents.length !== 0)) && ['place', 'object_location'].includes(item.features[0].systemClass)">Click here for a list of events of which this place has been the origin/destination of.
+                  <br/>For more information about how the database is structured, see our user guide <nuxt-link to="/userguide">here</nuxt-link>.</span>
+
 
 
               </div>
